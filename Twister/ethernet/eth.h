@@ -11,26 +11,27 @@ void eth_pkt_ctor() {			//--!TODO
 	return;
 }
 
-uint8_t	eth_pkt_parser(rte_mbuf * pkt) {
-	struct ether_hdr * eth = (struct ether_hdr *) pkt;
+uint8_t	eth_pkt_parser(rte_mbuf * pkt, uint8_t port_id) {
+	struct ether_hdr * eth = rte_pktmbuf_mtod(struct ether_hdr *, pkt);
 	uint8_t accept_brdcast = is_broadcast_ether_addr(eth->d_addr) & ACCEPT_BRDCAST;
-	if(is_same_ether_addr(eth->d_addr, port_info[pkt->port].eth_mac) || (is_broadcast_ether_addr(eth->d_addr) & ACCEPT_BRDCAST)) {
+	if(is_same_ether_addr(eth->d_addr, port_info[port_id].eth_mac) || (is_broadcast_ether_addr(eth->d_addr) & ACCEPT_BRDCAST)) {
 		switch(eth->ether_type) {
 		case ETHER_TYPE_ARP:
-			arp_parser(pkt);
+			arp_parser(eth, port_id);
 			break;
 		case ETHER_TYPE_VLAN:
-			vlan_parser(pkt);
+			vlan_parser(pkt, port_id);
 			break;
 		case ETHER_TYPE_IPv4:
-			ipv4_parser(pkt);	//--!TODO implement ipv6
+			ipv4_parser(pkt, port_id);	//--!TODO implement ipv6
 			break;
 		default:
 			rte_pktmbuf_free(pkt);
 			break;
 		}
 	}
-
+	else
+		rte_pktmbuf_free(pkt);
 }
 
 #endif
