@@ -15,7 +15,7 @@ struct port_info {
 	union {
 		uint32_t	ip_addr;
 		uint8_t		ip[4];
-	}
+	};
 	uint8_t	flags;
 	struct ether_addr * eth_mac;		//--!TODO initialize eth_mac in init func
 	uint16_t vlan_tag;
