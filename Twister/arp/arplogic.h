@@ -5,7 +5,6 @@
 #include <rte_malloc.h>
 
 #define ARP_ENTRY_TIMEOUT 15000
-#define ARP_TABLE_SIZE	512
 
 struct arp_table {
 	uint32_t ip_addr;
@@ -80,6 +79,7 @@ int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add) {
 		return -1;
 	arp_table_ptr->ip_addr = ip_to_add;
 	ether_addr_copy(&(mac_to_add), &(arp_table_ptr->eth_mac));
+	arp_table_size++;
 	return 0;
 }
 
