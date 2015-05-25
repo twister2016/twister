@@ -3,7 +3,7 @@
 
 #include <rte_ip.h>
 #include "portconf.h"
-
+#include "udp.h"
 
 static void ip4_packet_parser(struct rte_mbuf *pkt,uint8_t port_id);
 static void ip4_packet_parser(struct rte_mbuf *pkt,uint8_t port_id)
@@ -15,24 +15,24 @@ static void ip4_packet_parser(struct rte_mbuf *pkt,uint8_t port_id)
 	{
        switch(ipHdr->next_proto_id)
 		{
-			uint32_t	local_ip  = rte_be_to_cpu_32(ipHdr->dst_addr);
-			uint32_t	remote_ip = rte_be_to_cpu_32(ipHdr->src_addr);
-			if (local_ip == port_info[port_id].ip_addr || local_ip == 2130706433) // To-do IP is hardcoded for one nic only. 
+			uint32_t dst_ip  = rte_be_to_cpu_32(ipHdr->dst_addr);
+			uint32_t src_ip = rte_be_to_cpu_32(ipHdr->src_addr);
+			if (local_ip == port_info[port_id].ip_addr || local_ip == 2130706433) 
 			{	
-			rte_pktmbuf_adj(pkt, ipHdr->version_ihl);
-			case (UDP_PROTO_ID):
-			udp_packet_parser(pkt);
-			break;
-			case (TCP_PROTO_ID):
-			tcp_packet_parser(pkt);
-			break;
-			default:
-			rte_pktmbuf_free(pkt);
-			break;
+				rte_pktmbuf_adj(pkt, ipHdr->version_ihl);
+				case (UDP_PROTO_ID):
+					udp_packet_parser(pkt,remote_ip);
+				break;
+				case (TCP_PROTO_ID):
+					tcp_packet_parser(pkt);
+				break;
+				default:
+					rte_pktmbuf_free(pkt);
+				break;
 			}
 			else
 			{
-			rte_pktmbuf_free(pkt);	
+				rte_pktmbuf_free(pkt);	
 			}
 		}
 	}
