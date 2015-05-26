@@ -28,13 +28,11 @@
 #   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 #   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-export RTE_ARCH=x86_64
 SRC_ROOT = $(PWD)
 RTE_SDK = $(SRC_ROOT)/../dpdk
 ifeq ($(RTE_SDK),)
 $(error "Please define RTE_SDK environment variable")
 endif
-make install T=$(SRC_ROOT}/../dpdk/x86_64-native-linuxapp-gcc
 # Default target, can be overriden by command line or environment
 RTE_TARGET ?= x86_64-native-linuxapp-gcc
 
@@ -50,5 +48,5 @@ CFLAGS += -O3
 DPDK_HEADERS = $(SRC_ROOT)/../dpdk/x86_64-native-linuxapp-gcc/include
 ALL_HEADERS = -I$(DPDK_HEADERS)
 CFLAGS += $(WERROR_FLAGS)
-CFLAGS += $(ALL_HEADER)
+CFLAGS += $(ALL_HEADERS)
 include $(RTE_SDK)/mk/rte.extapp.mk
