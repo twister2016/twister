@@ -2,6 +2,10 @@
 #include <rte_ip.h>
 #include "ipv4/ip.h"
 #include "ipv4/udp.h"
+#include "memmgmt/mempoolconf.h"
+#include "coremgmt/lcoreconf.h"
+#include "portmgmt/portconf.h"
+
 int main(void ) {
 	printf("Hello World\n");
 	return 0;
