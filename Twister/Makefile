@@ -48,11 +48,7 @@ SRCS-y := test.c
 
 CFLAGS += -O3
 DPDK_HEADERS = $(SRC_ROOT)/../dpdk/x86_64-native-linuxapp-gcc/include
-TWISTER_HEADERS = $(SRC_ROOT)/arp \
-		$(SRC_ROOT)/ethernet $(SRC_ROOT)/ipv4 \
-		$(SRC_ROOT)/jsonModule $(SRC_ROOT)/portmgmt \
-		$(SRC_ROOT)/rxtxmodule $(SRC_ROOT)/timerModules
-ALL_HEADERS = -I$(SRC_ROOT)/ -I$(DPDK_HEADERS)
+ALL_HEADERS = -I$(DPDK_HEADERS)
 CFLAGS += $(WERROR_FLAGS)
 CFLAGS += $(ALL_HEADER)
 include $(RTE_SDK)/mk/rte.extapp.mk

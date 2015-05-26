@@ -4,7 +4,7 @@
 #include <rte_arp.h>
 #include <rte_malloc.h>
 #include <rte_ether.h>
-#include "tx.h"
+#include "rxtxmodule/tx.h"
 #include <portconf.h>
 
 #define ARP_ENTRY_TIMEOUT 15000
