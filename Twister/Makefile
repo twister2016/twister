@@ -48,6 +48,6 @@ SRCS-y := test.c
 CFLAGS += -O3
 DPDK_HEADERS = $(SRC_ROOT)/../dpdk/x86_64-native-linuxapp-gcc/include
 ALL_HEADERS = -I$(SRC_ROOT) -I$(DPDK_HEADERS)
-CFLAGS += $(WERROR_FLAGS)
+#CFLAGS += $(WERROR_FLAGS)
 CFLAGS += $(ALL_HEADERS)
 include $(RTE_SDK)/mk/rte.extapp.mk

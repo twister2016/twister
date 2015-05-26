@@ -2,6 +2,9 @@
 #define _IP_H_
 
 #include <rte_udp.h>
+#include <rte_memcpy.h>
+#include <rte_byteorder.h>
+#include <rte_mbuf.h>
 #include "portconf.h"
 #include "ip.h"
 #define UDP_PROTO_ID	17
@@ -52,3 +55,5 @@ static void udp_packet_create(struct rte_mbuf *pkt, struct udp_conn_t *udp_conn)
 	udp_hdr_d->dgram_cksum = udp_hdr_d->src_port + udp_hdr_d->dst_port + udp_hdr_d->dgram_len ;
 	ip4_packet_create(pkt, UDP_PROTO_ID,udp_conn->src_ip,udp_conn->dst_ip,udp_hdr_d->dgram_len);
 }
+
+#endif

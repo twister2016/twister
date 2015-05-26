@@ -98,4 +98,9 @@ dep_test.o = /home/mininet/xflow/HVC2/Twister/test.c \
  /home/mininet/xflow/HVC2/Twister/../dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
  /home/mininet/xflow/HVC2/Twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
  /home/mininet/xflow/HVC2/Twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_prefetch.h \
- /home/mininet/xflow/HVC2/Twister/../dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_prefetch.h
+ /home/mininet/xflow/HVC2/Twister/../dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_prefetch.h \
+ /home/mininet/xflow/HVC2/Twister/ipv4/ip.h \
+ /home/mininet/xflow/HVC2/Twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_udp.h \
+ /home/mininet/xflow/HVC2/Twister/portmgmt/portconf.h \
+ /home/mininet/xflow/HVC2/Twister/ipv4/udp.h \
+ /home/mininet/xflow/HVC2/Twister/ipv4/udp.h
