@@ -2,9 +2,6 @@
 #define _IP_H_
 
 #include <rte_udp.h>
-#include <rte_memcpy.h>
-#include <rte_byteorder.h>
-#include <rte_mbuf.h>
 #include "portconf.h"
 #include "ip.h"
 #define UDP_PROTO_ID	17
