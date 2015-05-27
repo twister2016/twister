@@ -5,8 +5,8 @@
 #include <memmgmt/mempoolconf.h>
 
 #define MAX_ETH_PORTS 16
-#define MAX_RX_QUEUES_PER_PORT 1
-#define MAX_TX_QUEUES_PER_PORT 1	//--! SRIOV NICs only support 1 rx and 1 tx queue per port
+#define RX_QUEUES_PER_PORT 1
+#define TX_QUEUES_PER_PORT 1	//--! SRIOV NICs only support 1 rx and 1 tx queue per port
 
 #define ACCEPT_BRDCAST	1		//If the ports should accept the broadcast packets or not
 
@@ -65,6 +65,7 @@ int eth_port_init() {
 	uint8_t port_id, counter;
 	int ret, socket_id;
 	total_eth_ports = rte_eth_dev_count();
+	struct rte_eth_dev_info dev_info;
 	if (total_eth_ports == 0)
 		rte_exit(EXIT_FAILURE, "No Ethernet ports\n");
 	if (total_eth_ports > MAX_ETH_PORTS)
@@ -84,9 +85,10 @@ int eth_port_init() {
 		rte_eth_macaddr_get(port_id, port_info[port_id].eth_mac);
 		socket_id = rte_eth_dev_socket_id(port_id);
 		port_info[port_id].socket_id = socket_id;
+		rte_eth_dev_info_get(portid, &dev_info);			//--!TODO use dev_info in port_info struct
 
-		port_info[port_id].num_rx_queues = MAX_RX_QUEUES_PER_PORT;
-		port_info[port_id].num_tx_queues = MAX_TX_QUEUES_PER_PORT;
+		port_info[port_id].num_rx_queues = RX_QUEUES_PER_PORT;
+		port_info[port_id].num_tx_queues = TX_QUEUES_PER_PORT;
 		for(counter=0;counter<port_info[port_id].num_rx_queues;counter++) {
 			ret = rte_eth_rx_queue_setup(port_id, 0, nb_rxd, socket_id, NULL, rx_mempool[socket_id]);
 			if (ret < 0)
