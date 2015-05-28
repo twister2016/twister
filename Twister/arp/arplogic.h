@@ -16,9 +16,18 @@ struct arp_table {
 	struct arp_table * next;
 } __attribute__((__packed__));
 
+static  struct ether_addr broadcastMac = {
+   .addr_bytes[1] = 0xff,
+   .addr_bytes[2] = 0xff,
+   .addr_bytes[3] = 0xff,
+   .addr_bytes[4] = 0xff,
+   .addr_bytes[5] = 0xff,
+   .addr_bytes[0] = 0xff,
+};
 struct arp_table * arp_table_root = NULL;
 uint32_t arp_table_size = 0;
 /******************************************************************************************/
+int construct_arp_packet(uint8_t, uint8_t, bool) {
 int arp_parser(struct ether_hdr *, uint8_t);
 int send_arp_reply(struct ether_hdr *, uint8_t);
 int process_arp_reply(struct ether_hdr *, uint8_t);
@@ -86,5 +95,43 @@ int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port
 	arp_table_size++;
 	return 0;
 }
+int construct_arp_packet(uint8_t ip, uint8_t port_id, bool vlan) {
 
+    socket_id = rte_eth_dev_socket_id(port_id);
+    struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
+    
+    rte_pktmbuf_append(m, sizeof ( struct arp_hdr* ));
+    struct arp_hdr * arp_pkt = rte_pktmbuf_mtod (m, sizeof ( struct arp_hdr *) );
+    arp_pkt->arp_op = ARP_OP_REQUEST;
+    
+    ether_addr_copy(port_info[port_id].eth_mac, &(arp_pkt->arp_data.arp_sha));
+	ether_addr_copy(&(broadcastmac), &(arp_pkt->arp_data.arp_tha));
+	arp_pkt->arp_data.arp_sip = port_info[port_id].ip_addr;
+	arp_pkt->arp_data.arp_tip = ip;
+    
+    rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr* )  );
+    struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
+    
+    if (vlan)
+    {
+        eth->ether_type = ETHER_TYPE_VLAN;
+    }
+    
+    else 
+    {
+        eth->ether_type = ETHER_TYPE_IPv4;
+    }
+        
+    
+    ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
+	ether_addr_copy(&(broadcastmac), &(eth->d_addr));
+	
+	
+	add_pkt_to_tx_queue(m, port_id);				
+	
+	return 0;
+        
+    
+    
+}
 #endif
