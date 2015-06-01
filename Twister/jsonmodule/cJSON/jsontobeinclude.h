@@ -32,7 +32,7 @@ void doit(char *text)
 	json=cJSON_Parse(text);
 	if (!json) {printf("Error before: [%s]\n",cJSON_GetErrorPtr());}
 	else
-	{
+	{   
 		out=cJSON_Print(json);
 		cJSON_Delete(json);
 		printf("%s\n",out);
@@ -41,6 +41,17 @@ void doit(char *text)
 }
 
 /* Read a file, parse, render back, etc. */
+char *registerfile (char *filename)
+{
+	FILE *f;long len;char *data;
+	
+	f=fopen(filename,"rb");fseek(f,0,SEEK_END);len=ftell(f);fseek(f,0,SEEK_SET);
+	data=(char*)malloc(len+1);fread(data,1,len,f);fclose(f);
+	return data;
+	//doit(data);
+	//free(data);
+}
+
 void dofile(char *filename)
 {
 	FILE *f;long len;char *data;
@@ -133,30 +144,4 @@ void create_objects()
 
 }
 
-int main (int argc, const char * argv[]) {
-	/* a bunch of json: */
-	char text1[]="{\n\"name\": \"Jack (\\\"Bee\\\") Nimble\", \n\"format\": {\"type\":       \"rect\", \n\"width\":      1920, \n\"height\":     1080, \n\"interlace\":  false,\"frame rate\": 24\n}\n}";	
-	char text2[]="[\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\"]";
-	char text3[]="[\n    [0, -1, 0],\n    [1, 0, 0],\n    [0, 0, 1]\n	]\n";
-	char text4[]="{\n		\"Image\": {\n			\"Width\":  800,\n			\"Height\": 600,\n			\"Title\":  \"View from 15th Floor\",\n			\"Thumbnail\": {\n				\"Url\":    \"http:/*www.example.com/image/481989943\",\n				\"Height\": 125,\n				\"Width\":  \"100\"\n			},\n			\"IDs\": [116, 943, 234, 38793]\n		}\n	}";
-	char text5[]="[\n	 {\n	 \"precision\": \"zip\",\n	 \"Latitude\":  37.7668,\n	 \"Longitude\": -122.3959,\n	 \"Address\":   \"\",\n	 \"City\":      \"SAN FRANCISCO\",\n	 \"State\":     \"CA\",\n	 \"Zip\":       \"94107\",\n	 \"Country\":   \"US\"\n	 },\n	 {\n	 \"precision\": \"zip\",\n	 \"Latitude\":  37.371991,\n	 \"Longitude\": -122.026020,\n	 \"Address\":   \"\",\n	 \"City\":      \"SUNNYVALE\",\n	 \"State\":     \"CA\",\n	 \"Zip\":       \"94085\",\n	 \"Country\":   \"US\"\n	 }\n	 ]";
 
-	/* Process each json textblock by parsing, then rebuilding: */
-	doit(text1);
-	doit(text2);	
-	doit(text3);
-	doit(text4);
-	doit(text5);
-
-	/* Parse standard testfiles: */
-/*	dofile("../../tests/test1"); */
-/*	dofile("../../tests/test2"); */
-/*	dofile("../../tests/test3"); */
-/*	dofile("../../tests/test4"); */
-/*	dofile("../../tests/test5"); */
-
-	/* Now some samplecode for building objects concisely: */
-	create_objects();
-	
-	return 0;
-}

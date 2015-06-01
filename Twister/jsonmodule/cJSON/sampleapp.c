@@ -32,7 +32,7 @@ void doit(char *text)
 	json=cJSON_Parse(text);
 	if (!json) {printf("Error before: [%s]\n",cJSON_GetErrorPtr());}
 	else
-	{
+	{   
 		out=cJSON_Print(json);
 		cJSON_Delete(json);
 		printf("%s\n",out);
@@ -136,27 +136,55 @@ void create_objects()
 int main (int argc, const char * argv[]) {
 	
 	/* Parse standard testfiles: */
-	dofile("/home/monster/Documents/cJSONFiles/cJSON/tests/jsontemplate"); 
+	//dofile("/home/monster/Documents/cJSONFiles/cJSON/tests/jsontemplate");
+	char *path="/home/monster/Documents/cJSONFiles/cJSON/tests/jsontemplate";
+	//printf("%s", path) ;
 	
-	cJSON *root,*fmt,*img, *thm;
-	char * out;
-	FILE* fp;
-	int ids[4]={116,943,234,38793};
+	cJSON *jsonconfigfile, *ips, *ip2;
+	char *out;
+	FILE *f;
+	long len;
+	char *data;
+	int i;
+	cJSON* name = NULL;
+    cJSON* index = NULL;
+    cJSON* optional = NULL;
 	
-	root=cJSON_CreateObject();
-	cJSON_AddItemToObject(root, "Imagee", img=cJSON_CreateObject());
-	cJSON_AddNumberToObject(img,"Widthe",800);
-	cJSON_AddNumberToObject(img,"Heighte",600);
-	cJSON_AddStringToObject(img,"Title","View from 15th Floor");
-	cJSON_AddItemToObject(img, "Thumbnail", thm=cJSON_CreateObject());
-	cJSON_AddStringToObject(thm, "Url", "http:/*www.example.com/image/481989943");
-	cJSON_AddNumberToObject(thm,"Height",125);
-	cJSON_AddStringToObject(thm,"Width","100");
-	cJSON_AddItemToObject(img, "IDs", cJSON_CreateIntArray(ids,4));
+	f=fopen(path,"rb"); fseek(f,0,SEEK_END);len=ftell(f);fseek(f,0,SEEK_SET);
+	data=(char*)malloc(len+1);fread(data,1,len,f);fclose(f);
+	
+	jsonconfigfile=cJSON_Parse(data);
 
-	out = cJSON_Print ( root );
-    cJSON_Delete(root);
-    printf("%s\n",out);
+	if (!jsonconfigfile) {printf("Error before: [%s]\n",cJSON_GetErrorPtr());}
+	
+	else
+	{   
+		out=cJSON_Print(jsonconfigfile);
+		ips = cJSON_GetObjectItem(jsonconfigfile,"ips");
+		
+		
+		
+		/*for (i = 0 ; i < cJSON_GetArraySize(ips) ; i++)
+		{
+		    cJSON * subdict = cJSON_GetArrayItem(ips, i);
+            char*  ipaddress= cJSON_GetObjectItem(subdict, "ip")->valuestring;
+            char*  range= cJSON_GetObjectItem(subdict, "range")->valuestring;
+            
+            
+            
+            printf("ipaddress==%s\n" , ipaddress);
+            printf("range==%s\n" , range);
+            printf("size==%d\n" , cJSON_GetArraySize(ips) );
+		}
+		
+		cJSON_Delete(jsonconfigfile);
+		printf("%s\n",out);
+		free(out);
+	}
+		
+	free(data);
+
+	
     
     
     
