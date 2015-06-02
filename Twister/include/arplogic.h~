@@ -16,14 +16,14 @@ struct arp_table {
 	struct arp_table * next;
 } __attribute__((__packed__));
 
-struct ether_addr broadcastmac ={
+typedef struct ether_addr broadcastMac {
    .addr_bytes[1] = 0xff,
    .addr_bytes[2] = 0xff,
    .addr_bytes[3] = 0xff,
    .addr_bytes[4] = 0xff,
    .addr_bytes[5] = 0xff,
    .addr_bytes[0] = 0xff,
-};
+}__attribute__((__packed__))broadcastmac;
 struct arp_table * arp_table_root = NULL;
 uint32_t arp_table_size = 0;
 

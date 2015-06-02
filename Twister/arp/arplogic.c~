@@ -68,8 +68,8 @@ int construct_arp_packet(uint8_t ip, uint8_t port_id, uint8_t vlan) {
     uint8_t socket_id = rte_eth_dev_socket_id(port_id);
     struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
     
-    rte_pktmbuf_append(m, sizeof (struct arp_hdr *) );
-    struct arp_hdr * arp_pkt = rte_pktmbuf_mtod(m, struct arp_hdr *);
+    rte_pktmbuf_append(m, sizeof ( struct arp_hdr* ));
+    struct arp_hdr * arp_pkt = rte_pktmbuf_mtod (m, sizeof ( struct arp_hdr *) );
     arp_pkt->arp_op = ARP_OP_REQUEST;
     
     ether_addr_copy(port_info[port_id].eth_mac, &(arp_pkt->arp_data.arp_sha));

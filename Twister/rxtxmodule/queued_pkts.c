@@ -54,9 +54,9 @@ int delete_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt **
 	(*curr_queued_pkt) = (*prev_queued_pkt)->next;
 	return 0;
 }
-
+/*
 int send_queued_pkt(struct queued_pkt * queued_pkt, struct ether_addr eth_mac) {
 	return 0;	//--!TODO implement this func
-}
+}*/
 
 #endif
