@@ -20,7 +20,7 @@ uint8_t available_eth_ports = 0;
 uint16_t eth_port_mask = 0;
 
 enum {
-	REPLY_ARP		= 0x00000001,
+	REPLY_ARP	= 0x00000001,
 	REPLY_ICMPv4	= 0x00000002	//--!TODO add support for icmpv4 and v6
 } __attribute__((__packed__));
 
@@ -35,10 +35,10 @@ struct port_info {
 		uint8_t		ip[4];
 	};
 	uint8_t	flags;
-	struct ether_addr * eth_mac;		//--!TODO initialize eth_mac in init func
+	struct ether_addr * eth_mac;
 	uint16_t vlan_tag;
 	uint8_t socket_id;
-	uint8_t num_rx_queues;			//--!TODO init the values of rx and tx queues
+	uint8_t num_rx_queues;
 	uint8_t num_tx_queues;
 	struct mbuf_table tx_pkt_array[TX_QUEUES_PER_PORT];
 	//struct port_stats;	//--! add stats info

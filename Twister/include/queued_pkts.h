@@ -20,6 +20,7 @@ struct queued_pkt * root_queued_pkt = NULL;
 int add_pkt_to_queue(struct rte_mbuf *, uint32_t);
 int update_queued_pkts(void);
 int delete_queued_pkt(struct queued_pkt **, struct queued_pkt **);
-int send_queued_pkt(struct queued_pkt *, struct ether_addr);
+//int send_queued_pkt(struct queued_pkt *, struct ether_addr);
+int send_queued_pkt(void);
 
 #endif
