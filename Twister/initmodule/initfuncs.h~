@@ -1,9 +1,0 @@
-#ifndef _INITFUNCS_H_
-#define _INITFUNCS_H_
-
-#include <rte_eal.h>
-
-#include <lcoreconf.h>
-#include <mempoolconf.h>
-
-#endif

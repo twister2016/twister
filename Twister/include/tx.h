@@ -3,6 +3,7 @@
 
 #include <rte_mbuf.h>
 
-int add_pkt_to_tx_queue(struct rte_mbuf *, uint8_t);
+//int add_pkt_to_tx_queue(struct rte_mbuf *, uint8_t);
+int add_pkt_to_tx_queue(void);
 
 #endif

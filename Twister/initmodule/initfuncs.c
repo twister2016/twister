@@ -4,7 +4,7 @@
 #include <initfuncs.h>
 
 int init_eal_env(int argc, char **argv) {
-	ret = rte_eal_init(argc, argv);
+	int ret = rte_eal_init(argc, argv);
 	if (ret < 0)
 		rte_exit(EXIT_FAILURE, "Invalid EAL arguments\n");
 	argc -= ret;

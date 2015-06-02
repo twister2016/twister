@@ -25,7 +25,8 @@ int send_arp_reply(struct ether_hdr * eth, uint8_t port_id) {
 	ether_addr_copy(port_info[port_id].eth_mac, &(arp_pkt->arp_data.arp_sha));
 	arp_pkt->arp_data.arp_sip = arp_pkt->arp_data.arp_tip;
 	arp_pkt->arp_data.arp_tip = port_info[port_id].ip_addr;
-	add_pkt_to_tx_queue((struct rte_mbuf *) eth, port_id);				//--!TODO implement add_pkt_to_tx_queue
+	//add_pkt_to_tx_queue((struct rte_mbuf *) eth, port_id);				//--!TODO implement add_pkt_to_tx_queue
+	add_pkt_to_tx_queue();
 	return 0;
 }	
 
@@ -91,7 +92,8 @@ int construct_arp_packet(uint8_t ip, uint8_t port_id, uint8_t vlan) {
     }
         ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
 	ether_addr_copy(&(broadcastmac), &(eth->d_addr));
-	add_pkt_to_tx_queue(m, port_id);				
+	//add_pkt_to_tx_queue(m, port_id);				
+	add_pkt_to_tx_queue();				
 	return 0;
 }
 #endif
