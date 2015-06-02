@@ -40,7 +40,8 @@ RTE_TARGET ?= x86_64-native-linuxapp-gcc
 include $(RTE_SDK)/mk/rte.vars.mk
 
 # all source are stored in SRCS-y
-SRCS-y := ipv4/ip.c ipv4/udp.c
+SRCS-y := coremgmt/lcoreconf.c portmgmt/portconf.c memmgmt/mempoolconf.c ipv4/ip.c ipv4/udp.c timermodules/periodic_timers.c timermodules/timerdefs.c timermodules/timerfuncs.c \
+	rxtxmodule/queued_pkts.c arp/arplogic.c rxtxmodule/tx.c
 
 CFLAGS += -O3
 DPDK_HEADERS = $(SRC_ROOT)/../dpdk/x86_64-native-linuxapp-gcc/include
