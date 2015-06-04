@@ -1,0 +1,1 @@
+cmd_libtwister.a = ar crus libtwister.a coremgmt/lcoreconf.o portmgmt/portconf.o memmgmt/mempoolconf.o ipv4/ip.o ipv4/udp.o timermodules/periodic_timers.o timermodules/timerdefs.o timermodules/timerfuncs.o arp/arplogic.o rxtxmodule/queued_pkts.o rxtxmodule/tx.o initmodule/initfuncs.o ethernet/eth.o ethernet/vlan.o 
