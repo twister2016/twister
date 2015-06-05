@@ -6,7 +6,7 @@
 int arp_parser(struct ether_hdr * eth, uint8_t port_id) {
 	struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth+1);	//remove the eth header, and see if its a request or reply and act accordingly
 	if(arp_pkt->arp_op == ARP_OP_REQUEST) {
-		if((arp_pkt->arp_data.arp_tip == port_info->ip_addr) && (port_info[port_id].flags & REPLY_ARP)) {
+		if((arp_pkt->arp_data.arp_tip == port_info->start_ip_addr) && (port_info[port_id].flags & REPLY_ARP)) {
 				send_arp_reply(eth, port_id);
 		}
 	}
@@ -24,7 +24,7 @@ int send_arp_reply(struct ether_hdr * eth, uint8_t port_id) {
 	ether_addr_copy(&(arp_pkt->arp_data.arp_sha), &(arp_pkt->arp_data.arp_tha));
 	ether_addr_copy(port_info[port_id].eth_mac, &(arp_pkt->arp_data.arp_sha));
 	arp_pkt->arp_data.arp_sip = arp_pkt->arp_data.arp_tip;
-	arp_pkt->arp_data.arp_tip = port_info[port_id].ip_addr;
+	arp_pkt->arp_data.arp_tip = port_info[port_id].start_ip_addr;
 	//add_pkt_to_tx_queue((struct rte_mbuf *) eth, port_id);				//--!TODO implement add_pkt_to_tx_queue
 	add_pkt_to_tx_queue();
 	return 0;
@@ -75,7 +75,7 @@ int construct_arp_packet(uint8_t ip, uint8_t port_id, uint8_t vlan) {
     
     ether_addr_copy(port_info[port_id].eth_mac, &(arp_pkt->arp_data.arp_sha));
 	ether_addr_copy(&(broadcastmac), &(arp_pkt->arp_data.arp_tha));
-	arp_pkt->arp_data.arp_sip = port_info[port_id].ip_addr;
+	arp_pkt->arp_data.arp_sip = port_info[port_id].start_ip_addr;
 	arp_pkt->arp_data.arp_tip = ip;
     
     rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr* )  );
