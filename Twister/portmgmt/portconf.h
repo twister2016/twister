@@ -21,7 +21,10 @@ uint16_t eth_port_mask = 0;
 
 enum {
 	REPLY_ARP	= 0x00000001,
-	REPLY_ICMPv4	= 0x00000002	//--!TODO add support for icmpv4 and v6
+	REPLY_ICMPv4	= 0x00000002,	//--!TODO add support for icmpv4 and v6
+	ENABLE_VLAN	= 0x00000004,
+	ENABLE_PROMSC	= 0x00000008,
+	MGMT_PORT	= 0x00000010
 } __attribute__((__packed__));
 
 struct mbuf_table {
@@ -30,13 +33,13 @@ struct mbuf_table {
 } __attribute__((__packed__));
 
 struct port_info {
-	union {
-		uint32_t	ip_addr;
-		uint8_t		ip[4];
-	};
-	uint8_t	flags;
 	struct ether_addr * eth_mac;
+	uint32_t start_ip_addr;		//One port can have IPs from same subnet, hence a single gateway and subnet mask
+	uint8_t num_ip_addrs;
+	uint32_t gateway_ip;
+	uint32_t subnet_mask;
 	uint16_t vlan_tag;
+	uint64_t flags;
 	uint8_t socket_id;
 	uint8_t num_rx_queues;
 	uint8_t num_tx_queues;

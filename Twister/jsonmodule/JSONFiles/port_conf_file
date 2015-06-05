@@ -1,0 +1,36 @@
+[
+    {
+	"portnum": "00",
+	"ip_addrs" :  [    { "start_ip_addr":"192.2.2.2", "num_ip_addrs":"1"}
+                 ],
+	"gateway_ip": "192.2.2.1",
+	"subnet_mask" :  "255.255.255.0",
+	"vlan_tag" : "1",
+	"flags" : "00000"
+	"num_rx_queues" : "1",
+	"num_tx_queues" : "1",
+    },
+
+    {
+      "portnum": "01",
+      "ips"     :  [    { "ip":"192.3.3.3", "range":"12"}, 
+                        { "ip":"192.4.4.4", "range":"12"} 
+                   
+                   ],
+      
+      "mgmtport"   :  "1",
+      "subnet" :  "255.255.255.0",
+      "gateway": "192.2.2.2"
+    },
+    
+    {
+      "portnum": "02",
+      "ips"     :  [    { "ip":"192.5.5.5", "range":"12"}, 	
+                   
+                   ],
+      
+      "mgmtport"   :  "0",
+      "subnet" :  "255.255.255.0",
+      "gateway": "192.2.2.2"
+    }
+]

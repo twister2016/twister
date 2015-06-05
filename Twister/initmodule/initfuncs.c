@@ -29,6 +29,7 @@ int init_global(int argc, char **argv) {
 	return 0;
 }
 int init_user_given_vals(void) {
+	get_port_json_values("port_conf_file");
 	queue_time_limit = 15;			//--!TODO use file values parsed by jSON
 	return 0;				//--!JSON...port ips...num of rx/tx queues...flags...vlan tag
 }

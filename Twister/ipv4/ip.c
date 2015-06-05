@@ -18,7 +18,7 @@ void ip4_packet_parser(struct rte_mbuf *pkt,uint8_t port_id)
 	{*/
 	uint32_t dst_ip  = rte_be_to_cpu_32(ipHdr->dst_addr);
 	uint32_t src_ip = rte_be_to_cpu_32(ipHdr->src_addr);
-	if (dst_ip == port_info[port_id].ip_addr || dst_ip == 2130706433) 
+	if (dst_ip == port_info[port_id].start_ip_addr || dst_ip == 2130706433) 	//--!TODO Add IP range logic
 	{	
 		rte_pktmbuf_adj(pkt, ipHdr->version_ihl);
 		switch(ipHdr->next_proto_id)
