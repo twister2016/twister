@@ -13,6 +13,7 @@ struct lcore_conf {
 	uint8_t socket_id;
 	uint8_t num_ports;
 	uint8_t managed_port[MAX_ETH_PORTS];
+	struct mbuf_table tx_mbufs[MAX_ETH_PORTS];
 };
 
 struct lcore_conf lcore_conf[MAX_LCORES];
