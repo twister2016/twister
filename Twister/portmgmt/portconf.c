@@ -29,8 +29,8 @@ int eth_port_init(void) {
 		port_info[port_id].socket_id = socket_id;
 		rte_eth_dev_info_get(port_id, &dev_info);			//--!TODO use dev_info in port_info struct
 
-		port_info[port_id].num_rx_queues = RX_QUEUES_PER_PORT;
-		port_info[port_id].num_tx_queues = TX_QUEUES_PER_PORT;
+		//port_info[port_id].num_rx_queues = RX_QUEUES_PER_PORT;	//--!The number of queues values are init before this func call by json init funcs
+		//port_info[port_id].num_tx_queues = TX_QUEUES_PER_PORT;
 		for(counter=0;counter<port_info[port_id].num_rx_queues;counter++) {
 			ret = rte_eth_rx_queue_setup(port_id, 0, nb_rxd, socket_id, NULL, rx_mempool[socket_id]);
 			if (ret < 0)

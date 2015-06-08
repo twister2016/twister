@@ -5,8 +5,7 @@
 #include <mempoolconf.h>
 
 #define MAX_ETH_PORTS 16
-#define RX_QUEUES_PER_PORT 1
-#define TX_QUEUES_PER_PORT 1	//--! SRIOV NICs only support 1 rx and 1 tx queue per port
+#define RX_QUEUES_PER_PORT 1	//--! SRIOV NICs only support 1 rx and 1 tx queue per port
 
 #define ACCEPT_BRDCAST	1		//If the ports should accept the broadcast packets or not
 
@@ -43,7 +42,6 @@ struct port_info {
 	uint8_t socket_id;
 	uint8_t num_rx_queues;
 	uint8_t num_tx_queues;
-	struct mbuf_table tx_pkt_array[TX_QUEUES_PER_PORT];
 	//struct port_stats;	//--! add stats info
 } __attribute__((__packed__));
 

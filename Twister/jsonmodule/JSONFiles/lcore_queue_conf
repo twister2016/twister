@@ -1,0 +1,28 @@
+[
+    {
+	"lcore_id" : "00",
+	"core_rx" : "1",
+	"core_tx" : "1",
+	"ports" :  [    { "port_id":"05", "queue_id":"00"},
+			{ "port_id":"05", "queue_id":"01"}
+                 ]
+    },
+
+    {
+	"lcore_id" : "00",
+	"core_rx" : "1",
+	"core_tx" : "1",
+	"ports" :  [    { "port_id":"05", "queue_id":"00"},
+			{ "port_id":"05", "queue_id":"01"}
+                 ]
+    },
+    
+    {
+	"lcore_id" : "00",
+	"core_rx" : "1",
+	"core_tx" : "1",
+	"ports" :  [    { "port_id":"05", "queue_id":"00"},
+			{ "port_id":"05", "queue_id":"01"}
+                 ]
+    },
+]

@@ -23,7 +23,7 @@ cJSON * parse_json_file(const char * file_name) {
 	return json_config_file;
 }
 
-int get_port_json_values(const char * file_name) {
+int get_port_conf_json_vals(const char * file_name) {
 	uint8_t i, j;
 	cJSON * json_file = parse_json_file(file_name);
 	if (!json_file) {
@@ -33,8 +33,8 @@ int get_port_json_values(const char * file_name) {
 	for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {			//For each port_num
 
 		cJSON * subitem = cJSON_GetArrayItem(json_file, i);
-		int port_num = cJSON_GetObjectItem(subitem, "portnum")->valueint;
-		cJSON * ip_addrs= cJSON_GetObjectItem(subitem, "ip_addrs");
+		int port_num = cJSON_GetObjectItem(subitem, "port_num")->valueint;
+		cJSON * ip_addrs = cJSON_GetObjectItem(subitem, "ip_addrs");
 
 		for (j = 0 ; j < cJSON_GetArraySize(ip_addrs) ; j++) {			//For each start_ip_addr and range
 	        	cJSON * subdictip = cJSON_GetArrayItem(ip_addrs, j);
@@ -48,6 +48,31 @@ int get_port_json_values(const char * file_name) {
 		port_info[port_num].flags = convert_str_to_hex(cJSON_GetObjectItem(subitem, "flags")->valuestring, sizeof(uint64_t));
 		port_info[port_num].num_rx_queues = cJSON_GetObjectItem(subitem, "num_rx_queues")->valueint;
 		port_info[port_num].num_tx_queues = cJSON_GetObjectItem(subitem, "num_tx_queues")->valueint;          
+	}
+	return 0;
+}
+
+int get_lcore_queue_conf_json_vals(const char * file_name) {
+	uint8_t i, j;
+	cJSON * json_file = parse_json_file(file_name);
+	if (!json_file) {
+		printf("Error before: [%s]\n",cJSON_GetErrorPtr());
+		return -1;
+	}
+
+	for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {	
+		cJSON * subitem = cJSON_GetArrayItem(json_file, i);
+		uint8_t lcore_id = cJSON_GetObjectItem(subitem, "lcore_id")->valueint;
+		lcore_conf[lcore_id].core_rx = cJSON_GetObjectItem(subitem, "core_rx")->valueint;
+		lcore_conf[lcore_id].core_tx = cJSON_GetObjectItem(subitem, "core_tx")->valueint;
+		cJSON * ports = cJSON_GetObjectItem(subitem, "ports");
+
+		for(j = 0; j < cJSON_GetArraySize(ports); j++) {
+			cJSON * per_queue = cJSON_GetArrayItem(ports, j);
+			lcore_conf[lcore_id].mngd_queues[lcore_conf[lcore_id].num_queues].port_id = cJSON_GetObjectItem(per_queue, "port_id")->valueint;
+			lcore_conf[lcore_id].mngd_queues[lcore_conf[lcore_id].num_queues].queue_id = cJSON_GetObjectItem(per_queue, "queue_id")->valueint;
+			lcore_conf[lcore_id].num_queues++;
+		}
 	}
 	return 0;
 }

@@ -21,15 +21,16 @@ int init_global(int argc, char **argv) {
 	init_eal_env(argc, argv);
 	create_rx_tx_mempools();
 	create_queued_pkts_mempools();
+	init_user_given_vals();
 	lcore_conf_init();
 	eth_port_init();
 	init_timer_vals();
 	init_periodic_timers();
-	init_user_given_vals();
 	return 0;
 }
 int init_user_given_vals(void) {
-	get_port_json_values("port_conf_file");
+	get_port_conf_json_vals("port_conf_file");
+	get_lcore_queue_conf_json_vals("lcore_queue_conf");
 	queue_time_limit = 15;			//--!TODO use file values parsed by jSON
 	return 0;				//--!JSON...port ips...num of rx/tx queues...flags...vlan tag
 }
