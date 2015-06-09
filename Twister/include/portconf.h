@@ -1,8 +1,8 @@
 #ifndef _PORTCONF_H_
 #define _PORTCONF_H_
-
+#include<rte_config.h>
 #include <rte_ethdev.h>
-#include <mempoolconf.h>
+#include "mempoolconf.h"
 
 #define MAX_ETH_PORTS 16
 #define RX_QUEUES_PER_PORT 1
@@ -12,12 +12,13 @@
 
 #define DEFAULT_RX_RING_DESC 128
 #define DEFAULT_TX_RING_DESC 512
-uint16_t nb_rxd = DEFAULT_RX_RING_DESC;
-uint16_t nb_txd = DEFAULT_TX_RING_DESC;
 
-uint8_t total_eth_ports = 0;
-uint8_t available_eth_ports = 0;
-uint16_t eth_port_mask = 0;
+extern uint16_t nb_rxd;
+extern uint16_t nb_txd;
+
+extern uint8_t total_eth_ports;
+extern uint8_t available_eth_ports;
+extern uint16_t eth_port_mask;
 
 enum {
 	REPLY_ARP	= 0x00000001,

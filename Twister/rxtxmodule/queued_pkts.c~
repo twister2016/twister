@@ -3,7 +3,7 @@
 
 #include <queued_pkts.h>
 
-uint64_t queue_time_limit = 15;
+uint64_t queue_time_limit=15;
 struct queued_pkt * root_queued_pkt = NULL;
 
 int add_pkt_to_queue(struct rte_mbuf * pkt, uint32_t dest_ip_of_pkt) {

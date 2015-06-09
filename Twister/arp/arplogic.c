@@ -2,6 +2,16 @@
 #define _ARPLOGIC_C_
 
 #include <arplogic.h>
+struct arp_table * arp_table_root = NULL;
+uint32_t arp_table_size = 0;
+struct ether_addr broadcastmac ={
+   .addr_bytes[1] = 0xff,
+   .addr_bytes[2] = 0xff,
+   .addr_bytes[3] = 0xff,
+   .addr_bytes[4] = 0xff,
+   .addr_bytes[5] = 0xff,
+   .addr_bytes[0] = 0xff,
+};
 
 int arp_parser(struct ether_hdr * eth, uint8_t port_id) {
 	struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth+1);	//remove the eth header, and see if its a request or reply and act accordingly

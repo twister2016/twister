@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "lcoreconf.h"
-#include "common.h"
+#include <lcoreconf.h>
+#include <common.h>
 #include "cJSON.h"
 
 char * registerfile (const char *);

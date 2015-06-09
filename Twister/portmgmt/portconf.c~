@@ -9,7 +9,7 @@ uint16_t nb_txd = DEFAULT_TX_RING_DESC;
 
 uint8_t total_eth_ports = 0;
 uint8_t available_eth_ports = 0;
-uint16_t eth_port_mask = 0;
+extern uint16_t eth_port_mask = 0;
 
 int eth_port_init(void) {
 	uint8_t port_id, counter;

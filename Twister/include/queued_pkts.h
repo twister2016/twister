@@ -3,10 +3,10 @@
 
 #include <rte_mbuf.h>
 #include <rte_memory.h>
-#include <timerfuncs.h>
-#include <arplogic.h>
+#include "timerfuncs.h"
+#include "arplogic.h"
 
-uint64_t queue_time_limit = 15;		//--!TODO get the value from user
+extern uint64_t queue_time_limit;		//--!TODO get the value from user
 
 struct queued_pkt {
 	struct rte_mbuf * pkt;
@@ -15,7 +15,7 @@ struct queued_pkt {
 	struct queued_pkt * next;
 } __attribute__((__packed__));
 
-struct queued_pkt * root_queued_pkt = NULL;
+extern struct queued_pkt * root_queued_pkt;
 
 int add_pkt_to_queue(struct rte_mbuf *, uint32_t);
 int update_queued_pkts(void);

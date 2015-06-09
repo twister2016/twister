@@ -16,8 +16,8 @@ struct timestamp_option
 	uint32_t echo_timestamp;
 } __attribute__ ((__packed__));
 
-uint64_t one_sec = 0, one_msec = 0, one_usec = 0, one_nsec = 0;
-uint64_t prev_tsc = 0, cur_tsc = 0, timer_tsc = 0, diff_tsc = 0;
+extern uint64_t one_sec, one_msec , one_usec , one_nsec ;
+extern uint64_t prev_tsc, cur_tsc , timer_tsc , diff_tsc ;
 
 inline void sleep_msec(unsigned msec);
 inline void sleep_usec(unsigned sec);

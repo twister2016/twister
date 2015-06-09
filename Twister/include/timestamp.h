@@ -1,3 +1,6 @@
+#ifndef _TIMESTAMP_H_
+#define _TIMESTAMP_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -63,5 +66,5 @@ static inline void addTcpOptions (struct rte_mbuf *pkt)
 	}
 }*/
 
-
+#endif
 
