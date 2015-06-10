@@ -23,7 +23,7 @@ int init_global(int argc, char **argv) {
 	create_queued_pkts_mempools();
 	init_user_given_vals();
 	lcore_conf_init();
-	eth_port_init();
+//	eth_port_init();
 	init_timer_vals();
 	init_periodic_timers();
 	return 0;
