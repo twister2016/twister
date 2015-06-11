@@ -3,11 +3,6 @@
 #include <ip.h>
 #include <arplogic.h>
 
-/**********************************************/
-
-/*********************************************/
-
-
 int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 	rte_vlan_strip(pkt);			//--? should the vlan be compared with the vlan value in port_info[port_id]???
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);

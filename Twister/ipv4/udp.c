@@ -22,7 +22,7 @@ void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip)
 	rx_udp_conn->dst_port = src_port;
 	rx_udp_conn->src_port = dst_port;
 	
-	rte_pktmbuf_adj(pkt, sizeof(struct udp_hdr));
+	rte_pktmbuf_adj(pkt, sizeof(struct udp_hdr));		//--!TODO verify UDP checksum if CHECK_UDP_CKSUM macro is set
 
 	/*if(pkt->pkt.pkt_len >0)
 		// Call Application function here

@@ -6,12 +6,9 @@
 #include <portconf.h>
 #include <vlan.h>
 #include <eth.h>
-#include <rte_ether.h>
 #include <arplogic.h>
 #include <ip.h>
 #include <queued_pkts.h>
-#include <vlan.h>
-
 
 
 int pkt_ctor(struct rte_mbuf* m, void* ptr_l4, uint32_t eth_proto) {
