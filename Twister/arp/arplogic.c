@@ -74,12 +74,12 @@ int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port
 	arp_table_size++;
 	return 0;
 }
-int construct_arp_packet(uint8_t ip, uint8_t port_id, uint8_t vlan) {
+int construct_arp_packet(uint8_t ip, uint8_t port_id) {
 
     uint8_t socket_id = rte_eth_dev_socket_id(port_id);
     struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
     
-    rte_pktmbuf_append(m, sizeof (struct arp_hdr *) );
+    rte_pktmbuf_append(m, sizeof (struct arp_hdr) );
     struct arp_hdr * arp_pkt = rte_pktmbuf_mtod(m, struct arp_hdr *);
     arp_pkt->arp_op = ARP_OP_REQUEST;
     
@@ -88,22 +88,14 @@ int construct_arp_packet(uint8_t ip, uint8_t port_id, uint8_t vlan) {
 	arp_pkt->arp_data.arp_sip = port_info[port_id].start_ip_addr;
 	arp_pkt->arp_data.arp_tip = ip;
     
-    rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr* )  );
+    rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr )  );
     struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
-    
-    if (vlan)
-    {
-        eth->ether_type = ETHER_TYPE_VLAN;
-    }
-    
-    else 
-    {
-        eth->ether_type = ETHER_TYPE_IPv4;
-    }
-        ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
+    eth->ether_type = ETHER_TYPE_ARP;
+    ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
 	ether_addr_copy(&(broadcastmac), &(eth->d_addr));
 	add_pkt_to_tx_queue(m, port_id);				
 				
 	return 0;
 }
 #endif
+

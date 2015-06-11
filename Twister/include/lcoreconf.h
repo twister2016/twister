@@ -2,7 +2,7 @@
 #define _LCORECONF_H_
 
 #include <rte_per_lcore.h>
-#include "portconf.h"
+#include <portconf.h>
 
 #define MAX_LCORES 16
 #define MAX_RX_QUEUES_PER_LCORE 8

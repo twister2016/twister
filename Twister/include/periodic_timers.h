@@ -1,7 +1,7 @@
 #ifndef _PERIODIC_TIMERS_H_
 #define _PERIODIC_TIMERS_H_
 
-#include "timerfuncs.h"
+#include <timerfuncs.h>
 
 extern uint64_t prev_periodic_freq;					//--! Alternate initialization is to create periodic_init func
 extern uint64_t curr_periodic_freq;

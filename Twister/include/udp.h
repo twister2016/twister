@@ -1,5 +1,7 @@
 #ifndef _UDP_H_
 #define _UDP_H_
+
+#define UDP_PROTO_ID	17
 struct udp_conn_t
 {
 	uint16_t src_port;

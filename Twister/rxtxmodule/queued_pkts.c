@@ -42,6 +42,7 @@ int update_queued_pkts(void) {
 		}
 		rte_pktmbuf_free(curr_queued_pkt->pkt);			//Else delete the queued packet as time limit has passed
 		delete_queued_pkt(&prev_queued_pkt, &curr_queued_pkt);
+		
 	}
 	return 0;
 }

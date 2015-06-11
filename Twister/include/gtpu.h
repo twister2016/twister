@@ -58,7 +58,7 @@
 #include <rte_tcp.h>
 #include <rte_ip.h>
 #include <rte_udp.h>
-#include "udp.h"
+#include <udp.h>
 
 static gtpu_values_t *gtpu_value_in_use = NULL;
 static uint16_t default_udp_src = 0x0868;

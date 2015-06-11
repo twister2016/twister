@@ -6,14 +6,13 @@
 #include <udp.h>
 #include <ip.h>
 
-#define UDP_PROTO_ID	17
 
 
 
 void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip)
 {
 	uint16_t dst_port, src_port;
-	struct udp_conn_t *rx_udp_conn= NULL ;
+	struct udp_conn_t *rx_udp_conn= NULL ; //TODO No need to use here, AZ was trying to setup a socket connection..Monster
 	struct udp_hdr *udp_hdr_d = rte_pktmbuf_mtod(pkt, struct udp_hdr *);
 	dst_port  = rte_be_to_cpu_16(udp_hdr_d->dst_port);
 	src_port = rte_be_to_cpu_16(udp_hdr_d->src_port);	
@@ -42,5 +41,6 @@ void udp_packet_create(struct rte_mbuf *pkt, struct udp_conn_t *udp_conn)
 	udp_hdr_d->dgram_len = rte_cpu_to_be_16(pkt->pkt_len);
 	udp_hdr_d->dgram_cksum = udp_hdr_d->src_port + udp_hdr_d->dst_port + udp_hdr_d->dgram_len ;
 	ip4_packet_create(pkt, UDP_PROTO_ID,udp_conn->src_ip,udp_conn->dst_ip,udp_hdr_d->dgram_len);
+    
 }
 

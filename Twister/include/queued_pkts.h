@@ -3,8 +3,8 @@
 
 #include <rte_mbuf.h>
 #include <rte_memory.h>
-#include "timerfuncs.h"
-#include "arplogic.h"
+#include <timerfuncs.h>
+#include <arplogic.h>
 
 extern uint64_t queue_time_limit;		//--!TODO get the value from user
 

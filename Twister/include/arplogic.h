@@ -4,8 +4,8 @@
 #include <rte_arp.h>
 #include <rte_malloc.h>
 #include <rte_ether.h>
-#include "tx.h"
-#include "portconf.h"
+#include <tx.h>
+#include <portconf.h>
 
 #define ARP_ENTRY_TIMEOUT 15000
 
@@ -25,5 +25,5 @@ int send_arp_reply(struct ether_hdr *, uint8_t);
 int process_arp_reply(struct ether_hdr *, uint8_t);
 struct arp_table * search_arp_table(uint32_t);
 int add_arp_entry(uint32_t ip_to_add, struct ether_addr, uint8_t);
-int construct_arp_packet(uint8_t, uint8_t, uint8_t);
+int construct_arp_packet(uint8_t, uint8_t);
 #endif

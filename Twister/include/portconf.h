@@ -13,6 +13,7 @@
 #define DEFAULT_RX_RING_DESC 128
 #define DEFAULT_TX_RING_DESC 512
 
+
 extern uint16_t nb_rxd;
 extern uint16_t nb_txd;
 
@@ -66,5 +67,6 @@ static const struct rte_eth_conf port_conf = {
 
 
 int eth_port_init(void);
+int getportbyip(uint32_t);
 
 #endif

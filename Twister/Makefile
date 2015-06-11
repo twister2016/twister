@@ -41,7 +41,7 @@ include $(RTE_SDK)/mk/rte.vars.mk
 
 # all source are stored in SRCS-y
 SRCS-y := coremgmt/lcoreconf.c portmgmt/portconf.c memmgmt/mempoolconf.c ipv4/ip.c ipv4/udp.c timermodules/periodic_timers.c timermodules/timerdefs.c timermodules/timerfuncs.c \
-arp/arplogic.c rxtxmodule/queued_pkts.c \
+arp/arplogic.c rxtxmodule/queued_pkts.c pktctor/pktctor.c \
 rxtxmodule/tx.c rxtxmodule/rx.c initmodule/initfuncs.c jsonmodule/jsonparser.c common/common.c jsonmodule/cJSON.c ethernet/eth.c ethernet/vlan.c
 
 CFLAGS += -O3

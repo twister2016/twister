@@ -11,6 +11,21 @@ uint8_t total_eth_ports = 0;
 uint8_t available_eth_ports = 0;
 uint16_t eth_port_mask = 0;
 
+
+
+
+int getportbyip(uint32_t ip_addr)
+{
+    uint8_t i=0;
+    for (i=0; i<MAX_ETH_PORTS; i++)
+	{
+	    if (port_info[i].start_ip_addr == ip_addr)
+	        return i;
+	}
+	
+	return -1;
+	
+}
 int eth_port_init(void) {
 	uint8_t port_id, counter;
 	int ret, socket_id;
