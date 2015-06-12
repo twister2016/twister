@@ -14,6 +14,8 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
     
     //uint8_t socket_id = rte_eth_dev_socket_id(port_id);
     //struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
+
+    
     rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr )  );
     struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
     eth->ether_type = eth_type;
@@ -22,19 +24,44 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
     if ( eth_type == ETHER_TYPE_VLAN ) {
         vlan_ctor(m, port_id, ETHER_TYPE_IPv4); //TODO make it generic
     }
+    
+    
+    uint32_t source_and = port_info[port_id].start_ip_addr & port_info[port_id].subnet_mask;
+    uint32_t dest_and = dst_ip & port_info[port_id].subnet_mask;
+    
+    struct arp_table *  arp_table_ptr = search_arp_table(dst_ip);
+
+    if (source_and == dest_and )
+    {
+    
+        if ( arp_table_ptr == NULL ) {
         
-    struct arp_table * arp_table_ptr = search_arp_table(dst_ip);
-    if ( arp_table_ptr == NULL ) {
-        
-        construct_arp_packet(dst_ip, port_id);
-        add_pkt_to_queue(m, dst_ip);
+            construct_arp_packet(dst_ip, port_id);
+            add_pkt_to_queue(m, dst_ip);
 
         }
-    else {
-        ether_addr_copy(&(arp_table_ptr->eth_mac), &(eth->d_addr));
+        else {
+        
+            ether_addr_copy(&(arp_table_ptr->eth_mac), &(eth->d_addr));
+            add_pkt_to_tx_queue(m, port_id); 
         }
+        
+    }
+    else {
+        
+        if (arp_table_ptr == NULL) {
+
+            construct_arp_packet (port_info[port_id].gateway_ip, port_id);
+            add_pkt_to_queue(m, dst_ip);
+        }
+        else {
+            ether_addr_copy(&(arp_table_ptr->eth_mac), &(eth->d_addr));
+            add_pkt_to_tx_queue(m, port_id); 
+        }
+        
+    }    
+        
     
-    add_pkt_to_tx_queue(m, port_id); 
     return 0;   
 
 }
