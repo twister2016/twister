@@ -3,6 +3,7 @@
 #include<rte_mbuf.h>
 #include<usocket.h>
 #include<udp.h>
+#include<simple-queue.h>
 
 int maxfd=0;
 struct socket_info sockets[1024];
@@ -40,4 +41,18 @@ int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint32_t dst_addr, uin
 	udp_packet_create(&pkt,&dummy);
 	return 0;
 }
+
+void add_packet_to_queue(int i,struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip,uint16_t dst_port,uint16_t src_port){
+	struct udp_conn_t dummy;
+	dummy.src_port=src_port;
+	dummy.dst_port=dst_port;
+	dummy.src_ip=src_ip;
+	dummy.dst_ip=dst_ip;
+	sq_push(i,soft_q,pkt->buf_addr,pkt->buf_len,dummy);	
+}
+/*
+int udp_recv(int sockfd, void * buffer, uint16_t buf_len)
+{
+	
+}*/
 

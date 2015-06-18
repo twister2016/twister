@@ -10,7 +10,7 @@ struct udp_conn_t
 	uint32_t dst_ip;
 
 };
-extern void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip);
-extern void udp_packet_create(struct rte_mbuf *pkt, struct udp_conn_t *udp_conn);
+extern void udp_packet_parser(struct rte_mbuf *, uint32_t,uint32_t );
+extern void udp_packet_create(struct rte_mbuf *, struct udp_conn_t *);
 
 #endif
