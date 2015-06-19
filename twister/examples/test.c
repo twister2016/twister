@@ -5,5 +5,6 @@
 int main(int argc, char **argv ) {
 	printf("Hello World\n");
 	int x=init_global(argc, argv);
+	printf("Hello again\n");
         return 0;
 }

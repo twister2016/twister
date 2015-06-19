@@ -29,7 +29,7 @@ int init_global(int argc, char **argv) {
 	return 0;
 }
 int init_user_given_vals(void) {
-	get_port_conf_json_vals("port_conf_file");
+	get_port_conf_json_vals("port_conf");
 	get_lcore_queue_conf_json_vals("lcore_queue_conf");
 	queue_time_limit = 15;			//--!TODO use file values parsed by jSON
 	return 0;				//--!JSON...port ips...num of rx/tx queues...flags...vlan tag

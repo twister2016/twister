@@ -38,7 +38,7 @@ int get_port_conf_json_vals(const char * file_name) {
 
 		for (j = 0 ; j < cJSON_GetArraySize(ip_addrs) ; j++) {			//For each start_ip_addr and range
 	        	cJSON * subdictip = cJSON_GetArrayItem(ip_addrs, j);
-			port_info[port_num].start_ip_addr = convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "start_ip")->valuestring);
+			port_info[port_num].start_ip_addr = convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "start_ip_addr")->valuestring);
         		port_info[port_num].num_ip_addrs = cJSON_GetObjectItem(subdictip, "num_ip_addrs")->valueint;
     		}
 		port_info[port_num].gateway_ip = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "gateway_ip")->valuestring);
