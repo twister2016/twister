@@ -1,6 +1,22 @@
 #include <stats.h>
 
  
+uint8_t udp_hdr_size = 8;
+uint8_t tcp_hdr_size = 32; 
+uint8_t ip_hdr_size=20;
+uint8_t eth_hdr_size=20;
+uint32_t test_runtime = 0; //TODO init file, initate the testruntime
+uint64_t pps_limit = 0; //TODO
+uint64_t pps_delay = 0; //TODO
+struct average_filter *root_rtt_average = NULL;
+struct average_filter *end_rtt_average = NULL;
+const uint8_t average_filter_len = 255;
+struct print_stats *root_test_stats = NULL;
+struct print_stats *end_test_stats  = NULL;
+struct rte_eth_stats* port_stats;
+uint64_t stats_time_period=0;
+uint8_t average_list_size = 0;
+
 void clearScr(void)
 {
         const char clr[] = { 27, '[', '2', 'J', '\0' };

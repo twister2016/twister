@@ -8,12 +8,6 @@
 #include <udp.h>
 #include <ip.h>
 
-<<<<<<< HEAD:Twister/ipv4/udp.c
-=======
-
-
-
->>>>>>> 0ed65b036b53869ab1199792495634a32b2e08cd:twister/ipv4/udp.c
 void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip)
 {
 	uint16_t dst_port, src_port;

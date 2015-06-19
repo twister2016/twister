@@ -6,7 +6,7 @@
  * create timer with a periodic interval
  * update the timer status
  */
-
+#include <stats.h>
 #include <periodic_timers.h>
 uint64_t curr_periodic_freq = 0;
 uint64_t prev_periodic_freq = 0;	

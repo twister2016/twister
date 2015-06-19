@@ -3,6 +3,7 @@
 #include <rte_mbuf.h>
 #include <simple-queue.h>
 
+struct sq_pkt_q soft_q[SQ_NUM_QUEUES];
 /*initializes the queues*/
 void sq_init(struct sq_pkt_q q_list[])
 {

@@ -18,8 +18,8 @@
 #define l4_stat_port 5555
                      //TODO take input from user and set a variable here, If user wanted to set a variable or not?
 
-uint8_t stats_status;
-uint64_t stats_time_period;
+extern uint8_t stats_status;
+extern uint64_t stats_time_period;
 
 
 
@@ -29,12 +29,12 @@ struct average_filter
 struct average_filter* next;
 } __attribute__ ((__packed__));
 
-struct average_filter *root_rtt_average = NULL;
-struct average_filter *end_rtt_average = NULL;
-const uint8_t average_filter_len = 255;
+extern struct average_filter *root_rtt_average ;
+extern struct average_filter *end_rtt_average ;
+extern const uint8_t average_filter_len ;
 
 
-uint8_t average_list_size = 0;
+extern uint8_t average_list_size;
 
 struct print_stats
 {
@@ -51,8 +51,8 @@ float one_way_time;
 struct print_stats *next;
 } __attribute__ ((__packed__));
 
-struct print_stats *root_test_stats = NULL;
-struct print_stats *end_test_stats  = NULL;
+extern struct print_stats *root_test_stats ;
+extern struct print_stats *end_test_stats ;
 
 
 struct packet_stats{
@@ -84,9 +84,9 @@ uint32_t seconds_passed;
 uint8_t l4_proto ; //TODO init at run time, if protocl used is to be udp or tcp
 uint32_t PKT_PAYLOAD_SIZE;//TODO init decide payload size    
 
-uint32_t test_runtime = 0; //TODO init file, initate the testruntime
-uint64_t pps_limit = 0; //TODO
-uint64_t pps_delay = 0; //TODO
+extern uint32_t test_runtime ; //TODO init file, initate the testruntime
+extern uint64_t pps_limit ; //TODO
+extern uint64_t pps_delay ; //TODO
 
 
 #endif

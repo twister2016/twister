@@ -11,14 +11,10 @@ struct udp_conn_t
 	uint32_t dst_ip;
 
 };
-<<<<<<< HEAD:Twister/include/udp.h
-extern void udp_packet_parser(struct rte_mbuf *, uint32_t,uint32_t );
-extern void udp_packet_create(struct rte_mbuf *, struct udp_conn_t *);
-=======
+
 extern void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip);
 extern void udp_packet_create(struct rte_mbuf *pkt, struct udp_conn_t *udp_conn);
-uint8_t udp_hdr_size = 8;
-uint8_t tcp_hdr_size = 32; //
->>>>>>> 0ed65b036b53869ab1199792495634a32b2e08cd:twister/include/udp.h
+extern uint8_t udp_hdr_size;
+extern uint8_t tcp_hdr_size; 
 
 #endif
