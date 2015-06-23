@@ -1,6 +1,6 @@
-dep_rte_red.o = /home/umar/Documents/dpdk-2.0.0/lib/librte_sched/rte_red.c \
- /usr/include/stdc-predef.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_config.h \
+dep_rte_red.o = /home/dell/hvc2_local/dpdk/lib/librte_sched/rte_red.c \
+ /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/math.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -14,7 +14,7 @@ dep_rte_red.o = /home/umar/Documents/dpdk-2.0.0/lib/librte_sched/rte_red.c \
  /usr/include/x86_64-linux-gnu/bits/mathdef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathinline.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_sched/rte_red.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_sched/rte_red.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/limits.h \
@@ -25,7 +25,7 @@ dep_rte_red.o = /home/umar/Documents/dpdk-2.0.0/lib/librte_sched/rte_red.c \
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_common.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_common.h \
  /usr/include/stdlib.h /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
@@ -42,7 +42,6 @@ dep_rte_red.o = /home/umar/Documents/dpdk-2.0.0/lib/librte_sched/rte_red.c \
  /usr/include/x86_64-linux-gnu/bits/select2.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h /usr/include/ctype.h \
  /usr/include/errno.h /usr/include/x86_64-linux-gnu/bits/errno.h \
@@ -52,11 +51,11 @@ dep_rte_red.o = /home/umar/Documents/dpdk-2.0.0/lib/librte_sched/rte_red.c \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/mm_malloc.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_debug.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_random.h
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_debug.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_random.h

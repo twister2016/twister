@@ -1,9 +1,9 @@
 dep_ixgbe_dcb.o = \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_ixgbe/ixgbe/ixgbe_dcb.c \
- /usr/include/stdc-predef.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_config.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_ixgbe/ixgbe/ixgbe_type.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_ixgbe/ixgbe/ixgbe_osdep.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_ixgbe/ixgbe/ixgbe_dcb.c \
+ /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_ixgbe/ixgbe/ixgbe_type.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_ixgbe/ixgbe/ixgbe_osdep.h \
  /usr/include/string.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -26,7 +26,7 @@ dep_ixgbe_dcb.o = \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_common.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_common.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/sys/types.h /usr/include/time.h \
@@ -37,7 +37,6 @@ dep_ixgbe_dcb.o = \
  /usr/include/x86_64-linux-gnu/bits/select2.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h /usr/include/ctype.h \
  /usr/include/errno.h /usr/include/x86_64-linux-gnu/bits/errno.h \
@@ -53,20 +52,20 @@ dep_ixgbe_dcb.o = \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/mm_malloc.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_debug.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_log.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_byteorder.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_byteorder.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_byteorder_64.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_ixgbe/ixgbe/../ixgbe_logs.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_ixgbe/ixgbe/../ixgbe_bypass_defines.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_ixgbe/ixgbe/ixgbe_mbx.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_ixgbe/ixgbe/ixgbe_dcb.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_ixgbe/ixgbe/ixgbe_dcb_82598.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_ixgbe/ixgbe/ixgbe_dcb_82599.h
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_debug.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_log.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_byteorder.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_byteorder.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_byteorder_64.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_ixgbe/ixgbe/../ixgbe_logs.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_ixgbe/ixgbe/../ixgbe_bypass_defines.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_ixgbe/ixgbe/ixgbe_mbx.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_ixgbe/ixgbe/ixgbe_dcb.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_ixgbe/ixgbe/ixgbe_dcb_82598.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_ixgbe/ixgbe/ixgbe_dcb_82599.h

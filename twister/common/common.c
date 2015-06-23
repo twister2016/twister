@@ -40,7 +40,7 @@ uint8_t convert_str_to_iparr(char *value, uint8_t *ipVar)
 			else if((((ip[n+1])  - (ip[n] + 1)) >3) || (((ip[n+1])  - (ip[n] + 1)) < 1))
 				return 0;
 
-			ipVar[n] = strToInt(temp, 3);
+			ipVar[n] = convert_str_to_int(temp, 3);
 		}
 		return 1;
 	}
@@ -131,7 +131,7 @@ uint8_t findChar(const char *str, int *quoteLoc, char c, uint8_t instances)
 }
 
 
-uint64_t strToInt (const char *str, uint8_t n)
+uint64_t convert_str_to_int(const char *str, uint8_t n)
 {
 	uint8_t count = 0;
 	uint64_t num = 0;

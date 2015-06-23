@@ -7,8 +7,8 @@
 	"subnet_mask" :  "255.255.255.0",
 	"vlan_tag" : "1",
 	"flags" : "00000",
-	"num_rx_queues" : "1",
-	"num_tx_queues" : "1"
+	"num_rx_queues" : "01",
+	"num_tx_queues" : "01"
     },
     {
 	"port_num": "01",
@@ -18,8 +18,8 @@
 	"subnet_mask" :  "255.255.255.0",
 	"vlan_tag" : "1",
 	"flags" : "00000",
-	"num_rx_queues" : "1",
-	"num_tx_queues" : "1"
+	"num_rx_queues" : "01",
+	"num_tx_queues" : "01"
     },
     {
 	"port_num": "02",
@@ -29,7 +29,7 @@
 	"subnet_mask" :  "255.255.255.0",
 	"vlan_tag" : "1",
 	"flags" : "00000",
-	"num_rx_queues" : "1",
-	"num_tx_queues" : "1"
+	"num_rx_queues" : "01",
+	"num_tx_queues" : "01"
     }
 ]

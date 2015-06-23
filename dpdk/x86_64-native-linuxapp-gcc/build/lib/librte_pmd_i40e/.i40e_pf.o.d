@@ -1,6 +1,6 @@
-dep_i40e_pf.o = /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e_pf.c \
- /usr/include/stdc-predef.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_config.h \
+dep_i40e_pf.o = /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e_pf.c \
+ /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/x86_64-linux-gnu/sys/queue.h /usr/include/stdio.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -30,8 +30,8 @@ dep_i40e_pf.o = /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e_pf.c \
  /usr/include/x86_64-linux-gnu/bits/environments.h \
  /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
  /usr/include/x86_64-linux-gnu/bits/unistd.h /usr/include/inttypes.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_pci.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_pci.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/sys/types.h /usr/include/time.h \
@@ -42,7 +42,6 @@ dep_i40e_pf.o = /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e_pf.c \
  /usr/include/x86_64-linux-gnu/bits/select2.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/limits.h \
@@ -51,11 +50,11 @@ dep_i40e_pf.o = /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e_pf.c \
  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
  /usr/include/linux/limits.h \
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_interrupts.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/exec-env/rte_interrupts.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_ether.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_memcpy.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_vect.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_interrupts.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/exec-env/rte_interrupts.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_ether.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_memcpy.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_vect.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/x86intrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/ia32intrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/mmintrin.h \
@@ -74,59 +73,59 @@ dep_i40e_pf.o = /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e_pf.c \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/xsaveintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/xsaveoptintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/adxintrin.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_random.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_mbuf.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_mempool.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_log.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_debug.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_lcore.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_per_lcore.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_random.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_mbuf.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_mempool.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_log.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_debug.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_lcore.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_per_lcore.h \
  /usr/include/pthread.h /usr/include/sched.h \
  /usr/include/x86_64-linux-gnu/bits/sched.h \
  /usr/include/x86_64-linux-gnu/bits/setjmp.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_eal.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_launch.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_memory.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/exec-env/rte_dom0_common.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_ring.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_common.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_eal.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_launch.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_memory.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/exec-env/rte_dom0_common.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_ring.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_common.h \
  /usr/include/ctype.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_prefetch.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_prefetch.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_byteorder.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_byteorder.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_byteorder_64.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_ethdev.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_dev.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_devargs.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_ether.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_eth_ctrl.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_memzone.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_malloc.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e_logs.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_prototype.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_type.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_status.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_osdep.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_spinlock.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_spinlock.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/../i40e_logs.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_register.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_adminq.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_adminq_cmd.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_hmc.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_lan_hmc.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_alloc.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_virtchnl.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_adminq_cmd.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e/i40e_type.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e_ethdev.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_eth_ctrl.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e_rxtx.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_i40e/i40e_pf.h
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_prefetch.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_prefetch.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_byteorder.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_byteorder.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_byteorder_64.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_ethdev.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_dev.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_devargs.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_ether.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_eth_ctrl.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_memzone.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_malloc.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e_logs.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_prototype.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_type.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_status.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_osdep.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_spinlock.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_spinlock.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/../i40e_logs.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_register.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_adminq.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_adminq_cmd.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_hmc.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_lan_hmc.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_alloc.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_virtchnl.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_adminq_cmd.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e/i40e_type.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e_ethdev.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_eth_ctrl.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e_rxtx.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_i40e/i40e_pf.h

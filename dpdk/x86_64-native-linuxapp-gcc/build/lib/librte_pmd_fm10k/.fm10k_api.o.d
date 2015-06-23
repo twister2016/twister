@@ -1,11 +1,11 @@
 dep_fm10k_api.o = \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_fm10k/base/fm10k_api.c \
- /usr/include/stdc-predef.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_config.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_fm10k/base/fm10k_api.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_fm10k/base/fm10k_pf.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_fm10k/base/fm10k_type.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_fm10k/base/fm10k_osdep.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_fm10k/base/fm10k_api.c \
+ /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_fm10k/base/fm10k_api.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_fm10k/base/fm10k_pf.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_fm10k/base/fm10k_type.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_fm10k/base/fm10k_osdep.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h /usr/include/stdint.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -21,7 +21,7 @@ dep_fm10k_api.o = \
  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
  /usr/include/x86_64-linux-gnu/bits/byteswap-16.h /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/string3.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/emmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/mmintrin.h \
@@ -36,27 +36,26 @@ dep_fm10k_api.o = \
  /usr/include/x86_64-linux-gnu/bits/select2.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_byteorder.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_byteorder.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_byteorder_64.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_debug.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_fm10k/base/../fm10k_logs.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_log.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_byteorder.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_byteorder.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_byteorder_64.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_debug.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_fm10k/base/../fm10k_logs.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_log.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/wchar.h /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
  /usr/include/x86_64-linux-gnu/bits/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_fm10k/base/fm10k_mbx.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_fm10k/base/fm10k_tlv.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_fm10k/base/fm10k_common.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_pmd_fm10k/base/fm10k_vf.h
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_fm10k/base/fm10k_mbx.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_fm10k/base/fm10k_tlv.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_fm10k/base/fm10k_common.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_pmd_fm10k/base/fm10k_vf.h

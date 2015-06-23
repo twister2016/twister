@@ -1,7 +1,7 @@
 dep_cmdline_socket.o = \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_cmdline/cmdline_socket.c \
- /usr/include/stdc-predef.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_cmdline/cmdline_socket.c \
+ /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -36,7 +36,6 @@ dep_cmdline_socket.o = \
  /usr/include/x86_64-linux-gnu/bits/select2.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h /usr/include/stdint.h \
@@ -48,9 +47,9 @@ dep_cmdline_socket.o = \
  /usr/include/x86_64-linux-gnu/bits/fcntl2.h /usr/include/termios.h \
  /usr/include/x86_64-linux-gnu/bits/termios.h \
  /usr/include/x86_64-linux-gnu/sys/ttydefaults.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_cmdline/cmdline_parse.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_cmdline/cmdline_rdline.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_cmdline/cmdline_cirbuf.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_cmdline/cmdline_vt100.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_cmdline/cmdline_socket.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_cmdline/cmdline.h
+ /home/dell/hvc2_local/dpdk/lib/librte_cmdline/cmdline_parse.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_cmdline/cmdline_rdline.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_cmdline/cmdline_cirbuf.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_cmdline/cmdline_vt100.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_cmdline/cmdline_socket.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_cmdline/cmdline.h

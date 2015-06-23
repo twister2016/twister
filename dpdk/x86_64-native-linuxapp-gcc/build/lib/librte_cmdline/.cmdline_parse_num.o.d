@@ -1,7 +1,7 @@
 dep_cmdline_parse_num.o = \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_cmdline/cmdline_parse_num.c \
- /usr/include/stdc-predef.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_cmdline/cmdline_parse_num.c \
+ /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -28,6 +28,6 @@ dep_cmdline_parse_num.o = \
  /usr/include/x86_64-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
  /usr/include/x86_64-linux-gnu/asm/errno.h \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_cmdline/cmdline_parse.h \
- /home/umar/Documents/dpdk-2.0.0/lib/librte_cmdline/cmdline_parse_num.h
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_cmdline/cmdline_parse.h \
+ /home/dell/hvc2_local/dpdk/lib/librte_cmdline/cmdline_parse_num.h

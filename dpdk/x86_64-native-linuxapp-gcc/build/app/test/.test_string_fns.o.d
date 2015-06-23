@@ -1,7 +1,6 @@
-dep_test_string_fns.o = \
- /home/umar/Documents/dpdk-2.0.0/app/test/test_string_fns.c \
- /usr/include/stdc-predef.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_config.h \
+dep_test_string_fns.o = /home/dell/hvc2_local/dpdk/app/test/test_string_fns.c \
+ /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -26,8 +25,8 @@ dep_test_string_fns.o = \
  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
  /usr/include/x86_64-linux-gnu/bits/byteswap-16.h /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/string3.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
- /home/umar/Documents/dpdk-2.0.0/app/test/test.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_string_fns.h \
+ /home/dell/hvc2_local/dpdk/app/test/test.h \
  /usr/include/x86_64-linux-gnu/sys/queue.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/cmdline_parse.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/cmdline_parse_string.h
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/cmdline_parse.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/cmdline_parse_string.h

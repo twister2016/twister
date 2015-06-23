@@ -1,6 +1,6 @@
-dep_commands.o = /home/umar/Documents/dpdk-2.0.0/app/cmdline_test/commands.c \
- /usr/include/stdc-predef.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/rte_config.h \
+dep_commands.o = /home/dell/hvc2_local/dpdk/app/cmdline_test/commands.c \
+ /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -28,18 +28,17 @@ dep_commands.o = /home/umar/Documents/dpdk-2.0.0/app/cmdline_test/commands.c \
  /usr/include/x86_64-linux-gnu/bits/select2.h \
  /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
- /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h /usr/include/termios.h \
  /usr/include/x86_64-linux-gnu/bits/termios.h \
  /usr/include/x86_64-linux-gnu/sys/ttydefaults.h /usr/include/inttypes.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/cmdline_rdline.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/cmdline_cirbuf.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/cmdline_vt100.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/cmdline_parse.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/cmdline_parse_string.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/cmdline_parse_num.h \
- /home/umar/Documents/dpdk-2.0.0/x86_64-native-linuxapp-gcc/include/cmdline.h \
- /home/umar/Documents/dpdk-2.0.0/app/cmdline_test/cmdline_test.h
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/cmdline_rdline.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/cmdline_cirbuf.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/cmdline_vt100.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/cmdline_parse.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/cmdline_parse_string.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/cmdline_parse_num.h \
+ /home/dell/hvc2_local/dpdk/x86_64-native-linuxapp-gcc/include/cmdline.h \
+ /home/dell/hvc2_local/dpdk/app/cmdline_test/cmdline_test.h

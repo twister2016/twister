@@ -14,7 +14,7 @@ uint32_t convert_ip_str_to_dec(char *);
 uint8_t strLen(const char *);
 void sliceArray(const char *, char *, uint8_t, uint8_t);
 uint8_t findChar(const char *, int *, char, uint8_t);
-uint64_t strToInt (const char *str, uint8_t n);
+uint64_t convert_str_to_int(const char *str, uint8_t n);
 int power(uint8_t, uint8_t);
 
 #endif

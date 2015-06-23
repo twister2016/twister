@@ -33,7 +33,7 @@ int get_port_conf_json_vals(const char * file_name) {
 	for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {			//For each port_num
 
 		cJSON * subitem = cJSON_GetArrayItem(json_file, i);
-		int port_num = cJSON_GetObjectItem(subitem, "port_num")->valueint;
+		uint8_t port_num = convert_str_to_int(cJSON_GetObjectItem(subitem, "port_num")->valuestring, 2);	//TODO Remove "2" and use sizeof
 		cJSON * ip_addrs = cJSON_GetObjectItem(subitem, "ip_addrs");
 
 		for (j = 0 ; j < cJSON_GetArraySize(ip_addrs) ; j++) {			//For each start_ip_addr and range
@@ -46,8 +46,10 @@ int get_port_conf_json_vals(const char * file_name) {
 		port_info[port_num].vlan_tag = cJSON_GetObjectItem(subitem, "vlan_tag")->valueint;
 
 		port_info[port_num].flags = convert_str_to_hex(cJSON_GetObjectItem(subitem, "flags")->valuestring, sizeof(uint64_t));
-		port_info[port_num].num_rx_queues = cJSON_GetObjectItem(subitem, "num_rx_queues")->valueint;
-		port_info[port_num].num_tx_queues = cJSON_GetObjectItem(subitem, "num_tx_queues")->valueint;          
+		port_info[port_num].num_rx_queues = convert_str_to_int(cJSON_GetObjectItem(subitem, "num_rx_queues")->valuestring, 2);
+		port_info[port_num].num_tx_queues = convert_str_to_int(cJSON_GetObjectItem(subitem, "num_tx_queues")->valuestring, 2);
+
+		printf("%d rx q, %d tx q\n", port_info[port_num].num_rx_queues, port_info[port_num].num_tx_queues);
 	}
 	return 0;
 }
