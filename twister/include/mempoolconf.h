@@ -2,6 +2,7 @@
 #define _MEMMGMT_H_
 
 #include <rte_mempool.h>
+#include <rte_malloc.h>
 #include <rte_mbuf.h>
 
 #define MAX_NUMA_SOCKETS 2				//--? is there a scenario to have more than 2 NUMA nodes???

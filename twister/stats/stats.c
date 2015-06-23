@@ -28,7 +28,9 @@ void clearScr(void)
 
 int init_stats (uint8_t port_id, uint32_t dst_ip ) {
     
-    uint8_t socket_id = rte_eth_dev_socket_id(port_id);
+    int socket_id = rte_eth_dev_socket_id(port_id);
+    if(socket_id == -1)
+	socket_id = 0;
     port_stats= rte_malloc ("PortStatArray", sizeof(struct rte_eth_stats)*total_eth_ports, 0 );
     
     struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );

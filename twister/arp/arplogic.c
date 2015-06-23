@@ -76,7 +76,9 @@ int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port
 }
 int construct_arp_packet(uint8_t ip, uint8_t port_id) {
 
-    uint8_t socket_id = rte_eth_dev_socket_id(port_id);
+    int socket_id = rte_eth_dev_socket_id(port_id);
+    if(socket_id == -1)
+	socket_id = 0;
     struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
     
     rte_pktmbuf_append(m, sizeof (struct arp_hdr) );

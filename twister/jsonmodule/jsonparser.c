@@ -48,8 +48,6 @@ int get_port_conf_json_vals(const char * file_name) {
 		port_info[port_num].flags = convert_str_to_hex(cJSON_GetObjectItem(subitem, "flags")->valuestring, sizeof(uint64_t));
 		port_info[port_num].num_rx_queues = convert_str_to_int(cJSON_GetObjectItem(subitem, "num_rx_queues")->valuestring, 2);
 		port_info[port_num].num_tx_queues = convert_str_to_int(cJSON_GetObjectItem(subitem, "num_tx_queues")->valuestring, 2);
-
-		printf("%d rx q, %d tx q\n", port_info[port_num].num_rx_queues, port_info[port_num].num_tx_queues);
 	}
 	return 0;
 }
