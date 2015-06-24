@@ -7,6 +7,9 @@ int launch_one_lcore(__attribute__((unused)) void *);
 
 int main(int argc, char **argv ) {
 	init_global(argc, argv);
+	int sockfd=udp_socket(185272233,7898);
+	char data[]={'s','e','x','y','1'};
+	udp_send(sockfd,data,5,185272133,8787);
 	rte_eal_mp_remote_launch(launch_one_lcore, NULL, CALL_MASTER);
 	return 0;	
 }

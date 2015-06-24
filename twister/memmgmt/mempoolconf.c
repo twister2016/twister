@@ -19,6 +19,14 @@ int create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_init" before us
 	return 0;
 }
 
+
+
+
+struct rte_mbuf *app_get_buffer(void)
+{
+	return rte_pktmbuf_alloc(tx_mempool[0]);
+}
+
 int create_queued_pkts_mempools(void) {		//--! To be used by queued packets including pakets waiting for an ARP reply
 	uint8_t numa_socket = 0;
         for(numa_socket=0;numa_socket<num_numa_sockets;numa_socket++) {
