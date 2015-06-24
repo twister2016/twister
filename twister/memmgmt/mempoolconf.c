@@ -6,9 +6,9 @@
 uint8_t num_numa_sockets = 1;
 
 int create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_init" before using this function
-	printf("create_rx_tx_mempools\n");
 	uint8_t numa_socket = 0;
 	for(numa_socket=0;numa_socket<num_numa_sockets;numa_socket++) {
+		printf("%d socket id %d NB_MBUF, %lu MBUF_SIZE, %d numa_socket\n", rte_socket_id(), NB_MBUF, MBUF_SIZE, numa_socket);
 		rx_mempool[numa_socket] = rte_mempool_create("rx_mempool_" + numa_socket, NB_MBUF, MBUF_SIZE, 32, sizeof(struct rte_pktmbuf_pool_private), rte_pktmbuf_pool_init, NULL, rte_pktmbuf_init, NULL, numa_socket, 0);	//--!TODO Is mempool name correct--???
 		if (rx_mempool[numa_socket] == NULL)
 			rte_exit(EXIT_FAILURE, "Cannot init rx mempool on NUMA node %d\n", numa_socket);
@@ -20,7 +20,6 @@ int create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_init" before us
 }
 
 int create_queued_pkts_mempools(void) {		//--! To be used by queued packets including pakets waiting for an ARP reply
-	printf("create_queued_pkts_mempools\n");
 	uint8_t numa_socket = 0;
         for(numa_socket=0;numa_socket<num_numa_sockets;numa_socket++) {
                 queued_pkts_mempool[numa_socket] = rte_mempool_create("queued_pkts_mempool"+numa_socket, NB_MBUF, MBUF_SIZE, 32, sizeof(struct rte_pktmbuf_pool_private), rte_pktmbuf_pool_init, NULL, rte_pktmbuf_init, NULL, numa_socket, 0);

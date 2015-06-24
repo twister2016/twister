@@ -1,6 +1,7 @@
 #ifndef _PORTCONF_H_
 #define _PORTCONF_H_
-#include<rte_config.h>
+
+#include <rte_config.h>
 #include <rte_ethdev.h>
 #include "mempoolconf.h"
 
@@ -19,7 +20,7 @@ extern uint16_t nb_txd;
 
 extern uint8_t total_eth_ports;
 extern uint8_t available_eth_ports;
-extern uint16_t eth_port_mask;
+extern uint16_t app_port_mask;
 
 enum {
 	REPLY_ARP	= 0x00000001,

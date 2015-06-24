@@ -9,9 +9,7 @@ uint16_t nb_txd = DEFAULT_TX_RING_DESC;
 
 uint8_t total_eth_ports = 0;
 uint8_t available_eth_ports = 0;
-uint16_t eth_port_mask = 0;
-
-
+uint16_t app_port_mask = 0;
 
 
 int getportbyip(uint32_t ip_addr)
@@ -39,7 +37,7 @@ int eth_port_init(void) {
 
 	for (port_id = 0; port_id < total_eth_ports; port_id++) {
 		/* skip ports that are not enabled */
-		if ((eth_port_mask & (1 << port_id)) == 0) {
+		if ((app_port_mask & (1 << port_id)) == 0) {
 			available_eth_ports--;
 			continue;
 		}
@@ -50,28 +48,33 @@ int eth_port_init(void) {
 				  ret, (unsigned) port_id);
 		port_info[port_id].eth_mac = rte_malloc("struct ether_addr", sizeof(struct ether_addr), RTE_CACHE_LINE_SIZE);
 		rte_eth_macaddr_get(port_id, port_info[port_id].eth_mac);
+
+		printf("Port %u, MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n\n",
+				(unsigned) port_id,
+				port_info[port_id].eth_mac->addr_bytes[0],
+				port_info[port_id].eth_mac->addr_bytes[1],
+				port_info[port_id].eth_mac->addr_bytes[2],
+				port_info[port_id].eth_mac->addr_bytes[3],
+				port_info[port_id].eth_mac->addr_bytes[4],
+				port_info[port_id].eth_mac->addr_bytes[5]);
+
 		socket_id = rte_eth_dev_socket_id(port_id);
 		if(socket_id == -1)
 			socket_id = 0;
 		port_info[port_id].socket_id = socket_id;
 		rte_eth_dev_info_get(port_id, &dev_info);			//--!TODO use dev_info in port_info struct
+		printf("%d port_id, %d socket id, %d num rx q, %d num tx q\n", port_id, port_info[port_id].socket_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues);
 		for(counter=0;counter<port_info[port_id].num_rx_queues;counter++) {
-			printf("%d portid, %d counter, %d nb_rxd, %d socket id\n", port_id, counter, nb_rxd, socket_id);
-			if(rx_mempool[socket_id] == NULL)
-				printf("rx_mempool[socket_id] is null\n");
 			ret = rte_eth_rx_queue_setup(port_id, counter, nb_rxd, socket_id, NULL, rx_mempool[socket_id]);
 			if (ret < 0)
 				rte_exit(EXIT_FAILURE, "rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
 		}
-		printf("rx queues setup\n");
 		for(counter=0;counter<port_info[port_id].num_tx_queues;counter++) {
 			ret = rte_eth_tx_queue_setup(port_id, counter, nb_txd, socket_id, NULL);
 			if (ret < 0)
 				rte_exit(EXIT_FAILURE, "rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
 		}
-		printf("tx queue setup\n");
 	}
-	printf("eth port init complete\n");
 	return 0;
 }
 

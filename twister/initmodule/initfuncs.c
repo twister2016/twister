@@ -9,7 +9,9 @@ int init_eal_env(int argc, char **argv) {
 		rte_exit(EXIT_FAILURE, "Invalid EAL arguments\n");
 	argc -= ret;
 	argv += ret;
-	parse_twister_args(argc, argv);	//--! TODO implement parse_twister_args()
+	ret = parse_twister_args(argc, argv);	//--! TODO implement parse_twister_args()
+	if (ret < 0)
+		rte_exit(EXIT_FAILURE, "Invalid commandline arguments\n");
 	return 0;
 }
 
@@ -30,8 +32,8 @@ int parse_twister_args(int argc, char **argv) {
 		switch (opt) {
 		/* portmask */
 		case 'p':
-			eth_port_mask = parse_portmask(optarg);
-			if (eth_port_mask == 0) {
+			app_port_mask = parse_portmask(optarg);
+			if (app_port_mask == 0) {
 				printf("invalid portmask\n");
 				display_usage(prgname);
 				return -1;
@@ -59,10 +61,10 @@ int parse_twister_args(int argc, char **argv) {
 
 int init_global(int argc, char **argv) {
 	init_eal_env(argc, argv);
+	lcore_conf_init();
 	create_rx_tx_mempools();
 	create_queued_pkts_mempools();
 	init_user_given_vals();
-	lcore_conf_init();
 	eth_port_init();
 	init_timer_vals();
 	init_periodic_timers();

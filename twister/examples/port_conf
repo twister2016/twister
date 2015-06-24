@@ -1,33 +1,22 @@
 [
     {
 	"port_num": "00",
-	"ip_addrs" :  [    { "start_ip_addr":"192.2.0.2", "num_ip_addrs":"1"}
+	"ip_addrs" :  [    { "start_ip_addr":"192.2.0.2", "num_ip_addrs":"01"}
                  ],
 	"gateway_ip": "192.2.0.1",
 	"subnet_mask" :  "255.255.255.0",
-	"vlan_tag" : "1",
+	"vlan_tag" : "0001",
 	"flags" : "00000",
 	"num_rx_queues" : "01",
 	"num_tx_queues" : "01"
     },
     {
 	"port_num": "01",
-	"ip_addrs" :  [    { "start_ip_addr":"192.2.1.2", "num_ip_addrs":"1"}
+	"ip_addrs" :  [    { "start_ip_addr":"192.2.1.2", "num_ip_addrs":"01"}
                  ],
 	"gateway_ip": "192.2.1.1",
 	"subnet_mask" :  "255.255.255.0",
-	"vlan_tag" : "1",
-	"flags" : "00000",
-	"num_rx_queues" : "01",
-	"num_tx_queues" : "01"
-    },
-    {
-	"port_num": "02",
-	"ip_addrs" :  [    { "start_ip_addr":"192.2.2.2", "num_ip_addrs":"1"}
-                 ],
-	"gateway_ip": "192.2.2.1",
-	"subnet_mask" :  "255.255.255.0",
-	"vlan_tag" : "1",
+	"vlan_tag" : "0001",
 	"flags" : "00000",
 	"num_rx_queues" : "01",
 	"num_tx_queues" : "01"

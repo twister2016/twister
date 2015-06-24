@@ -39,11 +39,11 @@ int get_port_conf_json_vals(const char * file_name) {
 		for (j = 0 ; j < cJSON_GetArraySize(ip_addrs) ; j++) {			//For each start_ip_addr and range
 	        	cJSON * subdictip = cJSON_GetArrayItem(ip_addrs, j);
 			port_info[port_num].start_ip_addr = convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "start_ip_addr")->valuestring);
-        		port_info[port_num].num_ip_addrs = cJSON_GetObjectItem(subdictip, "num_ip_addrs")->valueint;
+        		port_info[port_num].num_ip_addrs = convert_str_to_int(cJSON_GetObjectItem(subdictip, "num_ip_addrs")->valuestring, 2);	//TODO add string lenght logic
     		}
 		port_info[port_num].gateway_ip = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "gateway_ip")->valuestring);
 		port_info[port_num].subnet_mask = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "subnet_mask")->valuestring);
-		port_info[port_num].vlan_tag = cJSON_GetObjectItem(subitem, "vlan_tag")->valueint;
+		port_info[port_num].vlan_tag = convert_str_to_int(cJSON_GetObjectItem(subitem, "vlan_tag")->valuestring, 4);
 
 		port_info[port_num].flags = convert_str_to_hex(cJSON_GetObjectItem(subitem, "flags")->valuestring, sizeof(uint64_t));
 		port_info[port_num].num_rx_queues = convert_str_to_int(cJSON_GetObjectItem(subitem, "num_rx_queues")->valuestring, 2);
@@ -62,15 +62,15 @@ int get_lcore_queue_conf_json_vals(const char * file_name) {
 
 	for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {	
 		cJSON * subitem = cJSON_GetArrayItem(json_file, i);
-		uint8_t lcore_id = cJSON_GetObjectItem(subitem, "lcore_id")->valueint;
-		lcore_conf[lcore_id].core_rx = cJSON_GetObjectItem(subitem, "core_rx")->valueint;
-		lcore_conf[lcore_id].core_tx = cJSON_GetObjectItem(subitem, "core_tx")->valueint;
+		uint8_t lcore_id = convert_str_to_int(cJSON_GetObjectItem(subitem, "lcore_id")->valuestring, 2);
+		lcore_conf[lcore_id].core_rx = convert_str_to_int(cJSON_GetObjectItem(subitem, "core_rx")->valuestring, 1);
+		lcore_conf[lcore_id].core_tx = convert_str_to_int(cJSON_GetObjectItem(subitem, "core_tx")->valuestring, 1);
 		cJSON * ports = cJSON_GetObjectItem(subitem, "ports");
 
 		for(j = 0; j < cJSON_GetArraySize(ports); j++) {
 			cJSON * per_queue = cJSON_GetArrayItem(ports, j);
-			lcore_conf[lcore_id].mngd_queues[lcore_conf[lcore_id].num_queues].port_id = cJSON_GetObjectItem(per_queue, "port_id")->valueint;
-			lcore_conf[lcore_id].mngd_queues[lcore_conf[lcore_id].num_queues].queue_id = cJSON_GetObjectItem(per_queue, "queue_id")->valueint;
+			lcore_conf[lcore_id].mngd_queues[lcore_conf[lcore_id].num_queues].port_id = convert_str_to_int(cJSON_GetObjectItem(per_queue, "port_id")->valuestring, 2);
+			lcore_conf[lcore_id].mngd_queues[lcore_conf[lcore_id].num_queues].queue_id = convert_str_to_int(cJSON_GetObjectItem(per_queue, "queue_id")->valuestring, 2);
 			lcore_conf[lcore_id].num_queues++;
 		}
 	}

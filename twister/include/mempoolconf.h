@@ -12,7 +12,7 @@
 
 #define MAX_PKT_BURST 32
 
-extern uint8_t num_numa_sockets ;
+uint8_t num_numa_sockets ;
 struct rte_mempool * rx_mempool[MAX_NUMA_SOCKETS];
 struct rte_mempool * tx_mempool[MAX_NUMA_SOCKETS];
 struct rte_mempool * queued_pkts_mempool[MAX_NUMA_SOCKETS];
