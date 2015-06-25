@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include<rx.h>
+#include<tx.h>
 #include <initfuncs.h>
 
 int main (int, char **);
@@ -11,8 +12,10 @@ int main(int argc, char **argv ) {
 	int sockfd=udp_socket(185272233,7898);
 	char data[]={'s','e','x','y','1'};
 	udp_send(sockfd,data,5,185272133,8787);
-	
-	rte_eal_mp_remote_launch(launch_one_lcore, NULL, CALL_MASTER);
+	while(1){
+			twister_timely_burst();
+	}
+
 	return 0;	
 }
 

@@ -17,7 +17,7 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
 
     rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr )  );
     struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
-    eth->ether_type = eth_type;
+    eth->ether_type = rte_cpu_to_be_16(eth_type);
 	
     ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
   
@@ -35,11 +35,15 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
     {
     
         if ( arp_table_ptr == NULL ) {
-        
-            construct_arp_packet(dst_ip, port_id);
-            add_pkt_to_queue(m, dst_ip);
 			printf("I am here1\n");
 			rte_pktmbuf_dump(stdout,m,100);
+			add_pkt_to_queue(m, dst_ip);
+			int i=0;
+			for(i=0;i<50;i++)
+			{
+            construct_arp_packet(dst_ip, port_id); 
+			}
+		
 
         }
         else {

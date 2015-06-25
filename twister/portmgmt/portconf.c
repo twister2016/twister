@@ -76,6 +76,11 @@ int eth_port_init(void) {
 			if (ret < 0)
 				rte_exit(EXIT_FAILURE, "rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
 		}
+		ret = rte_eth_dev_start(port_id);
+		rte_eth_promiscuous_enable(port_id);
+		if (ret < 0)
+			rte_exit(EXIT_FAILURE, "rte_eth_dev_start:err=%d, port=%u\n",
+					ret, (unsigned) port_id);
 	}
 	return 0;
 }

@@ -13,6 +13,15 @@ struct ether_addr broadcastmac ={
    .addr_bytes[0] = 0xff,
 };
 
+struct ether_addr querycastmac ={
+   .addr_bytes[1] = 0x00,
+   .addr_bytes[2] = 0x00,
+   .addr_bytes[3] = 0x00,
+   .addr_bytes[4] = 0x00,
+   .addr_bytes[5] = 0x00,
+   .addr_bytes[0] = 0x00,
+};
+
 int arp_parser(struct ether_hdr * eth, uint8_t port_id) {
 	struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth+1);	//remove the eth header, and see if its a request or reply and act accordingly
 	if(arp_pkt->arp_op == ARP_OP_REQUEST) {
@@ -74,29 +83,29 @@ int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port
 	arp_table_size++;
 	return 0;
 }
-int construct_arp_packet(uint8_t ip, uint8_t port_id) {
+int construct_arp_packet(uint32_t ip, uint8_t port_id) {
 
     int socket_id = rte_eth_dev_socket_id(port_id);
     if(socket_id == -1)
 	socket_id = 0;
     struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
-    
     rte_pktmbuf_append(m, sizeof (struct arp_hdr) );
     struct arp_hdr * arp_pkt = rte_pktmbuf_mtod(m, struct arp_hdr *);
-    arp_pkt->arp_op = ARP_OP_REQUEST;
-    
+    arp_pkt->arp_op =rte_cpu_to_be_16(ARP_OP_REQUEST);
+	arp_pkt->arp_pro=rte_cpu_to_be_16(ETHER_TYPE_IPv4);
+	arp_pkt->arp_pln=4;
+    arp_pkt->arp_hln=6;
+	arp_pkt->arp_hrd=rte_cpu_to_be_16(ARP_HRD_ETHER);
     ether_addr_copy(port_info[port_id].eth_mac, &(arp_pkt->arp_data.arp_sha));
-	ether_addr_copy(&(broadcastmac), &(arp_pkt->arp_data.arp_tha));
-	arp_pkt->arp_data.arp_sip = port_info[port_id].start_ip_addr;
-	arp_pkt->arp_data.arp_tip = ip;
+	ether_addr_copy(&(querycastmac), &(arp_pkt->arp_data.arp_tha));
+	arp_pkt->arp_data.arp_sip = rte_cpu_to_be_32(port_info[port_id].start_ip_addr);
+	arp_pkt->arp_data.arp_tip = rte_cpu_to_be_32(ip);
     
     rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr )  );
     struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
-    eth->ether_type = ETHER_TYPE_ARP;
+    eth->ether_type = rte_cpu_to_be_16(ETHER_TYPE_ARP);
     ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
 	ether_addr_copy(&(broadcastmac), &(eth->d_addr));
-	printf("ARP PACKET\n");
-	rte_pktmbuf_dump(stdout,m,100);
 	add_pkt_to_tx_queue(m, port_id);				
 				
 	return 0;
