@@ -15,12 +15,12 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
     //uint8_t socket_id = rte_eth_dev_socket_id(port_id);
     //struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
 
-    
     rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr )  );
     struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
     eth->ether_type = eth_type;
+	
     ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
-    
+  
     if ( eth_type == ETHER_TYPE_VLAN ) {
         vlan_ctor(m, port_id, ETHER_TYPE_IPv4); //TODO make it generic
     }
@@ -38,12 +38,16 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
         
             construct_arp_packet(dst_ip, port_id);
             add_pkt_to_queue(m, dst_ip);
+			printf("I am here1\n");
+			rte_pktmbuf_dump(stdout,m,100);
 
         }
         else {
         
             ether_addr_copy(&(arp_table_ptr->eth_mac), &(eth->d_addr));
-            add_pkt_to_tx_queue(m, port_id); 
+            add_pkt_to_tx_queue(m, port_id);
+			printf("I am here2\n");
+			rte_pktmbuf_dump(stdout,m,100);
         }
         
     }
@@ -53,10 +57,14 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
 
             construct_arp_packet (port_info[port_id].gateway_ip, port_id);
             add_pkt_to_queue(m, dst_ip);
+			printf("I am here3\n");
+			rte_pktmbuf_dump(stdout,m,100);
         }
         else {
             ether_addr_copy(&(arp_table_ptr->eth_mac), &(eth->d_addr));
-            add_pkt_to_tx_queue(m, port_id); 
+            add_pkt_to_tx_queue(m, port_id);
+			printf("I am here4\n");
+			rte_pktmbuf_dump(stdout,m,100);			
         }
         
     }    

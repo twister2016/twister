@@ -12,7 +12,7 @@ int create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_init" before us
 		rx_mempool[numa_socket] = rte_mempool_create("rx_mempool_" + numa_socket, NB_MBUF, MBUF_SIZE, 32, sizeof(struct rte_pktmbuf_pool_private), rte_pktmbuf_pool_init, NULL, rte_pktmbuf_init, NULL, numa_socket, 0);	//--!TODO Is mempool name correct--???
 		if (rx_mempool[numa_socket] == NULL)
 			rte_exit(EXIT_FAILURE, "Cannot init rx mempool on NUMA node %d\n", numa_socket);
-		tx_mempool[numa_socket] = rte_mempool_create("tx_mempool_" + numa_socket, NB_MBUF, MBUF_SIZE, 32, sizeof(struct rte_pktmbuf_pool_private), rte_pktmbuf_pool_init, NULL, rte_pktmbuf_init, NULL, numa_socket, 0);
+		tx_mempool[numa_socket] = rte_mempool_create("tx_mempool_" + numa_socket, NB_MBUF, MBUF_SIZE, 0, sizeof(struct rte_pktmbuf_pool_private), rte_pktmbuf_pool_init, NULL, rte_pktmbuf_init, NULL, numa_socket, 0);
 		if (tx_mempool[numa_socket] == NULL)
 			rte_exit(EXIT_FAILURE, "Cannot init tx mempool on NUMA node %d\n", numa_socket);
 	}

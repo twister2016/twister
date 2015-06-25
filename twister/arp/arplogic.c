@@ -95,6 +95,8 @@ int construct_arp_packet(uint8_t ip, uint8_t port_id) {
     eth->ether_type = ETHER_TYPE_ARP;
     ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
 	ether_addr_copy(&(broadcastmac), &(eth->d_addr));
+	printf("ARP PACKET\n");
+	rte_pktmbuf_dump(stdout,m,100);
 	add_pkt_to_tx_queue(m, port_id);				
 				
 	return 0;
