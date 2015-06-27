@@ -48,6 +48,7 @@ int eth_port_init(void) {
 		if (ret < 0)
 			rte_exit(EXIT_FAILURE, "Cannot configure device: err=%d, port=%u\n",
 				  ret, (unsigned) port_id);
+		rte_eth_promiscuous_enable(port_id);
 		port_info[port_id].eth_mac = rte_malloc("struct ether_addr", sizeof(struct ether_addr), RTE_CACHE_LINE_SIZE);
 		rte_eth_macaddr_get(port_id, port_info[port_id].eth_mac);
 
@@ -67,22 +68,44 @@ int eth_port_init(void) {
 		rte_eth_dev_info_get(port_id, &dev_info);			//--!TODO use dev_info in port_info struct
 		printf("%d port_id, %d socket id, %d num rx q, %d num tx q\n", port_id, port_info[port_id].socket_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues);
 		for(counter=0;counter<port_info[port_id].num_rx_queues;counter++) {
-			ret = rte_eth_rx_queue_setup(port_id, counter, nb_rxd, socket_id, NULL, rx_mempool[socket_id]);
+			ret = rte_eth_rx_queue_setup(port_id, counter, nb_rxd,rte_eth_dev_socket_id(port_id), NULL, rx_mempool[socket_id]);
 			if (ret < 0)
 				rte_exit(EXIT_FAILURE, "rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
 		}
 		for(counter=0;counter<port_info[port_id].num_tx_queues;counter++) {
-			ret = rte_eth_tx_queue_setup(port_id, counter, nb_txd, socket_id, NULL);
+			ret = rte_eth_tx_queue_setup(port_id, counter, nb_txd, rte_eth_dev_socket_id(port_id), NULL);
 			if (ret < 0)
 				rte_exit(EXIT_FAILURE, "rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
 		}
+		
 		ret = rte_eth_dev_start(port_id);
-		rte_eth_promiscuous_enable(port_id);
-		if (ret < 0)
-			rte_exit(EXIT_FAILURE, "rte_eth_dev_start:err=%d, port=%u\n",
-					ret, (unsigned) port_id);
+		if(ret < 0)
+			rte_panic("Cannot start port %u (%d)\n", port_id, ret);
 	}
 	return 0;
+}
+
+void check_all_ports_link(void) {
+	uint32_t all_ports_up, port_id;
+
+	all_ports_up = 1;
+
+	for (port_id = 0; port_id < available_eth_ports; port_id++) {
+		struct rte_eth_link link;
+		memset(&link, 0, sizeof(link));
+		rte_eth_link_get_nowait(port_id, &link);
+		RTE_LOG(INFO, USER1, "Port %u (%u Gbps) %s\n",
+			port_id,
+			link.link_speed / 1000,
+			link.link_status ? "UP" : "DOWN");
+
+		if (link.link_status == 0)
+			all_ports_up = 0;
+	}
+
+	if (all_ports_up == 0)
+		rte_panic("Some NIC ports are DOWN\n");
+	return;
 }
 
 #endif
