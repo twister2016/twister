@@ -12,20 +12,23 @@ uint8_t available_eth_ports = 0;
 uint16_t app_port_mask = 0;
 
 
-int getportbyip(uint32_t ip_addr)
+int get_port_by_ip(uint32_t ip_addr)
 {
-    uint8_t i=0;
-    for (i=0; i<MAX_ETH_PORTS; i++)
+	printf("get_port_by_ip*********** ip_addr %d\n", ip_addr);
+    	uint8_t i=0;
+    	for (i=0; i<MAX_ETH_PORTS; i++)
 	{
-	    if(port_info[i].start_ip_addr == ip_addr)
+	    	if(port_info[i].start_ip_addr == ip_addr)
 		{
-	        return i;
+			printf("port_id ********** %d\n", i);
+	        	return i;
 		}
 	}
 	
 	return -1;
 	
 }
+
 int eth_port_init(void) {
 	uint8_t port_id, counter;
 	int ret, socket_id;

@@ -65,7 +65,9 @@ int init_global(int argc, char **argv) {
 	create_rx_tx_mempools();
 	create_queued_pkts_mempools();
 	init_user_given_vals();
+	printf("init1\n");
 	eth_port_init();
+	printf("init2\n");
 	init_timer_vals();
 	init_periodic_timers();
 	return 0;

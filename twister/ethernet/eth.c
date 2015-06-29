@@ -12,20 +12,20 @@
 int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_t dst_ip ) {
 
     
-    //uint8_t socket_id = rte_eth_dev_socket_id(port_id);
-    //struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
-
-    rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr )  );
-    struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
-    eth->ether_type = rte_cpu_to_be_16(eth_type);
+	    //uint8_t socket_id = rte_eth_dev_socket_id(port_id);
+	    //struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
 	
-    ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
-  
+	rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr )  );
+	struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
+	eth->ether_type = rte_cpu_to_be_16(eth_type);
+	printf("%d port_id, %p eth_mac, %p eth->s_addr\n", port_id, port_info[port_id].eth_mac, &eth->s_addr);
+	ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
+	printf("eth1.1\n"); 
     if ( eth_type == ETHER_TYPE_VLAN ) {
         vlan_ctor(m, port_id, ETHER_TYPE_IPv4); //TODO make it generic
     }
     
-    
+	printf("eth2\n");
     uint32_t source_and = port_info[port_id].start_ip_addr & port_info[port_id].subnet_mask;
     uint32_t dest_and = dst_ip & port_info[port_id].subnet_mask;
     
