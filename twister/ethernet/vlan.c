@@ -8,7 +8,7 @@ int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
 	switch(eth->ether_type) {
 		case ETHER_TYPE_ARP:
-			arp_parser(eth, port_id);
+			arp_parser(pkt, port_id);
 			break;
 		/*case ETHER_TYPE_VLAN:					//--!Research...Case of double VLAN...should support or not???
 			vlan_parser(pkt, port_id);

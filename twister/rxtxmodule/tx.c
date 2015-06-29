@@ -11,7 +11,6 @@ twister_send_burst(struct lcore_conf *qconf, unsigned n, uint8_t port)
 	unsigned queueid =0;
 	m_table = (struct rte_mbuf **)qconf->tx_mbufs[port].m_table;
 	ret = rte_eth_tx_burst(port, (uint16_t) queueid, m_table, (uint16_t) n);
-	printf("I am Called WTF  % d\n",ret);
 	global_stats.packet_transmitted = global_stats.packet_transmitted + ret; //global variable in stats.h
 	if (unlikely(ret < n)) {	
 		do {
@@ -64,6 +63,7 @@ int add_pkt_to_tx_queue(struct rte_mbuf * m, uint8_t port) {
     rte_pktmbuf_dump(stdout,m,100);
 	/* enough pkts to be sent */
 	if (unlikely(len == MAX_PKT_BURST)) {
+		printf("tx1\n");
 		twister_send_burst(qconf, MAX_PKT_BURST, port);
 		len = 0;
 	}

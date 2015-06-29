@@ -20,8 +20,8 @@ extern struct ether_addr broadcastmac;
 extern struct arp_table * arp_table_root;
 extern uint32_t arp_table_size;
 
-int arp_parser(struct ether_hdr *, uint8_t);
-int send_arp_reply(struct ether_hdr *, uint8_t);
+int arp_parser(struct rte_mbuf *, uint8_t);
+int send_arp_reply(struct rte_mbuf *, uint8_t);
 int process_arp_reply(struct ether_hdr *, uint8_t);
 struct arp_table * search_arp_table(uint32_t);
 int add_arp_entry(uint32_t ip_to_add, struct ether_addr, uint8_t);
