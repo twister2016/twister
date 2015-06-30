@@ -11,16 +11,16 @@ extern uint64_t queue_time_limit;		//--!TODO get the value from user
 struct queued_pkt {
 	struct rte_mbuf * pkt;
 	uint64_t timercycle;
-	uint32_t dest_ip;
+	uint32_t arp_ip;	//IP for which ARP is needed
+	uint16_t port_id;
 	struct queued_pkt * next;
 } __attribute__((__packed__));
 
 extern struct queued_pkt * root_queued_pkt;
 
-int add_pkt_to_queue(struct rte_mbuf *, uint32_t);
+int add_pkt_to_queue(struct rte_mbuf *, uint32_t, uint16_t);
 int update_queued_pkts(void);
 int delete_queued_pkt(struct queued_pkt **, struct queued_pkt **);
-//int send_queued_pkt(struct queued_pkt *, struct ether_addr);
-int send_queued_pkt(void);
+int send_queued_pkt(struct queued_pkt **, struct queued_pkt **, struct ether_addr);
 
 #endif

@@ -1,0 +1,17 @@
+[
+    {
+	"lcore_id" : "00",
+	"core_rx" : "1",
+	"core_tx" : "1",
+	"ports" :  [    { "port_id":"00", "queue_id":"00"}
+                 ]
+    },
+
+    {
+	"lcore_id" : "01",
+	"core_rx" : "1",
+	"core_tx" : "1",
+	"ports" :  [    { "port_id":"01", "queue_id":"00"}
+                 ]
+    }
+]
