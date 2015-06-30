@@ -2,6 +2,32 @@
 #define _INITFUNCS_C_
 
 #include <initfuncs.h>
+#define PIPELINE 
+
+struct app_params app = {
+	/* Ports*/
+	.n_ports = MAX_ETH_PORTS,
+	.port_rx_ring_size = 128,
+	.port_tx_ring_size = 512,
+
+	/* Rings */
+	.ring_rx_size = 128,
+	.ring_tx_size = 128,
+
+	/* Buffer pool */
+	.pool_buffer_size = 2048 + sizeof(struct rte_mbuf) +
+		RTE_PKTMBUF_HEADROOM,
+	.pool_size = 32 * 1024,
+	.pool_cache_size = 256,
+
+	/* Burst sizes */
+	.burst_size_rx_read = 64,
+	.burst_size_rx_write = 64,
+	.burst_size_worker_read = 64,
+	.burst_size_worker_write = 64,
+	.burst_size_tx_read = 64,
+	.burst_size_tx_write = 64,
+};
 
 int init_eal_env(int argc, char **argv) {
 	int ret = rte_eal_init(argc, argv);
@@ -23,6 +49,31 @@ int parse_twister_args(int argc, char **argv) {
 	static struct option lgopts[] = {
 		{NULL, 0, 0, 0}
 	};
+	
+	uint32_t lcores[3], n_lcores, lcore_id;
+	/* EAL args */
+	n_lcores = 0;
+	for (lcore_id = 0; lcore_id < RTE_MAX_LCORE; lcore_id++) {
+		if (rte_lcore_is_enabled(lcore_id) == 0)
+			continue;
+
+		if (n_lcores >= 3) {
+			RTE_LOG(ERR, USER1, "Number of cores must be 3\n");
+			return -1;
+		}
+
+		lcores[n_lcores] = lcore_id;
+		n_lcores++;
+	}
+
+	if (n_lcores != 3) {
+		RTE_LOG(ERR, USER1, "Number of cores must be 3\n");
+		return -1;
+	}
+
+	app.core_rx = lcores[0];
+	app.core_worker = lcores[1];
+	app.core_tx = lcores[2];
 
 	argvopt = argv;
 
@@ -59,6 +110,43 @@ int parse_twister_args(int argc, char **argv) {
 	return ret;
 }
 
+static void
+app_init_rings(void)
+{
+	uint32_t i;
+
+	for (i = 0; i < app.n_ports; i++) {
+		char name[32];
+
+		snprintf(name, sizeof(name), "app_ring_rx_%u", i);
+
+		app.rings_rx[i] = rte_ring_create(
+			name,
+			app.ring_rx_size,
+			rte_socket_id(),
+			RING_F_SP_ENQ | RING_F_SC_DEQ);
+
+		if (app.rings_rx[i] == NULL)
+			rte_panic("Cannot create RX ring %u\n", i);
+	}
+
+	for (i = 0; i < app.n_ports; i++) {
+		char name[32];
+
+		snprintf(name, sizeof(name), "app_ring_tx_%u", i);
+
+		app.rings_tx[i] = rte_ring_create(
+			name,
+			app.ring_tx_size,
+			rte_socket_id(),
+			RING_F_SP_ENQ | RING_F_SC_DEQ);
+
+		if (app.rings_tx[i] == NULL)
+			rte_panic("Cannot create TX ring %u\n", i);
+	}
+
+}
+
 int init_global(int argc, char **argv) {
 	init_eal_env(argc, argv);
 	lcore_conf_init();
@@ -70,6 +158,9 @@ int init_global(int argc, char **argv) {
 	printf("init2\n");
 	init_timer_vals();
 	init_periodic_timers();
+	#ifdef PIPELINE
+	app_init_rings();
+#endif
 	return 0;
 }
 int init_user_given_vals(void) {

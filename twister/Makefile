@@ -42,7 +42,7 @@ include $(RTE_SDK)/mk/rte.vars.mk
 # all source are stored in SRCS-y
 SRCS-y := event/event.c coremgmt/lcoreconf.c portmgmt/portconf.c memmgmt/mempoolconf.c ipv4/ip.c ipv4/udp.c timermodules/periodic_timers.c timermodules/timerdefs.c timermodules/timerfuncs.c \
 ipv4/socket.c queue/simple-queue.c arp/arplogic.c rxtxmodule/queued_pkts.c pktctor/pktctor.c stats/stats.c \
-rxtxmodule/tx.c rxtxmodule/rx.c initmodule/initfuncs.c jsonmodule/jsonparser.c common/common.c jsonmodule/cJSON.c ethernet/eth.c ethernet/vlan.c pktparser/pktparser.c
+rxtxmodule/tx.c rxtxmodule/rx.c initmodule/initfuncs.c jsonmodule/jsonparser.c common/common.c jsonmodule/cJSON.c ethernet/eth.c ethernet/vlan.c pktparser/pktparser.c pipeline/runtime.c
 
 CFLAGS += -DRTE_MACHINE_CPUFLAG_SSE -DRTE_MACHINE_CPUFLAG_SSE2 -DRTE_MACHINE_CPUFLAG_SSE3 -DRTE_MACHINE_CPUFLAG_SSSE3 -DRTE_MACHINE_CPUFLAG_SSE4_1 -DRTE_MACHINE_CPUFLAG_SSE4_2 -DRTE_MACHINE_CPUFLAG_AES -DRTE_MACHINE_CPUFLAG_PCLMULQDQ -DRTE_MACHINE_CPUFLAG_AVX -DRTE_MACHINE_CPUFLAG_RDRAND -DRTE_MACHINE_CPUFLAG_FSGSBASE -DRTE_MACHINE_CPUFLAG_F16C 
 DPDK_HEADERS = $(SRC_ROOT)/../dpdk/x86_64-native-linuxapp-gcc/include
