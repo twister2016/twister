@@ -50,6 +50,8 @@ void
 app_main_loop_rx(void) {
 	uint32_t i;
 	int ret;
+	int j=0;
+	struct rte_mbuf *m;
 
 	RTE_LOG(INFO, USER1, "Core %u is doing RX\n", rte_lcore_id());
 
@@ -64,6 +66,12 @@ app_main_loop_rx(void) {
 
 		if (n_mbufs == 0)
 			continue;
+		// Remove this for loop
+		for (j = 0; j < n_mbufs; j++) {
+				m = app.mbuf_rx.m_table[j];
+				rte_prefetch0(rte_pktmbuf_mtod(m, void *));
+				rte_pktmbuf_dump(stdout,m,100);
+			}
 
 		do {
 			ret = rte_ring_sp_enqueue_bulk(

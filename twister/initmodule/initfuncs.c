@@ -2,7 +2,7 @@
 #define _INITFUNCS_C_
 
 #include <initfuncs.h>
-#define PIPELINE 
+//int PIPELINE=0; 
 
 struct app_params app = {
 	/* Ports*/
@@ -49,7 +49,8 @@ int parse_twister_args(int argc, char **argv) {
 	static struct option lgopts[] = {
 		{NULL, 0, 0, 0}
 	};
-	
+	if(PIPELINE==1)
+	{
 	uint32_t lcores[3], n_lcores, lcore_id;
 	/* EAL args */
 	n_lcores = 0;
@@ -74,7 +75,7 @@ int parse_twister_args(int argc, char **argv) {
 	app.core_rx = lcores[0];
 	app.core_worker = lcores[1];
 	app.core_tx = lcores[2];
-
+    }
 	argvopt = argv;
 
 	while ((opt = getopt_long(argc, argvopt, "p:",
@@ -158,9 +159,11 @@ int init_global(int argc, char **argv) {
 	printf("init2\n");
 	init_timer_vals();
 	init_periodic_timers();
-	#ifdef PIPELINE
-	app_init_rings();
-#endif
+	if(PIPELINE==1)
+	{
+		app_init_rings();
+	}
+	
 	return 0;
 }
 int init_user_given_vals(void) {

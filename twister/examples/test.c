@@ -3,6 +3,8 @@
 #include <rx.h>
 #include <initfuncs.h>
 
+int PIPELINE=0; 
+
 int main (int, char **);
 int launch_one_lcore(__attribute__((unused)) void *);
 
