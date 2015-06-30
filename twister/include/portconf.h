@@ -68,7 +68,7 @@ static const struct rte_eth_conf port_conf = {
 
 
 int eth_port_init(void);
-int getportbyip(uint32_t);
+int get_port_by_ip(uint32_t);
 void check_all_ports_link(void);
 
 #endif

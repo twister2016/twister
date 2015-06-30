@@ -22,29 +22,47 @@ struct ether_addr querycastmac ={
    .addr_bytes[0] = 0x00,
 };
 
-int arp_parser(struct ether_hdr * eth, uint8_t port_id) {
-	struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth+1);	//remove the eth header, and see if its a request or reply and act accordingly
-	if(arp_pkt->arp_op == ARP_OP_REQUEST) {
-		if((arp_pkt->arp_data.arp_tip == port_info->start_ip_addr) && (port_info[port_id].flags & REPLY_ARP)) {
-				send_arp_reply(eth, port_id);
+int arp_parser(struct rte_mbuf * pkt, uint8_t port_id) {
+	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
+	struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth+1);	
+	printf("arp_parser\n");
+	//remove the eth header, and see if its a request or reply and act accordingly
+	if(rte_be_to_cpu_16(arp_pkt->arp_op) == ARP_OP_REQUEST) {
+		printf("arp tip %d, port ip %d\n", rte_be_to_cpu_32(arp_pkt->arp_data.arp_tip), port_info[port_id].start_ip_addr);
+		if(rte_be_to_cpu_32(arp_pkt->arp_data.arp_tip) == port_info[port_id].start_ip_addr) { //&& (port_info[port_id].flags & REPLY_ARP)) {
+				printf("send arp reply\n");
+				send_arp_reply(pkt, port_id);
+				return 0;
 		}
 	}
-	else if(arp_pkt->arp_op == ARP_OP_REPLY) {
+	else if(rte_be_to_cpu_16(arp_pkt->arp_op) == ARP_OP_REPLY) {
+		printf("arp reply\n");
 		process_arp_reply(eth, port_id);
+		return 0;
 	}
-	else
-		rte_pktmbuf_free((struct rte_mbuf *) eth);
+	
+	printf("delete ARP pkt\n");
+	rte_pktmbuf_free(pkt);
 	return 0;
 }
 	
-int send_arp_reply(struct ether_hdr * eth, uint8_t port_id) {
-	struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth+1);		//ether_hdr pointer type was passed because we want to reuse the pktmbuf for transmission also
-	arp_pkt->arp_op = ARP_OP_REPLY;
+int send_arp_reply(struct rte_mbuf * pkt, uint8_t port_id) {
+	printf("init arp pkt\n");
+	rte_pktmbuf_dump(stdout, pkt, 100);
+	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
+	struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth+1);
+	arp_pkt->arp_op = rte_cpu_to_be_16(ARP_OP_REPLY);
 	ether_addr_copy(&(arp_pkt->arp_data.arp_sha), &(arp_pkt->arp_data.arp_tha));
 	ether_addr_copy(port_info[port_id].eth_mac, &(arp_pkt->arp_data.arp_sha));
-	arp_pkt->arp_data.arp_sip = arp_pkt->arp_data.arp_tip;
-	arp_pkt->arp_data.arp_tip = port_info[port_id].start_ip_addr;
-	add_pkt_to_tx_queue((struct rte_mbuf *) eth, port_id);				//--!TODO implement add_pkt_to_tx_queue
+	printf("sip %d, dip %d\n", rte_be_to_cpu_32(arp_pkt->arp_data.arp_sip), rte_be_to_cpu_32(arp_pkt->arp_data.arp_tip));
+	arp_pkt->arp_data.arp_tip = arp_pkt->arp_data.arp_sip;
+	arp_pkt->arp_data.arp_sip = rte_cpu_to_be_32(port_info[port_id].start_ip_addr);
+	ether_addr_copy(&(eth->s_addr), &(eth->d_addr));
+	ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
+	printf("\n\n");
+	rte_pktmbuf_dump(stdout, pkt, 100);
+	printf("\n\n");
+	add_pkt_to_tx_queue(pkt, port_id);
 
 	return 0;
 }	
@@ -83,14 +101,15 @@ int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port
 	arp_table_size++;
 	return 0;
 }
+
 int construct_arp_packet(uint32_t ip, uint8_t port_id) {
 
-    int socket_id = rte_eth_dev_socket_id(port_id);
-    if(socket_id == -1)
-	socket_id = 0;
-    struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
-    rte_pktmbuf_append(m, sizeof (struct arp_hdr) );
-    struct arp_hdr * arp_pkt = rte_pktmbuf_mtod(m, struct arp_hdr *);
+	int socket_id = rte_eth_dev_socket_id(port_id);
+	if(socket_id == -1)
+		socket_id = 0;
+	struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
+	rte_pktmbuf_append(m, sizeof (struct arp_hdr) );
+	struct arp_hdr * arp_pkt = rte_pktmbuf_mtod(m, struct arp_hdr *);
     arp_pkt->arp_op =rte_cpu_to_be_16(ARP_OP_REQUEST);
 	arp_pkt->arp_pro=rte_cpu_to_be_16(ETHER_TYPE_IPv4);
 	arp_pkt->arp_pln=4;

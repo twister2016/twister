@@ -12,19 +12,16 @@
 int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_t dst_ip ) {
 
     
-    //uint8_t socket_id = rte_eth_dev_socket_id(port_id);
-    //struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
-
-    rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr )  );
-    struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
-    eth->ether_type = rte_cpu_to_be_16(eth_type);
+	    //uint8_t socket_id = rte_eth_dev_socket_id(port_id);
+	    //struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
 	
-    ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
-  
-    if ( eth_type == ETHER_TYPE_VLAN ) {
-        vlan_ctor(m, port_id, ETHER_TYPE_IPv4); //TODO make it generic
-    }
-    
+	rte_pktmbuf_prepend( m, sizeof ( struct ether_hdr )  );
+	struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
+	eth->ether_type = rte_cpu_to_be_16(eth_type);
+	ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
+    	if ( eth_type == ETHER_TYPE_VLAN ) {
+        	vlan_ctor(m, port_id, ETHER_TYPE_IPv4); //TODO make it generic
+    	}
     
     uint32_t source_and = port_info[port_id].start_ip_addr & port_info[port_id].subnet_mask;
     uint32_t dest_and = dst_ip & port_info[port_id].subnet_mask;
@@ -81,20 +78,22 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
 int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
 	uint8_t accept_brdcast = is_broadcast_ether_addr(&(eth->d_addr)) & ACCEPT_BRDCAST;
+	printf("port id %d, accept_brdcast %d\n", port_id, accept_brdcast);
 	if(is_same_ether_addr(&(eth->d_addr), port_info[port_id].eth_mac) || accept_brdcast) {
-		switch(eth->ether_type) {
-		case ETHER_TYPE_ARP:
-			arp_parser(eth, port_id);
-			break;
-		case ETHER_TYPE_VLAN:
-			vlan_parser(pkt, port_id);
-			break;
-		case ETHER_TYPE_IPv4:
-			ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
-			break;
-		default:
-			rte_pktmbuf_free(pkt);
-			break;
+		printf("eth type %02x\n", eth->ether_type);
+		switch(rte_be_to_cpu_16(eth->ether_type)) {
+			case ETHER_TYPE_ARP:
+				arp_parser(pkt, port_id);
+				break;
+			case ETHER_TYPE_VLAN:
+				vlan_parser(pkt, port_id);
+				break;
+			case ETHER_TYPE_IPv4:
+				ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
+				break;
+			default:
+				rte_pktmbuf_free(pkt);
+				break;
 		}
 	}
 	else

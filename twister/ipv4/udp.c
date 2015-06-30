@@ -33,14 +33,19 @@ void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip)
 
 void udp_packet_create(struct rte_mbuf *pkt, struct udp_conn_t *udp_conn)
 {
+	printf("udp1\n");
 	struct udp_hdr *udp_hdr_d;
 	rte_pktmbuf_prepend(pkt, sizeof(struct udp_hdr));
+	printf("udp2\n");
 	udp_hdr_d = rte_pktmbuf_mtod(pkt, struct udp_hdr *);
+	printf("udp2.1\n");
 	udp_hdr_d->src_port = rte_cpu_to_be_16(udp_conn->src_port);
 	udp_hdr_d->dst_port = rte_cpu_to_be_16(udp_conn->dst_port);
 	udp_hdr_d->dgram_len = rte_cpu_to_be_16(pkt->pkt_len);
 	udp_hdr_d->dgram_cksum = udp_hdr_d->src_port + udp_hdr_d->dst_port + pkt->pkt_len ;
+	printf("udp2.2\n");
 	ip4_packet_create(pkt, UDP_PROTO_ID,udp_conn->src_ip,udp_conn->dst_ip,pkt->pkt_len);
+	printf("udp3\n");
     
 }
 
