@@ -14,7 +14,10 @@ uint16_t app_port_mask = 0;
 
 int get_port_by_ip(uint32_t ip_addr)
 {
-	printf("get_port_by_ip*********** ip_addr %d\n", ip_addr);
+	if(ip_addr == 0) {
+		printf("IP addr is 0\n");
+		return -1;
+	}
     	uint8_t i=0;
     	for (i=0; i<MAX_ETH_PORTS; i++)
 	{

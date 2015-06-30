@@ -71,7 +71,11 @@ void ip4_packet_create(struct rte_mbuf *pkt,uint8_t next_proto_id,uint32_t src_i
 	ip_hdr->version_ihl = 69;
 	ip_hdr->time_to_live = 20;
 	ip_hdr->hdr_checksum =rte_ipv4_cksum(ip_hdr);
-	uint8_t port_id = get_port_by_ip(src_ip);
+	int port_id = get_port_by_ip(src_ip);
+	if(port_id < 0) {
+		printf("Port not found\n");
+		return;
+	}
 	printf("ip2\n");
 	eth_pkt_ctor(pkt, port_id, ETHER_TYPE_IPv4, dst_ip );
 	
