@@ -21,12 +21,12 @@ struct app_params app = {
 	.pool_cache_size = 256,
 
 	/* Burst sizes */
-	.burst_size_rx_read = 64,
-	.burst_size_rx_write = 64,
-	.burst_size_worker_read = 64,
-	.burst_size_worker_write = 64,
-	.burst_size_tx_read = 64,
-	.burst_size_tx_write = 64,
+	.burst_size_rx_read = 32,
+	.burst_size_rx_write = 32,
+	.burst_size_worker_read = 32,
+	.burst_size_worker_write = 32,
+	.burst_size_tx_read = 32,
+	.burst_size_tx_write = 32,
 };
 
 int init_eal_env(int argc, char **argv) {

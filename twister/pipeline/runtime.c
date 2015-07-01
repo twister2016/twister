@@ -50,8 +50,8 @@ void
 app_main_loop_rx(void) {
 	uint32_t i;
 	int ret;
-	int j=0;
-	struct rte_mbuf *m;
+	//int j=0;
+//	struct rte_mbuf *m;
 
 	RTE_LOG(INFO, USER1, "Core %u is doing RX\n", rte_lcore_id());
 
@@ -67,12 +67,12 @@ app_main_loop_rx(void) {
 		if (n_mbufs == 0)
 			continue;
 		// Remove this for loop
-		for (j = 0; j < n_mbufs; j++) {
+/*		for (j = 0; j < n_mbufs; j++) {
 				m = app.mbuf_rx.m_table[j];
 				rte_prefetch0(rte_pktmbuf_mtod(m, void *));
 				rte_pktmbuf_dump(stdout,m,100);
 			}
-
+*/
 		do {
 			ret = rte_ring_sp_enqueue_bulk(
 				app.rings_rx[i],
@@ -87,7 +87,8 @@ void
 app_main_loop_worker(void) {
 	struct mbuf_table *worker_mbuf;
 	uint32_t i;
-
+	struct rte_mbuf *m;
+	int j=0;
 	RTE_LOG(INFO, USER1, "Core %u is doing work (no pipeline)\n",
 		rte_lcore_id());
 
@@ -97,15 +98,24 @@ app_main_loop_worker(void) {
 		rte_panic("Worker thread: cannot allocate buffer space\n");
 
 	for (i = 0; ; i = ((i + 1) & (app.n_ports - 1))) {
-		int ret;
-
+		int ret,k;
+		k=rte_ring_count(app.rings_rx[i]);
 		ret = rte_ring_sc_dequeue_bulk(
 			app.rings_rx[i],
 			(void **) worker_mbuf->m_table,
 			app.burst_size_worker_read);
+		
+	
+		//printf("The Ring is %d \n",rte_ring_count(app.rings_rx[i]));
 
 		if (ret == -ENOENT)
 			continue;
+			// Remove this for loop
+    	for (j = 0; j < k; j++) {
+				m = (struct rte_mbuf *)worker_mbuf->m_table[j];
+				rte_prefetch0(rte_pktmbuf_mtod(m, void *));
+				rte_pktmbuf_dump(stdout,m,100);
+			}
 
 		do {
 			ret = rte_ring_sp_enqueue_bulk(
