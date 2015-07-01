@@ -26,4 +26,5 @@ int process_arp_reply(struct ether_hdr *, uint8_t);
 struct arp_table * search_arp_table(uint32_t);
 int add_arp_entry(uint32_t ip_to_add, struct ether_addr, uint8_t);
 int construct_arp_packet(uint32_t, uint8_t);
+void print_arp_table(void);
 #endif
