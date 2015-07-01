@@ -78,6 +78,17 @@ app_main_loop_rx(void) {
 
 
 void
+add_packet_to_tx_pipeline(struct rte_mbuf * m, uint8_t port)
+{
+	int ret=0;
+		do {
+			ret = rte_ring_enqueue(
+				app.rings_tx[port],
+				(void *) m);
+		} while (ret < 0);
+}
+
+void
 app_main_loop_worker(void) {
 	struct mbuf_table *worker_mbuf;
 	uint32_t i,j;
@@ -107,13 +118,6 @@ app_main_loop_worker(void) {
 				eth_pkt_parser(m, i);
 				
 			}
-/*
-		do {
-			ret = rte_ring_sp_enqueue_bulk(
-				app.rings_tx[i ^ 1],
-				(void **) worker_mbuf->m_table,
-				app.burst_size_worker_write);
-		} while (ret < 0);*/
 	}
 }
 
