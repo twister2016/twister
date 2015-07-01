@@ -133,6 +133,11 @@ int construct_arp_packet(uint32_t ip, uint8_t port_id) {
     eth->ether_type = rte_cpu_to_be_16(ETHER_TYPE_ARP);
     ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
 	ether_addr_copy(&(broadcastmac), &(eth->d_addr));
+	if(PIPELINE==1)
+	{
+		add_packet_to_tx_pipeline(m, port_id);
+		return 0;
+	}
 	add_pkt_to_tx_queue(m, port_id);				
 				
 	return 0;
