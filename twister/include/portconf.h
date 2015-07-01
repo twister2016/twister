@@ -5,7 +5,7 @@
 #include <rte_ethdev.h>
 #include "mempoolconf.h"
 
-#define MAX_ETH_PORTS 16
+#define MAX_ETH_PORTS 3
 #define RX_QUEUES_PER_PORT 1
 #define TX_QUEUES_PER_PORT 1	//--! SRIOV NICs only support 1 rx and 1 tx queue per port
 

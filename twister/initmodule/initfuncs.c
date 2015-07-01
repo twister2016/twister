@@ -2,7 +2,6 @@
 #define _INITFUNCS_C_
 
 #include <initfuncs.h>
-//int PIPELINE=0; 
 
 struct app_params app = {
 	/* Ports*/
