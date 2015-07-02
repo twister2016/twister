@@ -33,8 +33,8 @@ int udp_socket(uint32_t ip_addr,uint32_t port)
 int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint32_t dst_addr, uint32_t port)
 {
 	struct rte_mbuf *pkt=app_get_buffer();
-	rte_pktmbuf_append(pkt,buf_len + sizeof(struct udp_hdr ) + sizeof(struct ipv4_hdr) + 40);
-	rte_pktmbuf_trim(pkt,buf_len + sizeof(struct udp_hdr ) + sizeof(struct ipv4_hdr) + 40);
+	//rte_pktmbuf_append(pkt,buf_len + sizeof(struct udp_hdr ) + sizeof(struct ipv4_hdr) + 40);
+	//rte_pktmbuf_trim(pkt,buf_len + sizeof(struct udp_hdr ) + sizeof(struct ipv4_hdr) + 40);
 	struct socket_info * sockptr = NULL;
 	sockptr =&sockets[sockfd];
 	struct udp_conn_t dummy;
@@ -42,10 +42,12 @@ int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint32_t dst_addr, uin
 	dummy.dst_port=port;
 	dummy.src_ip=sockptr->ip_addr;
 	dummy.dst_ip=dst_addr;
-	//memcpy(pkt->userdata,buffer,buf_len);
-	pkt->userdata=buffer;
-	pkt->data_len=buf_len;
-	pkt->pkt_len=pkt->data_len;
+	rte_pktmbuf_append(pkt, buf_len);
+	void * payload = rte_pktmbuf_mtod(pkt, void *);
+	rte_memcpy(payload, buffer, buf_len);
+	//pkt->userdata=buffer;
+	//pkt->data_len=buf_len;
+	//pkt->pkt_len=pkt->data_len;
 	rte_pktmbuf_dump(stdout,pkt,100);
 	udp_packet_create(pkt,&dummy);
 	return 0;

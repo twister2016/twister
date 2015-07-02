@@ -13,6 +13,7 @@
 
 int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 {
+	printf("ip4_packet_parser\n");
 	struct ipv4_hdr *ipHdr = rte_pktmbuf_mtod(pkt, struct ipv4_hdr *);
     //uint16_t ipchecksum = rte_ipv4_cksum(ipHdr);	
  /*   if (ipchecksum == ipHdr->hdr_checksum && ipHdr->version_ihl > 20 && ipHdr->time_to_live >= 0)
@@ -29,6 +30,7 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 	if (((dst_ip >= port_info[port_id].start_ip_addr) && (dst_ip <= (port_info[port_id].start_ip_addr + port_info[port_id].num_ip_addrs))) || dst_ip == LOCAL_HOST_IP) 	//--!TODO Add IP range logic
 	{	
 		rte_pktmbuf_adj(pkt, ipHdr->version_ihl);
+		printf("IP proto %d\n", ipHdr->next_proto_id);
 		switch(ipHdr->next_proto_id)
 		{
 			case (UDP_PROTO_ID):

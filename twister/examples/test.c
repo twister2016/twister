@@ -29,6 +29,7 @@ int launch_one_lcore(__attribute__((unused)) void *dummy) {
 			for (j = 0; j < nb_rx; j++) {
 				m = pkts_burst[j];
 				rte_prefetch0(rte_pktmbuf_mtod(m, void *));
+				rte_pktmbuf_dump(stdout, m, 100);
 				eth_pkt_parser(m, portid);
 			}
 	}
