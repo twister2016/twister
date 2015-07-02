@@ -24,6 +24,7 @@ int launch_one_lcore(__attribute__((unused)) void *dummy) {
 			printf("\n\n***************\n");
 			sleep(1);
 			twister_timely_burst();
+			update_queued_pkts();
 			nb_rx = rte_eth_rx_burst(portid, 0, pkts_burst, 16);
 			for (j = 0; j < nb_rx; j++) {
 				m = pkts_burst[j];
