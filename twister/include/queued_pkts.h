@@ -5,6 +5,8 @@
 #include <rte_memory.h>
 #include <timerfuncs.h>
 #include <arplogic.h>
+#include <initfuncs.h>
+#include <runtime.h>
 
 extern uint64_t queue_time_limit;		//--!TODO get the value from user
 
