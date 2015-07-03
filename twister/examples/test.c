@@ -16,6 +16,7 @@ int main(int argc, char **argv ) {
 
 int launch_one_lcore(__attribute__((unused)) void *dummy) {
 	unsigned i, j, nb_rx;
+	int sockfd = udp_socket(port_info[0].start_ip_addr, 8787);
 	struct rte_mbuf *pkts_burst[MAX_PKT_BURST];
 	struct rte_mbuf *m;
 	uint8_t portid = 0;

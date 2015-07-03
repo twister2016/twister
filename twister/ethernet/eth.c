@@ -59,9 +59,10 @@ int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			arp_parser(pkt, port_id);
 			break;
 		case ETHER_TYPE_VLAN:
-			vlan_parser(pkt, port_id);
+			vlan_parser(pkt, port_id);	//TODO adjust vlan header before parsing
 			break;
 		case ETHER_TYPE_IPv4:
+			rte_pktmbuf_adj(pkt, sizeof(struct ether_hdr));
 			ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
 			break;
 		default:

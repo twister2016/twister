@@ -10,25 +10,27 @@
 
 void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip)
 {
+	printf("udp_packet_parser\n");
 	uint16_t dst_port, src_port;
 	struct udp_hdr *udp_hdr_d = rte_pktmbuf_mtod(pkt, struct udp_hdr *);
 	dst_port  = rte_be_to_cpu_16(udp_hdr_d->dst_port);
 	src_port = rte_be_to_cpu_16(udp_hdr_d->src_port);	
 	int i=0;
    	struct socket_info * sockptr = NULL;
-    	for (i=0;i<=maxfd;i++){
+    	for (i=0;i<=maxfd;i++){			//TODO see if code can be improved ito performance
         	sockptr =&sockets[i];
         	if(sockptr->port==dst_port){
             		break;
             	}
     	}	
 	if (i >= maxfd){
+		printf("Src Port %d and dst port %d not found\n", src_port, dst_port);
 		rte_pktmbuf_free(pkt);
 		return;
 	}
 
 	rte_pktmbuf_adj(pkt, sizeof(struct udp_hdr));
-	add_packet_to_queue(i,pkt,src_ip,dst_ip,src_port,dst_port);
+	add_packet_to_udp_queue(i,pkt,src_ip,dst_ip,src_port,dst_port);
 }
 
 void udp_packet_create(struct rte_mbuf *pkt, struct udp_conn_t *udp_conn)

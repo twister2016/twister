@@ -7,11 +7,11 @@ struct sq_pkt_q soft_q[SQ_NUM_QUEUES];
 /*initializes the queues*/
 void sq_init(struct sq_pkt_q q_list[])
 {
-    int i = 0;
-    for (; i<SQ_NUM_QUEUES; i++){
-        q_list[i].n_pkts = 0;
-        q_list[i].head = NULL;
-    }
+    	int i = 0;
+    	for (; i<SQ_NUM_QUEUES; i++) {
+        	q_list[i].n_pkts = 0;
+        	q_list[i].head = NULL;
+    	}
 }
 
 /*
@@ -21,24 +21,25 @@ void sq_init(struct sq_pkt_q q_list[])
 */
 int sq_push(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size, struct udp_conn_t conn)
 {
-    struct sq_pkt* new_pkt = NULL, *pkt_p;
-    if((new_pkt = (struct sq_pkt*) malloc(sizeof(struct sq_pkt))) == NULL){
+	printf("sq_push\n");
+    	struct sq_pkt* new_pkt = NULL, *pkt_p;
+    	if((new_pkt = (struct sq_pkt*) rte_malloc(sizeof(struct sq_pkt))) == NULL) {
 		return 0;
-	 }
-    new_pkt->data = data;
+	}
+    	new_pkt->data = data;
 	new_pkt->size=size;
 	new_pkt->conn=conn;
-    q_list[q_id].n_pkts++;
-    new_pkt->next_pkt = NULL;
-    if(q_list[q_id].head == NULL){
-        q_list[q_id].head = new_pkt;
-        return 1;
-    }
-    pkt_p = q_list[q_id].head;
-    while(pkt_p->next_pkt != NULL)
-        pkt_p = pkt_p->next_pkt;
-    pkt_p->next_pkt = new_pkt;
-    return 1;
+    	q_list[q_id].n_pkts++;
+    	new_pkt->next_pkt = NULL;
+    	if(q_list[q_id].head == NULL) {
+        	q_list[q_id].head = new_pkt;
+        	return 1;
+    	}
+    	pkt_p = q_list[q_id].head;
+    	while(pkt_p->next_pkt != NULL)
+        	pkt_p = pkt_p->next_pkt;
+    	pkt_p->next_pkt = new_pkt;
+    	return 1;
 }
 /*
 * pops a packet from q_id index of q_list

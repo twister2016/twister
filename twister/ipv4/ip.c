@@ -21,12 +21,14 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 	if(CHECK_IPv4_CKSUM) {
 		uint16_t ipchecksum = rte_ipv4_cksum(ipHdr);
 		if (ipchecksum != ipHdr->hdr_checksum) {
+			printf("Incorrect Checksum\n");
 			rte_pktmbuf_free(pkt);
 			return -1;
 		}
 	}
 	uint32_t dst_ip  = rte_be_to_cpu_32(ipHdr->dst_addr);
 	uint32_t src_ip = rte_be_to_cpu_32(ipHdr->src_addr);
+	printf("Num ip addrs %d, start ip %d, dst ip %d, range %d\n", port_info[port_id].num_ip_addrs, port_info[port_id].start_ip_addr, dst_ip, port_info[port_id].start_ip_addr + port_info[port_id].num_ip_addrs);
 	if (((dst_ip >= port_info[port_id].start_ip_addr) && (dst_ip <= (port_info[port_id].start_ip_addr + port_info[port_id].num_ip_addrs))) || dst_ip == LOCAL_HOST_IP) 	//--!TODO Add IP range logic
 	{	
 		rte_pktmbuf_adj(pkt, ipHdr->version_ihl);
@@ -34,6 +36,7 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 		switch(ipHdr->next_proto_id)
 		{
 			case (UDP_PROTO_ID):
+				rte_pktmbuf_adj(pkt, sizeof(struct ipv4_hdr));
 				udp_packet_parser(pkt,src_ip,dst_ip);
 				break;
 			case (TCP_PROTO_ID):
@@ -46,6 +49,7 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 	}
 	else
 	{
+		printf("IP not matched. Freeing packet\n");
 		rte_pktmbuf_free(pkt);	
 	}
 		

@@ -53,7 +53,7 @@ int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint32_t dst_addr, uin
 	return 0;
 }
 
-void add_packet_to_queue(int i,struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip,uint16_t dst_port,uint16_t src_port){
+void add_packet_to_udp_queue(int i,struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip,uint16_t dst_port,uint16_t src_port){
 	struct udp_conn_t dummy;
 	dummy.src_port=src_port;
 	dummy.dst_port=dst_port;
