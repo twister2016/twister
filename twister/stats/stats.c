@@ -39,7 +39,7 @@ int init_stats (uint8_t port_id, uint32_t dst_ip ) {
     sta->PPS = 512; //randomly written PPS packet persecond
     sta->timestamp = rte_cpu_to_be_64(rte_rdtsc()/one_usec);
     
-    struct udp_conn_t* udp_stat_struct = rte_malloc ("UdpStructurForStat", sizeof (struct udp_conn_t ), 0 );
+    struct sock_conn_t* udp_stat_struct = rte_malloc ("UdpStructurForStat", sizeof (struct sock_conn_t ), 0 );
     udp_stat_struct->src_port = port_id;
     udp_stat_struct->dst_port = l4_stat_port;             //randomly chosen for destination app written in python
     udp_stat_struct->src_ip = port_info[port_id].start_ip_addr;

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <rte_mbuf.h>
+#include <rte_malloc.h>
 #include <simple-queue.h>
 
 struct sq_pkt_q soft_q[SQ_NUM_QUEUES];
@@ -15,20 +16,19 @@ void sq_init(struct sq_pkt_q q_list[])
 }
 
 /*
-* pushes an item in the beginning of q
+* pushes an item at the end of q
 * does not free data
 * returns 1 if success
 */
-int sq_push(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size, struct udp_conn_t conn)
+int sq_push(int q_id, struct sq_pkt_q* q_list, struct rte_mbuf * pkt, struct sock_conn_t conn)
 {
 	printf("sq_push\n");
-    	struct sq_pkt* new_pkt = NULL, *pkt_p;
-    	if((new_pkt = (struct sq_pkt*) malloc(sizeof(struct sq_pkt))) == NULL) {
+    	struct sq_pkt * new_pkt = NULL, *pkt_p;
+    	if((new_pkt = (struct sq_pkt*) rte_malloc("struct sq_pkt *", sizeof(struct sq_pkt), 64)) == NULL) {
 		return 0;
 	}
-    	new_pkt->data = data;
-	new_pkt->size=size;
 	new_pkt->conn=conn;
+    	new_pkt->pkt = pkt;
     	q_list[q_id].n_pkts++;
     	new_pkt->next_pkt = NULL;
     	if(q_list[q_id].head == NULL) {
@@ -47,7 +47,7 @@ int sq_push(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size, struct
 * returns 0 if no data otherwise returns size of received data 
 */
 /*
-int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size,struct udp_conn_t *conn)
+int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size,struct sock_conn_t *conn)
 {
     struct sq_pkt* tmp_pkt = q_list[q_id].head;
     int pkt_size = 0;

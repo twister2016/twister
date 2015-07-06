@@ -12,11 +12,10 @@
 /*
  * structure to store a packet ==> fm_buffer
 */
-struct sq_pkt{
-    struct udp_conn_t conn;
-	void* data;
-	uint16_t size;
-    struct sq_pkt* next_pkt;
+struct sq_pkt {
+	struct sock_conn_t conn;
+	struct rte_mbuf * pkt;
+    	struct sq_pkt* next_pkt;
 };
 
 /*
@@ -32,9 +31,9 @@ extern struct sq_pkt_q soft_q[SQ_NUM_QUEUES];
 extern void sq_init(struct sq_pkt_q q_list[]);
 
 /*pushes an item in the beginning of q*/
-extern int sq_push(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size, struct udp_conn_t conn);
+extern int sq_push(int q_id, struct sq_pkt_q* q_list, struct rte_mbuf * pkt, struct sock_conn_t conn);
 
 /*pops an item from the end of the queue*/
-//extern int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size,struct udp_conn_t *conn);
+//extern int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size,struct sock_conn_t *conn);
 
 #endif  /*simple-queue.h*/

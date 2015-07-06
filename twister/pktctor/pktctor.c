@@ -12,7 +12,7 @@
 
 
 int pkt_ctor(struct rte_mbuf* m, void* ptr_l4, uint32_t eth_proto) {
-    struct udp_conn_t *udp_conn = ( struct udp_conn_t * )ptr_l4 ;
+    struct sock_conn_t *udp_conn = ( struct sock_conn_t * ) ptr_l4 ;
     if (m == NULL) {
         return -1;
     }

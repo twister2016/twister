@@ -33,7 +33,7 @@ void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip)
 	add_packet_to_udp_queue(i,pkt,src_ip,dst_ip,src_port,dst_port);
 }
 
-void udp_packet_create(struct rte_mbuf *pkt, struct udp_conn_t *udp_conn)
+void udp_packet_create(struct rte_mbuf *pkt, struct sock_conn_t *udp_conn)
 {
 	struct udp_hdr *udp_hdr_d;
 	rte_pktmbuf_prepend(pkt, sizeof(struct udp_hdr));

@@ -77,4 +77,19 @@ int get_lcore_queue_conf_json_vals(const char * file_name) {
 	return 0;
 }
 
+int get_processing_conf_json_vals(const char * file_name) {
+	uint8_t i;
+	cJSON * json_file = parse_json_file(file_name);
+	if (!json_file) {
+		printf("Error before: [%s]\n",cJSON_GetErrorPtr());
+		return -1;
+	}
+	for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {
+		cJSON * subitem = cJSON_GetArrayItem(json_file, i);
+		uint8_t processing_id = convert_str_to_int(cJSON_GetObjectItem(subitem, "processing_id")->valuestring, 2);
+		printf("**************** %d ****************\n", processing_id);
+	}
+	return 0;
+}
+
 #endif
