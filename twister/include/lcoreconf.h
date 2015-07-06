@@ -18,6 +18,8 @@ struct lcore_conf {
 	uint8_t num_queues;
 	uint8_t core_rx;
 	uint8_t core_tx;
+	uint8_t num_port;
+	uint8_t managed_port[MAX_RX_QUEUES_PER_LCORE];
 	struct lcore_port_queue mngd_queues[MAX_RX_QUEUES_PER_LCORE];
 	struct mbuf_table tx_mbufs[MAX_ETH_PORTS];
 } __rte_cache_aligned;
@@ -25,6 +27,6 @@ struct lcore_conf {
 struct lcore_conf lcore_conf[MAX_LCORES];
 
 int lcore_conf_init(void);
-int map_queue_to_lcore(uint8_t, uint8_t, uint8_t);
+
 
 #endif

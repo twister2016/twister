@@ -9,7 +9,8 @@
 #include <lcoreconf.h>
 #include <stats.h>
 
-int get_pkt_from_rx_queue(struct rte_mbuf ** m, uint8_t port);
+int get_pkt_from_rx_queue(struct rte_mbuf ** m, uint8_t port, uint8_t queue_id);
+int rx_for_each_queue(struct rte_mbuf ** m);
 
 
 #endif

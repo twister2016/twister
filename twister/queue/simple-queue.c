@@ -23,7 +23,7 @@ int sq_push(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size, struct
 {
 	printf("sq_push\n");
     	struct sq_pkt* new_pkt = NULL, *pkt_p;
-    	if((new_pkt = (struct sq_pkt*) rte_malloc(sizeof(struct sq_pkt))) == NULL) {
+    	if((new_pkt = (struct sq_pkt*) malloc(sizeof(struct sq_pkt))) == NULL) {
 		return 0;
 	}
     	new_pkt->data = data;

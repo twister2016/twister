@@ -149,10 +149,10 @@ app_init_rings(void)
 
 int init_global(int argc, char **argv) {
 	init_eal_env(argc, argv);
+	init_user_given_vals();
 	lcore_conf_init();
 	create_rx_tx_mempools();
 	create_queued_pkts_mempools();
-	init_user_given_vals();
 	printf("init1\n");
 	eth_port_init();
 	printf("init2\n");

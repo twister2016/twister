@@ -73,21 +73,20 @@ int send_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt ** c
 					(*curr_queued_pkt) = (*prev_queued_pkt);
 					return 0;
 				}
-					if(PIPELINE==1)
-				{
-					add_packet_to_tx_pipeline(pkt, (*curr_queued_pkt)->port_id);
-					 rte_free(*curr_queued_pkt);
-					(*curr_queued_pkt) = (*prev_queued_pkt);
-					return 0;
-				}
-				
                 add_pkt_to_tx_queue(pkt, (*curr_queued_pkt)->port_id);
                 rte_free(*curr_queued_pkt);
                 (*curr_queued_pkt) = (*prev_queued_pkt);
                 return 0;
         }
         (*prev_queued_pkt)->next = (*curr_queued_pkt)->next;
-	add_pkt_to_tx_queue(pkt, (*curr_queued_pkt)->port_id);
+		if(PIPELINE==1)
+			{
+				add_packet_to_tx_pipeline(pkt, (*curr_queued_pkt)->port_id);
+				rte_free(*curr_queued_pkt);
+				(*curr_queued_pkt) = (*prev_queued_pkt);
+				return 0;
+			}
+		add_pkt_to_tx_queue(pkt, (*curr_queued_pkt)->port_id);
         rte_free(*curr_queued_pkt);
         (*curr_queued_pkt) = (*prev_queued_pkt)->next;
         return 0;
