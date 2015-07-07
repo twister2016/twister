@@ -2,6 +2,7 @@
 #define _JSONPARSER_C_
 
 #include <jsonparser.h>
+#include <initfuncs.h>
 
 /* Read a file, parse, render back, etc. */
 char * registerfile (const char *filename) {
@@ -65,6 +66,7 @@ int get_lcore_queue_conf_json_vals(const char * file_name) {
 		uint8_t lcore_id = convert_str_to_int(cJSON_GetObjectItem(subitem, "lcore_id")->valuestring, 2);
 		lcore_conf[lcore_id].core_rx = convert_str_to_int(cJSON_GetObjectItem(subitem, "core_rx")->valuestring, 1);
 		lcore_conf[lcore_id].core_tx = convert_str_to_int(cJSON_GetObjectItem(subitem, "core_tx")->valuestring, 1);
+		lcore_conf[lcore_id].core_working = convert_str_to_int(cJSON_GetObjectItem(subitem, "core_working")->valuestring, 1);
 		cJSON * ports = cJSON_GetObjectItem(subitem, "ports");
 
 		for(j = 0; j < cJSON_GetArraySize(ports); j++) {
@@ -86,8 +88,8 @@ int get_processing_conf_json_vals(const char * file_name) {
 	}
 	for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {
 		cJSON * subitem = cJSON_GetArrayItem(json_file, i);
-		uint8_t processing_id = convert_str_to_int(cJSON_GetObjectItem(subitem, "processing_id")->valuestring, 2);
-		printf("**************** %d ****************\n", processing_id);
+		PIPELINE = convert_str_to_int(cJSON_GetObjectItem(subitem, "pipeline_processing")->valuestring, 2);
+		
 	}
 	return 0;
 }

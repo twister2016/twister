@@ -18,6 +18,7 @@ struct lcore_conf {
 	uint8_t num_queues;
 	uint8_t core_rx;
 	uint8_t core_tx;
+	uint8_t core_working;
 	uint8_t num_port;
 	uint8_t managed_port[MAX_RX_QUEUES_PER_LCORE];
 	struct lcore_port_queue mngd_queues[MAX_RX_QUEUES_PER_LCORE];
@@ -27,6 +28,7 @@ struct lcore_conf {
 struct lcore_conf lcore_conf[MAX_LCORES];
 
 int lcore_conf_init(void);
+int lcore_pipeline_init(void);
 
 
 #endif

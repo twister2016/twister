@@ -48,10 +48,10 @@ int parse_twister_args(int argc, char **argv) {
 	static struct option lgopts[] = {
 		{NULL, 0, 0, 0}
 	};
-	if(PIPELINE==1)
+
+	/*if(PIPELINE==1)
 	{
 	uint32_t lcores[3], n_lcores, lcore_id;
-	/* EAL args */
 	n_lcores = 0;
 	for (lcore_id = 0; lcore_id < RTE_MAX_LCORE; lcore_id++) {
 		if (rte_lcore_is_enabled(lcore_id) == 0)
@@ -75,6 +75,7 @@ int parse_twister_args(int argc, char **argv) {
 	app.core_worker = lcores[1];
 	app.core_tx = lcores[2];
     }
+	*/
 	argvopt = argv;
 
 	while ((opt = getopt_long(argc, argvopt, "p:",
@@ -148,20 +149,24 @@ app_init_rings(void)
 }
 
 int init_global(int argc, char **argv) {
-	init_eal_env(argc, argv);
 	init_user_given_vals();
-	lcore_conf_init();
+    init_eal_env(argc, argv);
 	create_rx_tx_mempools();
 	create_queued_pkts_mempools();
-	printf("init1\n");
+	if(PIPELINE==0)
+	{
+		lcore_conf_init();
+	}
+	if(PIPELINE==1)
+	{
+		lcore_pipeline_init();
+		app_init_rings();
+	}
 	eth_port_init();
 	printf("init2\n");
 	init_timer_vals();
 	init_periodic_timers();
-	if(PIPELINE==1)
-	{
-		app_init_rings();
-	}
+	
 	
 	return 0;
 }

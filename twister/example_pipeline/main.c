@@ -3,7 +3,7 @@
 #include<rx.h>
 #include <initfuncs.h>
 
-int PIPELINE=1;
+//int PIPELINE=1;
 
 int main (int, char **);
 int app_lcore_main_loop(void *arg);

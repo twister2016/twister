@@ -37,4 +37,27 @@ int lcore_conf_init(void) {
 	return 0;
 }
 
+int lcore_pipeline_init(void){
+	uint8_t lcore_id = 0;
+	for(lcore_id=0;lcore_id<MAX_LCORES;lcore_id++) {
+		if(rte_lcore_is_enabled(lcore_id)) {
+			
+			if(lcore_conf[lcore_id].core_working==1)
+			{
+				app.core_worker = lcore_id;
+			}
+			if(lcore_conf[lcore_id].core_rx==1)
+			{
+				app.core_rx = lcore_id;
+			}
+			if(lcore_conf[lcore_id].core_tx==1)
+			{
+				app.core_tx = lcore_id;
+			}
+								//--!TODO implement assign_queue_to_core
+		}
+	}
+	return 0;
+	
+}
 
