@@ -59,7 +59,7 @@ void add_packet_to_udp_queue(int sock_fd, struct rte_mbuf *pkt, uint32_t src_ip,
 	dummy.dst_port=dst_port;
 	dummy.src_ip=src_ip;
 	dummy.dst_ip=dst_ip;
-	sq_push(sock_fd, soft_q, pkt, dummy);
+	sq_push(sock_fd, udp_socket_q, pkt, dummy);
 }
 /*
 int udp_recv(int sockfd, void * buffer, uint16_t buf_len)

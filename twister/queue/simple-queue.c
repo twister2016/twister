@@ -4,7 +4,7 @@
 #include <rte_malloc.h>
 #include <simple-queue.h>
 
-struct sq_pkt_q soft_q[SQ_NUM_QUEUES];
+struct sq_pkt_q udp_socket_q[SQ_NUM_QUEUES];
 /*initializes the queues*/
 void sq_init(struct sq_pkt_q q_list[])
 {
@@ -46,29 +46,25 @@ int sq_push(int q_id, struct sq_pkt_q* q_list, struct rte_mbuf * pkt, struct soc
 * assumes data has been allocated 'size' by caller
 * returns 0 if no data otherwise returns size of received data 
 */
-/*
-int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size,struct sock_conn_t *conn)
+int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, struct sock_conn_t * conn)
 {
-    struct sq_pkt* tmp_pkt = q_list[q_id].head;
-    int pkt_size = 0;
-  
-    if(tmp_pkt == NULL)
-        return 0;
-  
-    if(q_list[q_id].n_pkts < 1)
-      return 0;
-  
-    if(tmp_pkt->size > size){
-        printf("[WARN] Popped pkt's payload size is greater than the \
-                     buffer provided. So returning.\n"); 
-        return 0;
-    }
-    memcpy(data, tmp_pkt->data, tmp_pkt->size);
-    pkt_size = tmp_pkt->size;
-    q_list[q_id].head = tmp_pkt->next_pkt;
-    q_list[q_id].n_pkts--;
-    free(tmp_pkt->data);
-    free(tmp_pkt);
-    return pkt_size;
+	struct sq_pkt* tmp_pkt = q_list[q_id].head;
+	
+	if(tmp_pkt == NULL)
+		return 0;
+	if(q_list[q_id].n_pkts < 1)
+		return 0;
+	struct rte_mbuf * temp_mbuf = tmp_pkt->pkt;
+	int payload_size = temp_mbuf->data_len;
+	void * pkt_payload = rte_pktmbuf_mtod(temp_mbuf, void *);
+
+	rte_memcpy(data, pkt_payload, payload_size);
+	conn->src_port = tmp_pkt->conn.src_port;
+	conn->src_ip = tmp_pkt->conn.src_ip;
+	q_list[q_id].head = tmp_pkt->next_pkt;
+	q_list[q_id].n_pkts--;
+	rte_pktmbuf_free(tmp_pkt->pkt);
+	free(tmp_pkt);
+	return payload_size;
 }
-*/
+
