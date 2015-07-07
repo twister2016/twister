@@ -11,6 +11,14 @@ struct event_io {
 	struct event_io * next;
 };
 
+struct event_loop_flags {
+	uint8_t get_l2_packets;
+	uint8_t get_l3_packets;
+	uint8_t get_l4_packets;	
+}; 
+
+struct event_loop_flags event_loop_flags;
+
 struct event_io * root_event_io[MAX_LCORES];
 
 struct event_io * 
