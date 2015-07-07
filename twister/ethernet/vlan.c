@@ -2,6 +2,7 @@
 #include <vlan.h>
 #include <ip.h>
 #include <arplogic.h>
+#include <event_loop.h>
 
 int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 	rte_vlan_strip(pkt);			//--? should the vlan be compared with the vlan value in port_info[port_id]???
@@ -14,7 +15,12 @@ int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			vlan_parser(pkt, port_id);
 			break; */
 		case ETHER_TYPE_IPv4:
-			ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
+			if(event_loop_flags.get_l3_packets==1)
+				printf("L3 PACKET Received /n");
+				//user function should come here
+			else{
+				ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
+			}	
 			break;
 		default:
 			rte_pktmbuf_free(pkt);

@@ -1,5 +1,5 @@
 #include <rx.h>
-
+#include <event_loop.h>
 int rx_for_each_queue(struct rte_mbuf ** m){
 	unsigned lcore_id,nb_pkt_rx=0;
 	struct lcore_conf *qconf;
@@ -10,6 +10,9 @@ int rx_for_each_queue(struct rte_mbuf ** m){
 	{
 		nb_pkt_rx += get_pkt_from_rx_queue(m + nb_pkt_rx ,qconf->mngd_queues[i].port_id,qconf->mngd_queues[i].queue_id);
 	}
+	if(event_loop_flags.get_l2_packets==1)
+			printf("L2 PACKET Received /n");
+				//user function should come here
 	return nb_pkt_rx;
 }
 

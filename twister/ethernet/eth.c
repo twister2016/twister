@@ -7,6 +7,7 @@
 #include <ip.h>
 #include <queued_pkts.h>
 #include <vlan.h>
+#include <event_loop.h>
 
 //static struct ether_addr eth_port_mac[MAX_ETH_PORTS];
 int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_t dst_ip ) {
@@ -63,7 +64,12 @@ int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			break;
 		case ETHER_TYPE_IPv4:
 			rte_pktmbuf_adj(pkt, sizeof(struct ether_hdr));
-			ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
+			if(event_loop_flags.get_l3_packets==1)
+				printf("L3 PACKET Received /n");
+				//user function should come here
+			else{
+				ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
+			}		
 			break;
 		default:
 			rte_pktmbuf_free(pkt);
