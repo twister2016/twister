@@ -14,7 +14,7 @@ enum {
 struct event_io {
         uint8_t event_lock;
         uint8_t event_repeat;
-	uint8_t event_flags;
+		uint8_t event_flags;
         int sock_fd;
         void * event_cb;        //TODO args for cb
         struct event_io * next;
@@ -24,7 +24,7 @@ int reg_flag_event(uint8_t, void *);
 
 struct event_io root_event_io[MAX_LCORES];
 
-struct event_io * reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event);
+struct event_io * reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event ,uint8_t event_flags);
 
-int start_io_event(struct event_io * event_to_start);
+int start_io_events(void);
 #endif

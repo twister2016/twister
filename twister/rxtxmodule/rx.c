@@ -9,7 +9,9 @@ int rx_for_each_queue(struct mbuf_table * m) {
 	int i=0;
 	for(i=0;i<qconf->num_queues;i++)
 	{
-		nb_pkt_rx += get_pkt_from_rx_queue(m + nb_pkt_rx ,qconf->mngd_queues[i].port_id,qconf->mngd_queues[i].queue_id);
+		nb_pkt_rx += get_pkt_from_rx_queue(&m[i],qconf->mngd_queues[i].port_id,qconf->mngd_queues[i].queue_id);
+		m[i].portid=qconf->mngd_queues[i].port_id;
+		m[i].len=nb_pkt_rx;
 	}
 	return nb_pkt_rx;
 }

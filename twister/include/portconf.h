@@ -31,8 +31,9 @@ enum {
 } __attribute__((__packed__));
 
 struct mbuf_table {
-	unsigned len;
+	int len;
 	struct rte_mbuf *m_table[MAX_PKT_BURST];
+	uint8_t portid;
 } __attribute__((__packed__));
 
 struct port_info {
