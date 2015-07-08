@@ -64,7 +64,7 @@ int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			break;
 		case ETHER_TYPE_IPv4:
 			rte_pktmbuf_adj(pkt, sizeof(struct ether_hdr));
-			if(event_loop_flags.get_l3_packets==1)
+			if(root_event_io[rte_lcore_id()].event_flags == GET_L3_PKTS)
 				printf("L3 PACKET Received /n");
 				//user function should come here
 			else{

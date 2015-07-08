@@ -38,8 +38,8 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 		{
 			case (UDP_PROTO_ID):
 			rte_pktmbuf_adj(pkt, sizeof(struct ipv4_hdr));
-			if(event_loop_flags.get_l4_packets==1)
-				printf("L3 PACKET Received /n");
+			if(root_event_io[rte_lcore_id()].event_flags == GET_L4_PKTS)
+				printf("L4 PACKET Received /n");
 			//user function should come here
 			else
 			{
