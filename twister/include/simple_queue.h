@@ -1,10 +1,10 @@
 #ifndef SIMPLE_QUEUE_H
 #define SIMPLE_QUEUE_H
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <rte_mbuf.h>
 #include <rte_memcpy.h>
 #include <udp.h>
 
@@ -27,7 +27,7 @@ struct sq_pkt_q {
     struct sq_pkt* head;
 };
 
-extern struct sq_pkt_q soft_q[SQ_NUM_QUEUES];
+extern struct sq_pkt_q soft_q[SQ_NUM_QUEUES]; //TODO make in sync with socket structs
 struct sq_pkt_q udp_socket_q[SQ_NUM_QUEUES];
 
 /*initializes the queues*/

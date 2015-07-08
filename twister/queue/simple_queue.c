@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <rte_mbuf.h>
 #include <rte_malloc.h>
-#include <simple-queue.h>
+#include <simple_queue.h>
 
 struct sq_pkt_q udp_socket_q[SQ_NUM_QUEUES];
 /*initializes the queues*/
@@ -60,7 +60,9 @@ int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, struct sock_conn_t * c
 
 	rte_memcpy(data, pkt_payload, payload_size);
 	conn->src_port = tmp_pkt->conn.src_port;
+	conn->dst_port = tmp_pkt->conn.dst_port;
 	conn->src_ip = tmp_pkt->conn.src_ip;
+	conn->dst_ip = tmp_pkt->conn.dst_ip;
 	q_list[q_id].head = tmp_pkt->next_pkt;
 	q_list[q_id].n_pkts--;
 	rte_pktmbuf_free(tmp_pkt->pkt);

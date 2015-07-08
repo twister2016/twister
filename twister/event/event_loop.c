@@ -31,46 +31,55 @@ reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_fl
 	return temp_event_io;
 }
 
-int start_io_events(void) {
-	int num_rx_pkts, pkt_count,i;
+int start_io_events(void) {	//TODO tx callbacks --???
+	int num_rx_pkts, pkt_count, payload_size = 0, i;
 	int core_id = rte_lcore_id();
-	struct mbuf_table m[MAX_ETH_PORTS*RX_QUEUES_PER_PORT]; //TODO change to global
+	struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()] ;
+	struct mbuf_table m[qconf->num_queues];
 	struct rte_mbuf * pkt;
-	struct event_io * temp_event = &root_event_io[core_id];
+	struct event_io * temp_event;
+	struct sock_conn_t conn;
+	void * payload_data = NULL;
+	void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t);
+	void (*cb_func) (void *, int, struct sock_conn_t);
 	do {
+		temp_event = &root_event_io[core_id];
 		printf("\n\n***************\n");
 		if(temp_event == NULL) 
-			rte_exit(EXIT_FAILURE,"NO EVENT FLAGS\n"); //TODO exit properly
+			rte_exit(EXIT_FAILURE,"NO EVENT FLAGS\n"); 
                 sleep(1);
                 twister_timely_burst();
                 update_queued_pkts();
-		num_rx_pkts = rx_for_each_queue(m); //TODO for each queue
+		num_rx_pkts = rx_for_each_queue(m);
 		if(num_rx_pkts > 0) {
-			struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()] ;
 			for(i=0;i<qconf->num_queues;i++)
 			{
 				
-					for(pkt_count = 0;pkt_count < m[i].len;pkt_count++) {
-					pkt = m[i].m_table[pkt_count];
-					if(root_event_io[core_id].event_flags == NO_FLAG_SET) {
-										eth_pkt_parser(pkt, m[i].portid); //TODO port id
-						return 0;
+				for(pkt_count = 0;pkt_count < m[i].len;pkt_count++) {
+					pkt = m[i].m_table[pkt_count];	
+					if(temp_event->event_flags == GET_L2_PKTS) {
+						printf("Get L2 pkts\n");
+						cb_func_with_flags = temp_event->event_cb;
+						cb_func_with_flags(pkt, m[i].portid);
 					}
-					while (temp_event != NULL) {
-						if(temp_event->event_flags == GET_L2_PKTS) {
-							printf("Get L2 pkts\n");
-							return 0;
-						}
-						if(temp_event->event_flags == GET_L3_PKTS || temp_event->event_flags == GET_L4_PKTS) {
-							printf("Get L3 pkts\n");
-							eth_pkt_parser(pkt, 0);
-							return 0;
-						}
+					else {
+						eth_pkt_parser(pkt, m[i].portid);
 					}
-
-					}
+						
+				}
 			}	
 		}
+		if(temp_event->event_flags == NO_FLAG_SET) {
+			while(temp_event != NULL) {
+				cb_func = temp_event->event_cb;
+				while(udp_socket_q[temp_event->sock_fd].n_pkts > 0) {	//Implemented for UDP sockets only
+					payload_size = sq_pop(temp_event->sock_fd, udp_socket_q, payload_data, &conn);
+					cb_func(payload_data, payload_size, conn);
+				}
+				temp_event = temp_event->next;
+			}
+		}
+		
 	} while(1); //TODO implement loop ending logic
 }
 

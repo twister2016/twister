@@ -2,6 +2,8 @@
 #define _EVENT_LOOP_H_
 
 #include <rte_lcore.h>
+#include <simple_queue.h>
+
 #define MAX_LCORES 16
 
 enum {

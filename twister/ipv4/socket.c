@@ -1,13 +1,13 @@
-#include<stdint.h>
-#include<stdlib.h>
-#include<rte_mbuf.h>
-#include<rte_ip.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <rte_mbuf.h>
+#include <rte_ip.h>
 #include <rte_udp.h>
-#include<usocket.h>
-#include<udp.h>
+#include <usocket.h>
+#include <udp.h>
 #include <rte_ether.h>
-#include<mempoolconf.h>
-#include<simple-queue.h>
+#include <mempoolconf.h>
+#include <simple_queue.h>
 
 int maxfd=0;
 struct socket_info sockets[1024];
@@ -61,9 +61,9 @@ void add_packet_to_udp_queue(int sock_fd, struct rte_mbuf *pkt, uint32_t src_ip,
 	dummy.dst_ip=dst_ip;
 	sq_push(sock_fd, udp_socket_q, pkt, dummy);
 }
-/*
-int udp_recv(int sockfd, void * buffer, uint16_t buf_len)
+
+int udp_recv(int sock_fd, void * buffer, struct sock_conn_t * conn)
 {
-	
-}*/
+	return (sq_pop(sock_fd, udp_socket_q, buffer, conn));
+}
 
