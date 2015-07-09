@@ -95,18 +95,23 @@ struct arp_table * search_arp_table(uint32_t ip_to_search) {
 
 int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port_id) {
 	struct arp_table * arp_table_ptr = arp_table_root;
-	while(arp_table_ptr != NULL)
-			arp_table_ptr = arp_table_ptr->next;
-	arp_table_ptr = rte_malloc("struct arp_table", sizeof(struct arp_table), RTE_CACHE_LINE_SIZE);
+	if(arp_table_ptr == NULL) {
+		arp_table_ptr = rte_malloc("struct arp_table", sizeof(struct arp_table), RTE_CACHE_LINE_SIZE);
+	}
+	else {
+		while(arp_table_ptr->next != NULL)
+				arp_table_ptr = arp_table_ptr->next;
+		arp_table_ptr->next = rte_malloc("struct arp_table", sizeof(struct arp_table), RTE_CACHE_LINE_SIZE);
+		arp_table_ptr = arp_table_ptr->next;
+	}
 	if(arp_table_ptr == NULL)
-		return -1;
+		rte_exit(EXIT_FAILURE,"CAN'T ALLOCATE ARP TABLE ENTRY\n");
+
 	arp_table_ptr->ip_addr = ip_to_add;
 	ether_addr_copy(&(mac_to_add), &(arp_table_ptr->eth_mac));
 	arp_table_ptr->port_id = port_id;
 	arp_table_ptr->next = NULL;
 	arp_table_size++;
-	if(arp_table_root == NULL)
-		arp_table_root = arp_table_ptr;
 	printf("ARP entry added\n");
 	return 0;
 }

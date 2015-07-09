@@ -16,7 +16,7 @@ enum {
 struct event_io {
         uint8_t event_lock;
         uint8_t event_repeat;
-		uint8_t event_flags;
+	uint8_t event_flags;
         int sock_fd;
         void * event_cb;        //TODO args for cb
         struct event_io * next;

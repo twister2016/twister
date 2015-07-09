@@ -10,21 +10,21 @@ struct event_io *
 reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_flags) {
 	int core_id = rte_lcore_id();   //TODO use proper lcore id
 	struct event_io * temp_event_io = &root_event_io[core_id];
-	if(temp_event_io == NULL) {
-		temp_event_io = rte_malloc("struct event_io *", sizeof(struct event_io), 64);
-		temp_event_io->event_repeat = repeat_event;
-		temp_event_io->event_flags = event_flags;
-		temp_event_io->sock_fd = sock_fd;
-		temp_event_io->event_cb = cb_func;
-		temp_event_io->next = NULL;
-		return temp_event_io;
-	}
-	while(temp_event_io->next != NULL)
+	if(temp_event_io == NULL) 
+		temp_event_io = rte_malloc("struct event_io *", sizeof(struct event_io), RTE_CACHE_LINE_SIZE);
+	
+	else {
+		while(temp_event_io->next != NULL)
+			temp_event_io = temp_event_io->next;
+		if(event_flags != 0) 
+			rte_exit(EXIT_FAILURE,"EVENT FLAG SETTING NOT ALLOWED\n"); //TODO end properly
+		temp_event_io->next = rte_malloc("struct event_io *", sizeof(struct event_io), RTE_CACHE_LINE_SIZE);
 		temp_event_io = temp_event_io->next;
-	if(event_flags != 0) {
-		rte_exit(EXIT_FAILURE,"NO EVENT FLAGS\n"); //TODO end properly
 	}
-	temp_event_io = rte_malloc("struct event_io *", sizeof(struct event_io), 64);
+	if(temp_event_io == NULL)
+		rte_exit(EXIT_FAILURE,"CAN'T ALLOCATE IO EVENT\n");
+	temp_event_io->event_repeat = repeat_event;
+	temp_event_io->event_flags = event_flags;
         temp_event_io->sock_fd = sock_fd;
         temp_event_io->event_cb = cb_func;
         temp_event_io->next = NULL;
@@ -44,7 +44,7 @@ int start_io_events(void) {	//TODO tx callbacks --???
 	void (*cb_func) (void *, int, struct sock_conn_t);
 	do {
 		temp_event = &root_event_io[core_id];
-		printf("\n\n***************\n");
+		printf("\n\n*******eventloop********\n");
 		if(temp_event == NULL) 
 			rte_exit(EXIT_FAILURE,"NO EVENT FLAGS\n"); 
                 sleep(1);
@@ -65,7 +65,6 @@ int start_io_events(void) {	//TODO tx callbacks --???
 					else {
 						eth_pkt_parser(pkt, m[i].portid);
 					}
-						
 				}
 			}	
 		}

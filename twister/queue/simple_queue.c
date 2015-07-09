@@ -58,6 +58,7 @@ int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, struct sock_conn_t * c
 	int payload_size = temp_mbuf->data_len;
 	void * pkt_payload = rte_pktmbuf_mtod(temp_mbuf, void *);
 
+	data = rte_malloc("void *", sizeof(payload_size), RTE_CACHE_LINE_SIZE);
 	rte_memcpy(data, pkt_payload, payload_size);
 	conn->src_port = tmp_pkt->conn.src_port;
 	conn->dst_port = tmp_pkt->conn.dst_port;

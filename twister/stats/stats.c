@@ -1,5 +1,4 @@
 #include <stats.h>
-
  
 uint8_t udp_hdr_size = 8;
 uint8_t tcp_hdr_size = 32; 
@@ -206,47 +205,4 @@ void writeTestStats(void)
 
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
