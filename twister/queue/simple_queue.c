@@ -46,7 +46,7 @@ int sq_push(int q_id, struct sq_pkt_q* q_list, struct rte_mbuf * pkt, struct soc
 * assumes data has been allocated 'size' by caller
 * returns 0 if no data otherwise returns size of received data 
 */
-int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, struct sock_conn_t * conn)
+int sq_pop(int q_id, struct sq_pkt_q* q_list, void ** data, struct sock_conn_t * conn)
 {
 	printf("sq_pop\n");
 	struct sq_pkt* tmp_pkt = q_list[q_id].head;
@@ -56,11 +56,13 @@ int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, struct sock_conn_t * c
 	if(q_list[q_id].n_pkts < 1)
 		return 0;
 	struct rte_mbuf * temp_mbuf = tmp_pkt->pkt;
+	printf("temp_mbuf val %p\n", temp_mbuf);
 	int payload_size = temp_mbuf->data_len;
 	void * pkt_payload = rte_pktmbuf_mtod(temp_mbuf, void *);
 
-	data = rte_malloc("void *", sizeof(payload_size), RTE_CACHE_LINE_SIZE);
-	rte_memcpy(data, pkt_payload, payload_size);
+	*data = rte_malloc("void *", sizeof(payload_size), RTE_CACHE_LINE_SIZE);
+	rte_memcpy(*data, pkt_payload, payload_size);
+	printf("payload_size %d, %s\n", payload_size, (char *) *data);
 	conn->src_port = tmp_pkt->conn.src_port;
 	conn->dst_port = tmp_pkt->conn.dst_port;
 	conn->src_ip = tmp_pkt->conn.src_ip;
@@ -68,7 +70,9 @@ int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, struct sock_conn_t * c
 	q_list[q_id].head = tmp_pkt->next_pkt;
 	q_list[q_id].n_pkts--;
 	rte_pktmbuf_free(tmp_pkt->pkt);
+	printf("rte_pktmbuf_free(tmp_pkt->pkt)\n");
 	rte_free(tmp_pkt);
+	printf("rte_free(tmp_pkt)\n");
 	return payload_size;
 }
 

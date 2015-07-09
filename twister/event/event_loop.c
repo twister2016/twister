@@ -77,7 +77,8 @@ int start_io_events(void) {	//TODO tx callbacks --???
 			while(temp_event != NULL) {
 				cb_func = temp_event->event_cb;
 				while(udp_socket_q[temp_event->sock_fd].n_pkts > 0) {	//Implemented for UDP sockets only
-					payload_size = sq_pop(temp_event->sock_fd, udp_socket_q, payload_data, &conn);
+					payload_size = sq_pop(temp_event->sock_fd, udp_socket_q, &payload_data, &conn);
+					printf("payload data %s, %d\n", (char *) payload_data, payload_size);
 					cb_func(payload_data, payload_size, conn);
 				}
 				temp_event = temp_event->next;
