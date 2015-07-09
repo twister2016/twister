@@ -24,7 +24,7 @@ int launch_one_lcore(__attribute__((unused)) void *dummy) {
 
         while (1) {
                         sleep(1);
-                        printf("\n\n***************\n");
+                        printf("\n\n*******core %d********\n", rte_lcore_id());
                         print_arp_table();
                         udp_send(sockfd,data,5,convert_ip_str_to_dec("11.11.7.166"),8787);
                         twister_timely_burst();

@@ -26,6 +26,7 @@ int udp_socket(uint32_t ip_addr,uint32_t port)
 	sockptr =&sockets[maxfd];
 	sockptr->ip_addr=ip_addr;
 	sockptr->port=port;
+	printf("udp socket ip addr %d, port %d, fd %d\n", sockptr->ip_addr, sockptr->port, maxfd);
 	maxfd++;
 	return maxfd-1;
 }
@@ -42,13 +43,13 @@ int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint32_t dst_addr, uin
 	dummy.dst_port=port;
 	dummy.src_ip=sockptr->ip_addr;
 	dummy.dst_ip=dst_addr;
+	printf("udp send src_ip %d, dst_ip %d, src port %d, dst port %d\n", dummy.src_ip, dummy.dst_ip, dummy.src_port, dummy.dst_port);
 	rte_pktmbuf_append(pkt, buf_len);
 	void * payload = rte_pktmbuf_mtod(pkt, void *);
 	rte_memcpy(payload, buffer, buf_len);
 	//pkt->userdata=buffer;
 	//pkt->data_len=buf_len;
 	//pkt->pkt_len=pkt->data_len;
-	rte_pktmbuf_dump(stdout,pkt,100);
 	udp_packet_create(pkt,&dummy);
 	return 0;
 }

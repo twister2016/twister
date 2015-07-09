@@ -1,7 +1,7 @@
 [
     {
 	"port_num": "00",
-	"ip_addrs" :  [    { "start_ip_addr":"11.11.7.166", "num_ip_addrs":"01"}
+	"ip_addrs" :  [    { "start_ip_addr":"11.11.7.171", "num_ip_addrs":"01"}
                  ],
 	"gateway_ip": "11.11.7.1",
 	"subnet_mask" :  "255.255.255.0",
@@ -12,7 +12,7 @@
     },
     {
 	"port_num": "01",
-	"ip_addrs" :  [    { "start_ip_addr":"192.2.1.2", "num_ip_addrs":"01"}
+	"ip_addrs" :  [    { "start_ip_addr":"192.2.1.22", "num_ip_addrs":"01"}
                  ],
 	"gateway_ip": "192.2.1.1",
 	"subnet_mask" :  "255.255.255.0",

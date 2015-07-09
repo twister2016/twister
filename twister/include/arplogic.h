@@ -8,6 +8,7 @@
 #include <portconf.h>
 
 #define ARP_ENTRY_TIMEOUT 15000
+#define NUM_ARP_RETRIES 3
 
 struct arp_table {
 	uint32_t ip_addr;

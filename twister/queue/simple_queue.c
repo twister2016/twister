@@ -48,6 +48,7 @@ int sq_push(int q_id, struct sq_pkt_q* q_list, struct rte_mbuf * pkt, struct soc
 */
 int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, struct sock_conn_t * conn)
 {
+	printf("sq_pop\n");
 	struct sq_pkt* tmp_pkt = q_list[q_id].head;
 	
 	if(tmp_pkt == NULL)
@@ -67,7 +68,7 @@ int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, struct sock_conn_t * c
 	q_list[q_id].head = tmp_pkt->next_pkt;
 	q_list[q_id].n_pkts--;
 	rte_pktmbuf_free(tmp_pkt->pkt);
-	free(tmp_pkt);
+	rte_free(tmp_pkt);
 	return payload_size;
 }
 

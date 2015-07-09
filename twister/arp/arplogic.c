@@ -97,6 +97,7 @@ int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port
 	struct arp_table * arp_table_ptr = arp_table_root;
 	if(arp_table_ptr == NULL) {
 		arp_table_ptr = rte_malloc("struct arp_table", sizeof(struct arp_table), RTE_CACHE_LINE_SIZE);
+		arp_table_root = arp_table_ptr;
 	}
 	else {
 		while(arp_table_ptr->next != NULL)
@@ -150,6 +151,7 @@ int construct_arp_packet(uint32_t ip, uint8_t port_id) {
 }
 
 void print_arp_table(void) {
+	printf("print arp table\n");
         struct arp_table * temp_arp_entry = arp_table_root;
         while(temp_arp_entry != NULL) {
                 printf("IP: %d\n", temp_arp_entry->ip_addr);

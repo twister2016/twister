@@ -10,9 +10,10 @@ struct event_io *
 reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_flags) {
 	int core_id = rte_lcore_id();   //TODO use proper lcore id
 	struct event_io * temp_event_io = &root_event_io[core_id];
-	if(temp_event_io == NULL) 
+	if(temp_event_io == NULL) {
 		temp_event_io = rte_malloc("struct event_io *", sizeof(struct event_io), RTE_CACHE_LINE_SIZE);
-	
+		root_event_io[core_id] = *temp_event_io;
+	}
 	else {
 		while(temp_event_io->next != NULL)
 			temp_event_io = temp_event_io->next;
@@ -44,17 +45,20 @@ int start_io_events(void) {	//TODO tx callbacks --???
 	void (*cb_func) (void *, int, struct sock_conn_t);
 	do {
 		temp_event = &root_event_io[core_id];
-		printf("\n\n*******eventloop********\n");
+		printf("\n\n*******eventloop core %d********\n", core_id);
+
 		if(temp_event == NULL) 
-			rte_exit(EXIT_FAILURE,"NO EVENT FLAGS\n"); 
+			rte_exit(EXIT_FAILURE,"NO EVENTS REGISTERED\n"); 
                 sleep(1);
+		printf("twister_timely_burst\n");
                 twister_timely_burst();
                 update_queued_pkts();
+		printf("update_queued_pkts");
 		num_rx_pkts = rx_for_each_queue(m);
+		printf("event loop total pkts rx %d\n", num_rx_pkts);
 		if(num_rx_pkts > 0) {
 			for(i=0;i<qconf->num_queues;i++)
 			{
-				
 				for(pkt_count = 0;pkt_count < m[i].len;pkt_count++) {
 					pkt = m[i].m_table[pkt_count];	
 					if(temp_event->event_flags == GET_L2_PKTS) {
@@ -64,9 +68,10 @@ int start_io_events(void) {	//TODO tx callbacks --???
 					}
 					else {
 						eth_pkt_parser(pkt, m[i].portid);
+						printf("eth_pkt_parser");
 					}
 				}
-			}	
+			}
 		}
 		if(temp_event->event_flags == NO_FLAG_SET) {
 			while(temp_event != NULL) {
