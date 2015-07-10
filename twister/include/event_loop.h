@@ -24,7 +24,7 @@ struct event_io {
 
 int reg_flag_event(uint8_t, void *);
 
-struct event_io root_event_io[MAX_LCORES];
+struct event_io * root_event_io[MAX_LCORES];
 
 struct event_io * reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event ,uint8_t event_flags);
 

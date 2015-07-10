@@ -15,7 +15,7 @@ int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			vlan_parser(pkt, port_id);
 			break; */
 		case ETHER_TYPE_IPv4:
-			if(root_event_io[rte_lcore_id()].event_flags == GET_L3_PKTS)
+			if(root_event_io[rte_lcore_id()]->event_flags == GET_L3_PKTS)
 				printf("L3 PACKET Received /n");
 				//user function should come here
 			else{

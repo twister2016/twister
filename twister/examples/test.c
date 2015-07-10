@@ -11,7 +11,7 @@ int launch_one_lcore(__attribute__((unused)) void *);
 void print_payload(void *, int, struct sock_conn_t);
 
 void print_payload(void * payload_data, int payload_size, struct sock_conn_t conn) {
-	printf("Data %s, Data Length %d\n", (char *) payload_data, payload_size);
+	printf("CB Data %s, Data Length %d\n", (char *) payload_data, payload_size);
 	rte_free(payload_data);
 	return;
 }

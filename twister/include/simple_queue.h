@@ -37,7 +37,7 @@ extern void sq_init(struct sq_pkt_q q_list[]);
 extern int sq_push(int q_id, struct sq_pkt_q* q_list, struct rte_mbuf * pkt, struct sock_conn_t conn);
 
 /*pops an item from the end of the queue*/
-extern int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, struct sock_conn_t * conn);
+extern int sq_pop(int q_id, struct sq_pkt_q* q_list, void** data, struct sock_conn_t * conn);
 //extern int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size,struct sock_conn_t *conn);
 
 #endif  /*simple-queue.h*/

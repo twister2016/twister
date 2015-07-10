@@ -23,7 +23,7 @@ int launch_one_lcore(__attribute__((unused)) void *dummy) {
         char data[]={'t','e','s','t','1'};
 
         while (1) {
-                        sleep(1);
+                        //sleep(1);
                         printf("\n\n*******core %d********\n", rte_lcore_id());
                         print_arp_table();
                         udp_send(sockfd,data,5,convert_ip_str_to_dec("11.11.7.166"),8787);
