@@ -15,7 +15,7 @@ void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip)
 	struct udp_hdr *udp_hdr_d = rte_pktmbuf_mtod(pkt, struct udp_hdr *);
 	dst_port  = rte_be_to_cpu_16(udp_hdr_d->dst_port);
 	src_port = rte_be_to_cpu_16(udp_hdr_d->src_port);	
-//	irfkbnaero naern gaern g; int i=0;
+	int i=0;
    	struct socket_info * sockptr = NULL;
     	for (i=0;i<=maxfd;i++){			//TODO see if code can be improved ito performance
         	sockptr =&sockets[i];
