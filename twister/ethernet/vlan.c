@@ -1,3 +1,6 @@
+#ifndef _VLAN_C_
+#define _VLAN_C_
+
 #include <rte_ether.h>
 #include <vlan.h>
 #include <ip.h>
@@ -15,9 +18,9 @@ int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			vlan_parser(pkt, port_id);
 			break; */
 		case ETHER_TYPE_IPv4:
-			if(root_event_io[rte_lcore_id()]->event_flags == GET_L3_PKTS)
+			if(event_flags_global == GET_L3_PKTS)
 				printf("L3 PACKET Received /n");
-				//user function should come here
+				//TODO user function should come here
 			else{
 				ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
 			}	
@@ -38,4 +41,4 @@ int vlan_ctor(struct rte_mbuf * pkt, uint8_t port_id, uint16_t ether_type) {
     return 0;
 }
 
-
+#endif

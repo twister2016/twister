@@ -3,15 +3,22 @@
 #include <rx.h>
 #include <initfuncs.h>
 #include <event_loop.h>
+#include <timestamp.h>
 
 //int PIPELINE=0;
 
+struct timestamp_option * pkt_timestamp;
+
 int main (int, char **);
 int launch_one_lcore(__attribute__((unused)) void *);
-void print_payload(void *, int, struct sock_conn_t);
+void reply_payload(int, void *, int, struct sock_conn_t);
 
-void print_payload(void * payload_data, int payload_size, struct sock_conn_t conn) {
+void reply_payload(int sock_fd, void * payload_data, int payload_size, struct sock_conn_t conn) {
 	printf("CB Data %s, Data Length %d\n", (char *) payload_data, payload_size);
+	pkt_timestamp = (struct timestamp_option *) payload_data;
+	parse_timestamp(pkt_timestamp);
+	add_timestamp(pkt_timestamp);
+	udp_send(sock_fd,(void *) pkt_timestamp,sizeof(struct timestamp_option),convert_ip_str_to_dec("11.11.7.166"),8787);
 	rte_free(payload_data);
 	return;
 }
@@ -23,11 +30,11 @@ int main(int argc, char **argv ) {
 }
 
 int launch_one_lcore(__attribute__((unused)) void *dummy) {
-	
-	void (*rx_cb_func) (void *, int, struct sock_conn_t) = print_payload;
-
+	void (*rx_cb_func) (int, void *, int, struct sock_conn_t) = reply_payload;
 	int sockfd = udp_socket(port_info[0].start_ip_addr, 8787);
-	struct event_io * io_event = reg_io_event(sockfd, rx_cb_func, 1, NO_FLAG_SET);
+	event_flags_global = NO_FLAG_SET;
+	struct event_io * io_event_rx = reg_io_event(sockfd, rx_cb_func, REPEAT_EVENT, NO_FLAG_SET, RX_CALLBACK);
+	//struct event_io * io_event_tx = reg_io_event(sockfd, tx_cb_func, REPEAT_EVENT, NO_FLAG_SET, TX_CALLBACK);
 	start_io_events();
         return 0;
 }

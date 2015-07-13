@@ -1,3 +1,6 @@
+#ifndef _ETHERNET_C_
+#define _ETHERNET_C_
+
 #include <rte_ether.h>
 #include <portconf.h>
 #include <vlan.h>
@@ -64,7 +67,7 @@ int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			break;
 		case ETHER_TYPE_IPv4:
 			rte_pktmbuf_adj(pkt, sizeof(struct ether_hdr));
-			if(root_event_io[rte_lcore_id()]->event_flags == GET_L3_PKTS)
+			if(event_flags_global == GET_L3_PKTS)
 				printf("L3 PACKET Received /n");
 				//user function should come here
 			else{
@@ -81,4 +84,4 @@ int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 	return 0;
 }
 
-
+#endif

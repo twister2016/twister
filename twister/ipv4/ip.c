@@ -1,3 +1,6 @@
+#ifndef _IPv4_C_
+#define _IPv4_C_
+
 #include <rte_ip.h>
 #include <rte_memcpy.h>
 #include <rte_byteorder.h>
@@ -38,7 +41,7 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 		{
 			case (UDP_PROTO_ID):
 			rte_pktmbuf_adj(pkt, sizeof(struct ipv4_hdr));
-			if(root_event_io[rte_lcore_id()]->event_flags == GET_L4_PKTS)
+			if(event_flags_global == GET_L4_PKTS)
 				printf("L4 PACKET Received /n");
 			//user function should come here
 			else
@@ -91,4 +94,4 @@ void ip4_packet_create(struct rte_mbuf *pkt,uint8_t next_proto_id,uint32_t src_i
 	eth_pkt_ctor(pkt, port_id, ETHER_TYPE_IPv4, dst_ip );
 }
 
-
+#endif

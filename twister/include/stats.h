@@ -70,7 +70,7 @@ struct packet_stats global_stats;
 void clearScr(void);
 int init_stats (uint8_t, uint32_t );
 void printXfgenStats(void);
-void calcAverageRtt(uint64_t);
+void calc_average_rtt(uint64_t);
 void writeTestStats(void);
 
 uint64_t prev_pkt_transmitted;

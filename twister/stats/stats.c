@@ -48,7 +48,7 @@ int init_stats (uint8_t port_id, uint32_t dst_ip ) {
     return 0;
 }
 
-void calcAverageRtt(uint64_t time_clk)
+void calc_average_rtt(uint64_t time_clk)
 {			
 	struct average_filter *average_entry = (struct average_filter *) malloc(sizeof(struct average_filter));
 	float curr_pkt_rtt = (float)time_clk/(float)average_filter_len;

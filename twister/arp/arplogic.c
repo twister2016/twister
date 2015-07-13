@@ -34,6 +34,9 @@ int arp_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 		printf("arp tip %d, port ip %d\n", rte_be_to_cpu_32(arp_pkt->arp_data.arp_tip), port_info[port_id].start_ip_addr);
 		if(rte_be_to_cpu_32(arp_pkt->arp_data.arp_tip) == port_info[port_id].start_ip_addr) { //&& (port_info[port_id].flags & REPLY_ARP)) {
 				printf("send arp reply\n");
+				if(search_arp_table(arp_pkt->arp_data.arp_sip) == NULL) { //Save ARP entry for local use also
+					add_arp_entry(arp_pkt->arp_data.arp_sip, arp_pkt->arp_data.arp_sha, port_id);
+				}
 				send_arp_reply(pkt, port_id);
 				return 0;
 		}
