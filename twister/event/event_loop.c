@@ -22,8 +22,8 @@ reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_fl
 	else {
 		while(temp_event_io->next != NULL)
 			temp_event_io = temp_event_io->next;
-		if(event_flags != 0) 
-			rte_exit(EXIT_FAILURE,"EVENT FLAG SETTING NOT ALLOWED\n"); //TODO end properly
+		//if(event_flags != 0) 
+			//rte_exit(EXIT_FAILURE,"EVENT FLAG SETTING NOT ALLOWED\n"); //TODO end properly
 		temp_event_io->next = rte_malloc("struct event_io *", sizeof(struct event_io), RTE_CACHE_LINE_SIZE);
 		temp_event_io = temp_event_io->next;
 		printf("event regd at temp\n");
@@ -61,8 +61,8 @@ int start_io_events(void) {	//TODO tx callbacks --???
                 //sleep(1);
 		printf("twister_timely_burst\n");
                 twister_timely_burst();
+		printf("update_queued_pkts\n");
                 update_queued_pkts();
-		printf("update_queued_pkts");
 		num_rx_pkts = rx_for_each_queue(m);
 		printf("event loop total pkts rx %d\n", num_rx_pkts);
 		if(num_rx_pkts > 0) {	//TODO Enable rx and tx check
@@ -70,7 +70,7 @@ int start_io_events(void) {	//TODO tx callbacks --???
 			{
 				for(pkt_count = 0;pkt_count < m[i].len;pkt_count++) {
 					pkt = m[i].m_table[pkt_count];	
-					if(event_flags_global & GET_L2_PKTS) {
+					if(event_flags_global == GET_L2_PKTS) {
 						printf("Get L2 pkts\n");
 						cb_func_with_flags = temp_event->event_cb;
 						cb_func_with_flags(pkt, m[i].portid);
@@ -82,7 +82,7 @@ int start_io_events(void) {	//TODO tx callbacks --???
 				}
 			}
 		}
-		if(event_flags_global & NO_FLAG_SET) {
+		if(event_flags_global == NO_FLAG_SET) {
 			while(temp_event != NULL) {
 				printf("cb_func %p in temp event %p root event %p root next %p sockfd %d\n", temp_event->event_cb, temp_event, root_event_io[rte_lcore_id()], root_event_io[rte_lcore_id()]->next, temp_event->sock_fd);
 				if(temp_event->type == RX_CALLBACK) {

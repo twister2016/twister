@@ -45,7 +45,6 @@ int twister_timely_burst(void) {
 			qconf->tx_mbufs[portid].len = 0;
 			prev_tsc=cur_tsc;
 		}
-
 	}
         return 0;
 }

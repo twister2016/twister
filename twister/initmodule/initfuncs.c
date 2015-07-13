@@ -174,7 +174,7 @@ int init_user_given_vals(void) {
 	get_port_conf_json_vals("port_conf");
 	get_lcore_queue_conf_json_vals("lcore_queue_conf");
 	get_processing_conf_json_vals("processing_conf");
-	queue_time_limit = 15;			//--!TODO use file values parsed by jSON
+	queued_pkt_time_limit = 10;			//--!TODO use file values parsed by jSON
 	return 0;				//--!JSON...port ips...num of rx/tx queues...flags...vlan tag
 }
 
