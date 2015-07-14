@@ -11,7 +11,6 @@ twister_send_burst(struct lcore_conf *qconf, unsigned n, uint8_t port)
 	unsigned queueid =0;
 	m_table = (struct rte_mbuf **)qconf->tx_mbufs[port].m_table;
 	ret = rte_eth_tx_burst(port, (uint16_t) queueid, m_table, (uint16_t) n);
-	printf("rte_eth_tx_burst ret %d, port %d, queue id %d num pkts %d\n", ret, port, queueid, n);
 	global_stats.packet_transmitted = global_stats.packet_transmitted + ret; //global variable in stats.h
 	if (unlikely(ret < n)) {	
 		do {

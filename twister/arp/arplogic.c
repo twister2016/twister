@@ -82,10 +82,6 @@ int process_arp_reply(struct ether_hdr * eth, uint8_t port_id) {
 
 struct arp_table * search_arp_table(uint32_t ip_to_search) {
 	ip_to_search = rte_be_to_cpu_32(ip_to_search);
-<<<<<<< HEAD
-=======
-	printf("search arp table %d\n", ip_to_search);
->>>>>>> b9e80865e6f40f55eb5731dd068f4188b69e0007
 	struct arp_table * arp_table_ptr = arp_table_root;
 	while(arp_table_ptr != NULL) {
 		if(arp_table_ptr->ip_addr == ip_to_search)
