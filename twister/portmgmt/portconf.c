@@ -23,7 +23,6 @@ int get_port_by_ip(uint32_t ip_addr)
 	{
 	    	if(port_info[i].start_ip_addr == ip_addr)
 		{
-			printf("port_id ********** %d\n", i);
 	        	return i;
 		}
 	}

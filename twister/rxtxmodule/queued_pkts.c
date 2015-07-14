@@ -26,7 +26,7 @@ int add_pkt_to_queue(struct rte_mbuf * pkt, uint32_t arp_ip_of_pkt, uint16_t por
 		return -1;
 	pkt_to_queue->pkt = pkt;
 	pkt_to_queue->timercycle = curr_timer_cycle;
-	pkt_to_queue->arp_ip = arp_ip_of_pkt;
+	pkt_to_queue->arp_ip = rte_cpu_to_be_32(arp_ip_of_pkt);
 	pkt_to_queue->port_id = port_id;
 	pkt_to_queue->next = NULL;
 	return 0;
@@ -55,7 +55,6 @@ int update_queued_pkts(void) {
 			continue;
 		}
 		rte_pktmbuf_free(curr_queued_pkt->pkt);			//Else delete the queued packet as time limit has passed
-		printf("delete queued pkt\n");
 		delete_queued_pkt(&prev_queued_pkt, &curr_queued_pkt);
 	}
 	return 0;

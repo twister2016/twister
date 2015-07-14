@@ -28,12 +28,9 @@ struct ether_addr querycastmac ={
 int arp_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
 	struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth+1);	
-	printf("arp_parser\n");
 	//remove the eth header, and see if its a request or reply and act accordingly
 	if(rte_be_to_cpu_16(arp_pkt->arp_op) == ARP_OP_REQUEST) {
-		printf("arp tip %d, port ip %d\n", rte_be_to_cpu_32(arp_pkt->arp_data.arp_tip), port_info[port_id].start_ip_addr);
 		if(rte_be_to_cpu_32(arp_pkt->arp_data.arp_tip) == port_info[port_id].start_ip_addr) { //&& (port_info[port_id].flags & REPLY_ARP)) {
-				printf("send arp reply\n");
 				if(search_arp_table(arp_pkt->arp_data.arp_sip) == NULL) { //Save ARP entry for local use also
 					add_arp_entry(arp_pkt->arp_data.arp_sip, arp_pkt->arp_data.arp_sha, port_id);
 				}
@@ -42,12 +39,10 @@ int arp_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 		}
 	}
 	else if(rte_be_to_cpu_16(arp_pkt->arp_op) == ARP_OP_REPLY) {
-		printf("process arp reply\n");
 		process_arp_reply(eth, port_id);
 		return 0;
 	}
 	
-	printf("delete ARP pkt\n");
 	rte_pktmbuf_free(pkt);
 	return 0;
 }
@@ -86,11 +81,12 @@ int process_arp_reply(struct ether_hdr * eth, uint8_t port_id) {
 }
 
 struct arp_table * search_arp_table(uint32_t ip_to_search) {
+	ip_to_search = rte_be_to_cpu_32(ip_to_search);
 	struct arp_table * arp_table_ptr = arp_table_root;
 	while(arp_table_ptr != NULL) {
 		if(arp_table_ptr->ip_addr == ip_to_search)
 			return arp_table_ptr;
-		else	
+		else
 			arp_table_ptr = arp_table_ptr->next;
 	}
 	return NULL;
@@ -111,12 +107,11 @@ int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port
 	if(arp_table_ptr == NULL)
 		rte_exit(EXIT_FAILURE,"CAN'T ALLOCATE ARP TABLE ENTRY\n");
 
-	arp_table_ptr->ip_addr = ip_to_add;
+	arp_table_ptr->ip_addr = rte_be_to_cpu_32(ip_to_add);
 	ether_addr_copy(&(mac_to_add), &(arp_table_ptr->eth_mac));
 	arp_table_ptr->port_id = port_id;
 	arp_table_ptr->next = NULL;
 	arp_table_size++;
-	printf("ARP entry added\n");
 	return 0;
 }
 
@@ -149,7 +144,6 @@ int construct_arp_packet(uint32_t ip, uint8_t port_id) {
 		return 0;
 	}
 	add_pkt_to_tx_queue(m, port_id);				
-				
 	return 0;
 }
 

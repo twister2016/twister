@@ -10,7 +10,6 @@
 
 void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip)
 {
-	printf("udp_packet_parser\n");
 	uint16_t dst_port, src_port;
 	struct udp_hdr *udp_hdr_d = rte_pktmbuf_mtod(pkt, struct udp_hdr *);
 	dst_port  = rte_be_to_cpu_16(udp_hdr_d->dst_port);
@@ -24,7 +23,6 @@ void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip)
             	}
     	}	
 	if (i >= maxfd){
-		printf("Src Port %d and dst port %d not found\n", src_port, dst_port);
 		rte_pktmbuf_free(pkt);
 		return;
 	}
@@ -35,7 +33,6 @@ void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip)
 
 void udp_packet_create(struct rte_mbuf *pkt, struct sock_conn_t *udp_conn)
 {
-	printf("UDP Pkt create src ip%d\n", udp_conn->src_ip);
 	struct udp_hdr *udp_hdr_d;
 	rte_pktmbuf_prepend(pkt, sizeof(struct udp_hdr));
 	udp_hdr_d = rte_pktmbuf_mtod(pkt, struct udp_hdr *);
