@@ -18,7 +18,7 @@ void reply_payload(int sock_fd, void * payload_data, int payload_size, struct so
 	pkt_timestamp = (struct timestamp_option *) payload_data;
 	parse_timestamp(pkt_timestamp);
 	add_timestamp(pkt_timestamp);
-	udp_send(sock_fd,(void *) pkt_timestamp,sizeof(struct timestamp_option),convert_ip_str_to_dec("11.11.7.166"),8787);
+	udp_send(sock_fd,(void *) pkt_timestamp,sizeof(struct timestamp_option),convert_ip_str_to_dec("11.11.7.171"),7898);
 	rte_free(payload_data);
 	return;
 }

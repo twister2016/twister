@@ -86,11 +86,13 @@ int process_arp_reply(struct ether_hdr * eth, uint8_t port_id) {
 }
 
 struct arp_table * search_arp_table(uint32_t ip_to_search) {
+	ip_to_search = rte_be_to_cpu_32(ip_to_search);
+	printf("search arp table %d\n", ip_to_search);
 	struct arp_table * arp_table_ptr = arp_table_root;
 	while(arp_table_ptr != NULL) {
 		if(arp_table_ptr->ip_addr == ip_to_search)
 			return arp_table_ptr;
-		else	
+		else
 			arp_table_ptr = arp_table_ptr->next;
 	}
 	return NULL;
@@ -111,7 +113,7 @@ int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port
 	if(arp_table_ptr == NULL)
 		rte_exit(EXIT_FAILURE,"CAN'T ALLOCATE ARP TABLE ENTRY\n");
 
-	arp_table_ptr->ip_addr = ip_to_add;
+	arp_table_ptr->ip_addr = rte_be_to_cpu_32(ip_to_add);
 	ether_addr_copy(&(mac_to_add), &(arp_table_ptr->eth_mac));
 	arp_table_ptr->port_id = port_id;
 	arp_table_ptr->next = NULL;
@@ -149,7 +151,6 @@ int construct_arp_packet(uint32_t ip, uint8_t port_id) {
 		return 0;
 	}
 	add_pkt_to_tx_queue(m, port_id);				
-				
 	return 0;
 }
 
