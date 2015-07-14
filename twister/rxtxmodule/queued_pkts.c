@@ -46,6 +46,7 @@ int update_queued_pkts(void) {
 	struct queued_pkt * prev_queued_pkt = curr_queued_pkt;
 	while(curr_queued_pkt) {
 		time_diff = get_time_diff(curr_timer_cycle, curr_queued_pkt->timercycle, one_sec);
+		printf("time diff %lu\n", time_diff);
 		if(likely(time_diff < queued_pkt_time_limit)) {
 			struct arp_table * arp_entry = search_arp_table(curr_queued_pkt->arp_ip);
 			if(unlikely(arp_entry != NULL))
