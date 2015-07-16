@@ -13,7 +13,6 @@ int rx_for_each_queue(struct mbuf_table * m) {
 		nb_pkt_rx += get_pkt_from_rx_queue(&m[i],qconf->mngd_queues[i].port_id,qconf->mngd_queues[i].queue_id);
 		m[i].portid=qconf->mngd_queues[i].port_id;
 		m[i].len=nb_pkt_rx;
-		printf("get pkts rx queue num of pkts %d, port id %d\n", m[i].len, m[i].portid);
 		total_pkts_rx +=nb_pkt_rx;
 	}
 	return total_pkts_rx;
@@ -25,7 +24,7 @@ int get_pkt_from_rx_queue(struct mbuf_table * m, uint8_t port,uint8_t queue_id) 
 	unsigned nb_pkt_rx = 0;
 	nb_pkt_rx = rte_eth_rx_burst(port, queue_id, m->m_table, MAX_PKT_BURST);
 	//printf("%d num pkt rx\n", nb_pkt_rx);
-	global_stats.packet_received += nb_pkt_rx; //global variable in stats.h
+	global_stats_option.pkts_rx += nb_pkt_rx; //global variable in stats.h
 	return nb_pkt_rx;
 }
 

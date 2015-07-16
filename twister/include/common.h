@@ -6,11 +6,11 @@
 #include <inttypes.h>
 
 
-uint8_t convert_str_to_iparr(char *, uint8_t *);
+uint8_t convert_str_to_iparr(const char *, uint8_t *);
 uint32_t convert_str_to_hex(char *, uint8_t);
 void ipDecToArr( uint32_t, uint8_t *);
 uint32_t ip_arr_To_dec(uint8_t *);
-uint32_t convert_ip_str_to_dec(char *);
+uint32_t convert_ip_str_to_dec(const char *);
 uint8_t strLen(const char *);
 void sliceArray(const char *, char *, uint8_t, uint8_t);
 uint8_t findChar(const char *, int *, char, uint8_t);

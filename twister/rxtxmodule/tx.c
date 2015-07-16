@@ -11,12 +11,12 @@ twister_send_burst(struct lcore_conf *qconf, unsigned n, uint8_t port)
 	unsigned queueid =0;
 	m_table = (struct rte_mbuf **)qconf->tx_mbufs[port].m_table;
 	ret = rte_eth_tx_burst(port, (uint16_t) queueid, m_table, (uint16_t) n);
-	global_stats.packet_transmitted = global_stats.packet_transmitted + ret; //global variable in stats.h
+	global_stats_option.pkts_tx += ret; //global variable in stats.h
 	if (unlikely(ret < n)) {	
 		do {
 			rte_pktmbuf_free(m_table[ret]);
 		} while (++ret < n);
-		global_stats.packet_dropped = global_stats.packet_dropped + (n-ret);
+		global_stats_option.pkts_dropped += (n-ret);
 	}
 
 	return 0;

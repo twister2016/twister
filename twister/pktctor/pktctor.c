@@ -12,17 +12,13 @@
 
 
 int pkt_ctor(struct rte_mbuf* m, void* ptr_l4, uint32_t eth_proto) {
-    struct sock_conn_t *udp_conn = ( struct sock_conn_t * ) ptr_l4 ;
-    if (m == NULL) {
-        return -1;
-    }
+    	struct sock_conn_t *udp_conn = ( struct sock_conn_t * ) ptr_l4 ;
+    	if (m == NULL) {
+        	return -1;
+    	}
     
-    if (eth_proto == UDP_PROTO_ID ) {
-        udp_packet_create(m, udp_conn);
-        
-    }
-    
-    
-    
-return 0;
+    	if (eth_proto == UDP_PROTO_ID ) {
+        	udp_packet_create(m, udp_conn);
+    	}
+	return 0;
 }

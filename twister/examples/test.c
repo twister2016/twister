@@ -14,22 +14,24 @@ int launch_one_lcore(__attribute__((unused)) void *);
 void reply_payload(int, void *, int, struct sock_conn_t);
 
 void reply_payload(int sock_fd, void * payload_data, int payload_size, struct sock_conn_t conn) {
-	printf("CB Data %s, Data Length %d\n", (char *) payload_data, payload_size);
 	pkt_timestamp = (struct timestamp_option *) payload_data;
 	parse_timestamp(pkt_timestamp);
 	add_timestamp(pkt_timestamp);
-	udp_send(sock_fd,(void *) pkt_timestamp,sizeof(struct timestamp_option),convert_ip_str_to_dec("11.11.7.166"),8787);
+	printf("Timestamp Received %u, Sending Timestamp %u\n", pkt_timestamp->echo_timestamp, pkt_timestamp->timestamp);
+	udp_send(sock_fd,(void *) pkt_timestamp,sizeof(struct timestamp_option),convert_ip_str_to_dec("11.11.7.171"),7898);
 	rte_free(payload_data);
 	return;
 }
 
-int main(int argc, char **argv ) {
+int main(int argc, char **argv )
+{
 	init_global(argc, argv);
 	rte_eal_mp_remote_launch(launch_one_lcore, NULL, CALL_MASTER);
-	return 0;	
+	return 0;
 }
 
-int launch_one_lcore(__attribute__((unused)) void *dummy) {
+int launch_one_lcore(__attribute__((unused)) void *dummy)
+ {
 	void (*rx_cb_func) (int, void *, int, struct sock_conn_t) = reply_payload;
 	int sockfd = udp_socket(port_info[0].start_ip_addr, 8787);
 	event_flags_global = NO_FLAG_SET;

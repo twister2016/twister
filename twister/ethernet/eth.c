@@ -34,27 +34,22 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
 		arp_ip = port_info[port_id].gateway_ip;
     	struct arp_table *  arp_table_ptr = search_arp_table(rte_cpu_to_be_32(arp_ip));
         if(arp_table_ptr == NULL) {
-		printf("no arp entry\n");
 		add_pkt_to_queue(m, arp_ip, port_id);
          	construct_arp_packet(arp_ip, port_id); 
         }
         else {
-		printf("arp entry found\n");
             	ether_addr_copy(&(arp_table_ptr->eth_mac), &(eth->d_addr));
-				if(PIPELINE==1)
-				{
-					add_packet_to_tx_pipeline(m, port_id);
-					return 0;
-				}
+		if(PIPELINE==1)
+		{
+			add_packet_to_tx_pipeline(m, port_id);
+			return 0;
+		}
             	add_pkt_to_tx_queue(m, port_id);
         }
-	printf("eth4\n");
-    	       
     	return 0;
 }
 
 int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
-	printf("eth_pkt_parser\n");
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
 	uint8_t accept_brdcast = is_broadcast_ether_addr(&(eth->d_addr)) & ACCEPT_BRDCAST;
 	if(is_same_ether_addr(&(eth->d_addr), port_info[port_id].eth_mac) || accept_brdcast) {
@@ -69,7 +64,7 @@ int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			rte_pktmbuf_adj(pkt, sizeof(struct ether_hdr));
 			if(event_flags_global == GET_L3_PKTS)
 				printf("L3 PACKET Received /n");
-				//user function should come here
+				//TODO user function should come here
 			else{
 				ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
 			}		

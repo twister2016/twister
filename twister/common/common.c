@@ -3,7 +3,7 @@
 
 #include <common.h>
 
-uint8_t convert_str_to_iparr(char *value, uint8_t *ipVar)
+uint8_t convert_str_to_iparr(const char *value, uint8_t *ipVar)
 {
 	int ip[5];
 	ip[0] = -1;
@@ -79,7 +79,7 @@ uint32_t ip_arr_To_dec(uint8_t *ip)
 	return( (uint32_t)((ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + (ip[3])));
 }
 
-uint32_t convert_ip_str_to_dec(char * ip_str) {
+uint32_t convert_ip_str_to_dec(const char * ip_str) {
 	uint8_t ip_arr[4];	
 	if(convert_str_to_iparr(ip_str, ip_arr)) 
 		return ip_arr_To_dec(ip_arr);

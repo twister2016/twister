@@ -9,7 +9,6 @@
 
 struct event_io * 
 reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_flags, uint8_t event_type) {
-	printf("reg_io_event with callback %p root event %p\n", cb_func, root_event_io[rte_lcore_id()]);
 	int core_id = rte_lcore_id();   //TODO use proper lcore id
 	struct event_io * temp_event_io;
 	
@@ -17,7 +16,6 @@ reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_fl
 	if(temp_event_io == NULL) {
 		temp_event_io = rte_malloc("struct event_io *", sizeof(struct event_io), RTE_CACHE_LINE_SIZE);
 		root_event_io[core_id] = temp_event_io;
-		printf("event regd at root\n");
 	}
 	else {
 		while(temp_event_io->next != NULL)
@@ -26,7 +24,6 @@ reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_fl
 			//rte_exit(EXIT_FAILURE,"EVENT FLAG SETTING NOT ALLOWED\n"); //TODO end properly
 		temp_event_io->next = rte_malloc("struct event_io *", sizeof(struct event_io), RTE_CACHE_LINE_SIZE);
 		temp_event_io = temp_event_io->next;
-		printf("event regd at temp\n");
 	}
 	if(temp_event_io == NULL)
 		rte_exit(EXIT_FAILURE,"CAN'T ALLOCATE IO EVENT\n");
@@ -42,6 +39,7 @@ reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_fl
 int start_io_events(void) {	//TODO tx callbacks --???
 	int num_rx_pkts, pkt_count, payload_size = 0, i;
 	int core_id = rte_lcore_id();
+	uint64_t curr_time_cycle = 0, prev_stats_cycle= 0, prev_queue_cycle = 0, time_diff = 0;
 	struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()] ;
 	struct mbuf_table m[qconf->num_queues];
 	struct rte_mbuf * pkt;
@@ -51,47 +49,57 @@ int start_io_events(void) {	//TODO tx callbacks --???
 	void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t);
 	void (*rx_cb_func) (int, void *, int, struct sock_conn_t);
 	void (*tx_cb_func) (int);
+
+	open_stats_socket();	
+
 	do {
+		printf("\n**********event loop***********\n");
+		curr_time_cycle = get_current_timer_cycles();
+		time_diff = get_time_diff(curr_time_cycle, prev_queue_cycle, one_msec);
+		printf("time diff %lu\n", time_diff);
+		if(unlikely(time_diff > queue_update_limit)) {
+			printf("update queued pkts\n");
+                	update_queued_pkts(curr_time_cycle);
+			prev_queue_cycle = curr_time_cycle;
+		}
+
+		time_diff = get_time_diff(curr_time_cycle, prev_stats_cycle, one_msec);
+		printf("time diff %lu, stat update limit %d\n", time_diff, stats_update_limit);
+		if(unlikely(time_diff > stats_update_limit)) {
+			printf("send stats pkts\n");
+			send_stats_pkt();
+			prev_stats_cycle = curr_time_cycle;
+		}
+
 		temp_event = root_event_io[core_id];
-		printf("\n\n*******eventloop core %d********\n", core_id);
-		print_arp_table();
 
 		if(temp_event == NULL) 
 			rte_exit(EXIT_FAILURE,"NO EVENTS REGISTERED\n"); 
-                //sleep(1);
-		printf("twister_timely_burst\n");
+                sleep(1);
                 twister_timely_burst();
-		printf("update_queued_pkts\n");
-                update_queued_pkts();
 		num_rx_pkts = rx_for_each_queue(m);
-		printf("event loop total pkts rx %d\n", num_rx_pkts);
 		if(num_rx_pkts > 0) {	//TODO Enable rx and tx check
 			for(i=0;i<qconf->num_queues;i++)
 			{
 				for(pkt_count = 0;pkt_count < m[i].len;pkt_count++) {
 					pkt = m[i].m_table[pkt_count];	
 					if(event_flags_global == GET_L2_PKTS) {
-						printf("Get L2 pkts\n");
 						cb_func_with_flags = temp_event->event_cb;
 						cb_func_with_flags(pkt, m[i].portid);
 					}
 					else {
 						eth_pkt_parser(pkt, m[i].portid);
-						printf("eth_pkt_parser");
 					}
 				}
 			}
 		}
 		if(event_flags_global == NO_FLAG_SET) {
 			while(temp_event != NULL) {
-				printf("cb_func %p in temp event %p root event %p root next %p sockfd %d\n", temp_event->event_cb, temp_event, root_event_io[rte_lcore_id()], root_event_io[rte_lcore_id()]->next, temp_event->sock_fd);
 				if(temp_event->type == RX_CALLBACK) {
 					rx_cb_func = temp_event->event_cb;
 					while(udp_socket_q[temp_event->sock_fd].n_pkts > 0) {	//Implemented for UDP sockets only
 						payload_size = sq_pop(temp_event->sock_fd, udp_socket_q, &payload_data, &conn);
-						printf("payload data %s, %d\n", (char *) payload_data, payload_size);
 						rx_cb_func(temp_event->sock_fd, payload_data, payload_size, conn);
-						printf("CB end");
 					}
 				}
 				else { //TX_CALLBACK

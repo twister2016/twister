@@ -15,6 +15,7 @@ struct print_stats *end_test_stats  = NULL;
 struct rte_eth_stats* port_stats;
 uint64_t stats_time_period=0;
 uint8_t average_list_size = 0;
+int stats_fd = -1;
 
 void clearScr(void)
 {
@@ -25,6 +26,19 @@ void clearScr(void)
         printf("%s%s", clr, topLeft);
 }
 
+int open_stats_socket(void) {
+	stats_server_ip = "11.11.7.111";
+	stats_fd = udp_socket(port_info[stats_port].start_ip_addr, l4_stats_port);
+	return stats_fd;
+}
+
+int send_stats_pkt(void) {
+	global_stats_option.timestamp = get_current_timer_cycles();
+	printf("pkts tx %lu\n", global_stats_option.pkts_tx);
+	udp_send(stats_fd, (void *) &global_stats_option, sizeof(struct stats_option), convert_ip_str_to_dec(stats_server_ip), l4_stats_port);
+	return 0;
+}
+
 int init_stats (uint8_t port_id, uint32_t dst_ip ) {
     
     int socket_id = rte_eth_dev_socket_id(port_id);
@@ -33,14 +47,14 @@ int init_stats (uint8_t port_id, uint32_t dst_ip ) {
     port_stats= rte_malloc ("PortStatArray", sizeof(struct rte_eth_stats)*total_eth_ports, 0 );
     
     struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
-    rte_pktmbuf_prepend(m, sizeof(struct packet_stats));
-	struct packet_stats *sta  = rte_pktmbuf_mtod(m, struct packet_stats *);
-    sta->PPS = 512; //randomly written PPS packet persecond
+    rte_pktmbuf_prepend(m, sizeof(struct stats_option));
+	struct stats_option *sta  = rte_pktmbuf_mtod(m, struct stats_option *);
+    sta->rx_pps = 512; //randomly written PPS packet persecond
     sta->timestamp = rte_cpu_to_be_64(rte_rdtsc()/one_usec);
     
     struct sock_conn_t* udp_stat_struct = rte_malloc ("UdpStructurForStat", sizeof (struct sock_conn_t ), 0 );
     udp_stat_struct->src_port = port_id;
-    udp_stat_struct->dst_port = l4_stat_port;             //randomly chosen for destination app written in python
+    udp_stat_struct->dst_port = l4_stats_port;             //randomly chosen for destination app written in python
     udp_stat_struct->src_ip = port_info[port_id].start_ip_addr;
     udp_stat_struct->dst_ip = dst_ip;
     pkt_ctor(m,udp_stat_struct ,UDP_PROTO_ID);
@@ -50,7 +64,7 @@ int init_stats (uint8_t port_id, uint32_t dst_ip ) {
 
 void calc_average_rtt(uint64_t time_clk)
 {			
-	struct average_filter *average_entry = (struct average_filter *) malloc(sizeof(struct average_filter));
+	struct average_filter *average_entry = (struct average_filter *) rte_malloc("struct average_filter *", sizeof(struct average_filter), 64);
 	float curr_pkt_rtt = (float)time_clk/(float)average_filter_len;
 		
 	average_entry->timestamp = curr_pkt_rtt;
@@ -78,7 +92,7 @@ void calc_average_rtt(uint64_t time_clk)
 		struct average_filter *temp = root_rtt_average;
 		average_rtt = average_rtt - root_rtt_average->timestamp;
 		root_rtt_average = root_rtt_average->next;
-		free(temp);
+		rte_free(temp);
 	}
 }    
     
@@ -89,8 +103,8 @@ void printXfgenStats(void)
 	struct print_stats *curr_stats = rte_malloc ("test_stats_array" ,sizeof(struct print_stats),0);
 	
 	printf("-------------------------------------------------------\n");
-	data_pkt_sent = global_stats.packet_transmitted;
-	data_pkt_recvd = global_stats.packet_received;
+	data_pkt_sent = global_stats_option.pkts_tx;
+	data_pkt_recvd = global_stats_option.pkts_rx;
 	
 	const uint64_t sent_pkt_per_sec		= data_pkt_sent - prev_pkt_transmitted;
 	const uint64_t recvd_pkt_per_sec 	= data_pkt_recvd - prev_pkt_received;

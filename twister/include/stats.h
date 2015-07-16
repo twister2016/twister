@@ -14,15 +14,20 @@
 #include <portconf.h>
 #include <rte_cycles.h>
 #include <pktctor.h>
-#include <timerdefs.h>
-#define l4_stat_port 5555
-                     //TODO take input from user and set a variable here, If user wanted to set a variable or not?
+#include <timerfuncs.h>
+#include <usocket.h>
+#include <common.h>
+
+#define stats_port 0 		//Use port stats_port to send stats packets
+#define l4_stats_port 5555 	//TODO take input from user
+#define stats_update_limit 1000	// send stats pkt after stats_update_limit msec
+
+struct rte_timer stats_timer;
 
 extern uint8_t stats_status;
 extern uint64_t stats_time_period;
-
-
-
+extern int stats_fd;
+const char * stats_server_ip; //"11.11.7.171"
 
 struct average_filter
 {	float   timestamp;
@@ -32,7 +37,6 @@ struct average_filter* next;
 extern struct average_filter *root_rtt_average ;
 extern struct average_filter *end_rtt_average ;
 extern const uint8_t average_filter_len ;
-
 
 extern uint8_t average_list_size;
 
@@ -55,23 +59,25 @@ extern struct print_stats *root_test_stats ;
 extern struct print_stats *end_test_stats ;
 
 
-struct packet_stats{
-uint64_t timestamp;
-uint64_t PPS;
-uint64_t packet_received;
-uint64_t packet_transmitted;
-uint64_t packet_dropped;
-uint64_t latency;
-
+struct stats_option {
+	uint64_t timestamp;
+	uint64_t rx_pps;
+	uint64_t tx_pps;
+	uint64_t pkts_rx;
+	uint64_t pkts_tx;
+	uint64_t pkts_dropped;
+	uint64_t rtt;
 } __attribute__ ((__packed__));
 
-struct packet_stats global_stats;
+struct stats_option global_stats_option;
 
 void clearScr(void);
 int init_stats (uint8_t, uint32_t );
 void printXfgenStats(void);
 void calc_average_rtt(uint64_t);
 void writeTestStats(void);
+int open_stats_socket(void);
+int send_stats_pkt(void);
 
 uint64_t prev_pkt_transmitted;
 uint64_t prev_pkt_received;

@@ -7,6 +7,7 @@
 #define MAX_LCORES 16
 #define MAX_RX_QUEUES_PER_LCORE 8
 #define MAX_TX_PKT_BURST 32
+#define MASTER_LCORE 0
 
 struct lcore_port_queue {
 	uint8_t port_id;

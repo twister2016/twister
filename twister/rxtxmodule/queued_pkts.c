@@ -5,7 +5,6 @@
 
 uint64_t queued_pkt_time_limit = 10;  //keep a pkt in queue for queued_pkt_time_limit sec
 uint64_t queue_update_limit = 1; //update queued pkts every queue_update_limit millisecs
-uint64_t last_queue_update_time = 0;
 struct queued_pkt * root_queued_pkt = NULL;
 
 int add_pkt_to_queue(struct rte_mbuf * pkt, uint32_t arp_ip_of_pkt, uint16_t port_id) {
@@ -26,7 +25,7 @@ int add_pkt_to_queue(struct rte_mbuf * pkt, uint32_t arp_ip_of_pkt, uint16_t por
 		return -1;
 	pkt_to_queue->pkt = pkt;
 	pkt_to_queue->timercycle = curr_timer_cycle;
-	pkt_to_queue->arp_ip = arp_ip_of_pkt;
+	pkt_to_queue->arp_ip = rte_cpu_to_be_32(arp_ip_of_pkt);
 	pkt_to_queue->port_id = port_id;
 	pkt_to_queue->next = NULL;
 	return 0;
@@ -36,12 +35,8 @@ int add_pkt_to_queue(struct rte_mbuf * pkt, uint32_t arp_ip_of_pkt, uint16_t por
  * This function will update the queued packets. If timestamp has expired, the packet will be deleted.
  * If ARP reply for queued packet has arrived and added in ARP table, the packet will be sent.
  */
-int update_queued_pkts(void) { 
-	uint64_t time_diff, curr_timer_cycle = get_current_timer_cycles();
-	time_diff = get_time_diff(curr_timer_cycle, last_queue_update_time, one_msec);
-	last_queue_update_time = curr_timer_cycle;
-	if(time_diff < queue_update_limit)
-		return 0;
+int update_queued_pkts(uint64_t curr_timer_cycle) { 
+	uint64_t time_diff;
 	struct queued_pkt * curr_queued_pkt = root_queued_pkt;
 	struct queued_pkt * prev_queued_pkt = curr_queued_pkt;
 	while(curr_queued_pkt) {
@@ -55,7 +50,6 @@ int update_queued_pkts(void) {
 			continue;
 		}
 		rte_pktmbuf_free(curr_queued_pkt->pkt);			//Else delete the queued packet as time limit has passed
-		printf("delete queued pkt\n");
 		delete_queued_pkt(&prev_queued_pkt, &curr_queued_pkt);
 	}
 	return 0;

@@ -163,7 +163,6 @@ int init_global(int argc, char **argv) {
 		app_init_rings();
 	}
 	eth_port_init();
-	printf("init2\n");
 	init_timer_vals();
 	init_periodic_timers();
 	

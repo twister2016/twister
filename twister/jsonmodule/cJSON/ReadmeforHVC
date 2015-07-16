@@ -1,5 +1,0 @@
-jsontobeinclude.h is the header file which is needed to be included for every sample app being written
-I have created a sample app final.c and in order to run this you have to issue following command:
-
-$ gcc cJSON.c final.c -lm
-
