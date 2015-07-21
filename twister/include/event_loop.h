@@ -5,6 +5,7 @@
 #include <simple_queue.h>
 
 #define MAX_LCORES 16
+#define INFINITE_LOOP 0
 
 uint8_t event_io_global;
 uint8_t event_flags_global;
@@ -38,5 +39,5 @@ struct event_io * root_event_io[MAX_LCORES];
 
 struct event_io * reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event ,uint8_t event_flags, uint8_t event_type);
 
-int start_io_events(void);
+int start_io_events(uint32_t);
 #endif

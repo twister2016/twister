@@ -36,10 +36,14 @@ reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_fl
 	return temp_event_io;
 }
 
-int start_io_events(void) {	//TODO tx callbacks --???
+int start_io_events(uint32_t secs_to_run) {
+	uint8_t infinite_loop = 0, continue_loop = 1;
+	if (secs_to_run == INFINITE_LOOP)
+		infinite_loop = 1;
 	int num_rx_pkts, pkt_count, payload_size = 0, i;
 	int core_id = rte_lcore_id();
 	uint64_t curr_time_cycle = 0, prev_stats_cycle= 0, prev_queue_cycle = 0, time_diff = 0;
+	uint64_t loop_start_time = get_current_timer_cycles();
 	struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()] ;
 	struct mbuf_table m[qconf->num_queues];
 	struct rte_mbuf * pkt;
@@ -109,8 +113,13 @@ int start_io_events(void) {	//TODO tx callbacks --???
 				temp_event = temp_event->next;
 			}
 		}
-		
-	} while(1); //TODO implement loop ending logic
+		if(!infinite_loop) {
+			if(get_time_diff(curr_time_cycle, loop_start_time, one_sec) >= secs_to_run)
+				continue_loop = 0;
+		}
+	} while(continue_loop);
+
+	return 0;
 }
 
 

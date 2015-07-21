@@ -37,7 +37,7 @@ int launch_one_lcore(__attribute__((unused)) void *dummy)
 	event_flags_global = NO_FLAG_SET;
 	struct event_io * io_event_rx = reg_io_event(sockfd, rx_cb_func, REPEAT_EVENT, NO_FLAG_SET, RX_CALLBACK);
 	//struct event_io * io_event_tx = reg_io_event(sockfd, tx_cb_func, REPEAT_EVENT, NO_FLAG_SET, TX_CALLBACK);
-	start_io_events();
+	start_io_events(INFINITE_LOOP);
         return 0;
 }
 

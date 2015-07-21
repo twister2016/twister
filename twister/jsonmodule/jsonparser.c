@@ -8,7 +8,12 @@
 char * registerfile (const char *filename) {
 	FILE *f;long len;char *data;
 	
-	f=fopen(filename,"rb");fseek(f,0,SEEK_END);len=ftell(f);fseek(f,0,SEEK_SET);
+	f=fopen(filename,"rb");
+	if(f == NULL) {
+		printf("No file with name %s exists\n", filename);
+		rte_exit(EXIT_FAILURE, "No file with specified name found\n");
+	}
+	fseek(f,0,SEEK_END);len=ftell(f);fseek(f,0,SEEK_SET);
 	data=(char*)malloc(len+1);
 	if(!fread(data,1,len,f))
 		printf("No data read from file %s\n", filename);
