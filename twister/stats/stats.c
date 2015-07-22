@@ -41,7 +41,7 @@ int send_stats_pkt(void) {
 	if(stats_server_ip) {  //if stats_server_ip is not zero
 		global_stats_option.timestamp = get_current_timer_cycles();
 		printf("pkts tx %lu\n", global_stats_option.pkts_tx);
-		udp_send(stats_fd, (void *) &global_stats_option, sizeof(struct stats_option), stats_server_ip, l4_stats_port);
+		udp_send(stats_fd, (void *) &global_stats_option, sizeof(struct stats_option), sizeof(struct stats_option), stats_server_ip, l4_stats_port);
 	}
 	return 0;
 }

@@ -45,7 +45,7 @@ int sq_push(int q_id, struct sq_pkt_q* q_list, struct rte_mbuf * pkt, struct soc
 * assumes data has been allocated 'size' by caller
 * returns 0 if no data otherwise returns size of received data 
 */
-int sq_pop(int q_id, struct sq_pkt_q* q_list, void ** data, struct sock_conn_t * conn)
+uint16_t sq_pop(int q_id, struct sq_pkt_q* q_list, void ** data, struct sock_conn_t * conn)
 {
 	struct sq_pkt* tmp_pkt = q_list[q_id].head;
 	
@@ -54,7 +54,7 @@ int sq_pop(int q_id, struct sq_pkt_q* q_list, void ** data, struct sock_conn_t *
 	if(q_list[q_id].n_pkts < 1)
 		return 0;
 	struct rte_mbuf * temp_mbuf = tmp_pkt->pkt;
-	int payload_size = temp_mbuf->data_len;
+	uint16_t payload_size = temp_mbuf->data_len;
 	void * pkt_payload = rte_pktmbuf_mtod(temp_mbuf, void *);
 
 	*data = rte_malloc("void *", sizeof(payload_size), RTE_CACHE_LINE_SIZE);

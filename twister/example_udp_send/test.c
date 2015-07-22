@@ -68,7 +68,7 @@ void send_timestamp(int sock_fd) {
 	if(diff_rate >= global_pps_delay) {
 		add_timestamp(&timestamp);
 		//printf("Sending timestamp %u\n", timestamp.timestamp);
-		udp_send(sock_fd,(void *)&timestamp,sizeof(struct timestamp_option),convert_ip_str_to_dec("11.11.7.166"),8787);
+		udp_send(sock_fd,(void *)&timestamp,sizeof(struct timestamp_option), user_params.PayloadSize, user_params.ServerIP, 7777);
 	}
 }
 

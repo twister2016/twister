@@ -41,7 +41,10 @@ int start_io_events(uint32_t secs_to_run) {
 	if (secs_to_run == INFINITE_LOOP)
 		infinite_loop = 1;
 	int num_rx_pkts, pkt_count, payload_size = 0, i;
-	global_pps_delay = 10000000000/global_pps_limit;
+	if(global_pps_limit)
+		global_pps_delay = 10000000000/global_pps_limit;
+	else
+		global_pps_delay = 0;
 	int core_id = rte_lcore_id();
 	uint64_t curr_time_cycle = 0, prev_stats_cycle= 0, prev_stats_calc = 0, prev_queue_cycle = 0, time_diff = 0;
 	uint64_t loop_start_time = get_current_timer_cycles();
@@ -52,7 +55,7 @@ int start_io_events(uint32_t secs_to_run) {
 	struct sock_conn_t conn;
 	void * payload_data = NULL;
 	void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t);
-	void (*rx_cb_func) (int, void *, int, struct sock_conn_t);
+	void (*rx_cb_func) (int, void *, uint16_t, struct sock_conn_t);
 	void (*tx_cb_func) (int);
 
 	do {
