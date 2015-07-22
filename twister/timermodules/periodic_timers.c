@@ -37,7 +37,7 @@ int update_periodic_timers(uint64_t time_limit) {							//Time limit will be in 
 int stats_callback_timer_init(void) {
 
     struct rte_timer stat_timer;
-    int tem= create_periodic_timer(&stat_timer, stats_time_period, rte_lcore_id(), (rte_timer_cb_t) printXfgenStats, NULL);
+    int tem= create_periodic_timer(&stat_timer, stats_time_period, rte_lcore_id(), (rte_timer_cb_t) print_global_stats, NULL);
     if (tem!=0)
         printf ("error occured at stats timer init, returned=%d\n", tem);
         

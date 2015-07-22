@@ -9,7 +9,7 @@
 
 struct event_io * 
 reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_flags, uint8_t event_type) {
-	int core_id = rte_lcore_id();   //TODO use proper lcore id
+	int core_id = rte_lcore_id();   //TODO modify if launch_one_lcore calling position changes
 	struct event_io * temp_event_io;
 	
 	temp_event_io = root_event_io[core_id];
@@ -41,10 +41,11 @@ int start_io_events(uint32_t secs_to_run) {
 	if (secs_to_run == INFINITE_LOOP)
 		infinite_loop = 1;
 	int num_rx_pkts, pkt_count, payload_size = 0, i;
+	global_pps_delay = 10000000000/global_pps_limit;
 	int core_id = rte_lcore_id();
-	uint64_t curr_time_cycle = 0, prev_stats_cycle= 0, prev_queue_cycle = 0, time_diff = 0;
+	uint64_t curr_time_cycle = 0, prev_stats_cycle= 0, prev_stats_calc = 0, prev_queue_cycle = 0, time_diff = 0;
 	uint64_t loop_start_time = get_current_timer_cycles();
-	struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()] ;
+	struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()];
 	struct mbuf_table m[qconf->num_queues];
 	struct rte_mbuf * pkt;
 	struct event_io * temp_event;
@@ -53,8 +54,6 @@ int start_io_events(uint32_t secs_to_run) {
 	void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t);
 	void (*rx_cb_func) (int, void *, int, struct sock_conn_t);
 	void (*tx_cb_func) (int);
-
-	open_stats_socket();	
 
 	do {
 		printf("\n**********event loop***********\n");
@@ -66,12 +65,19 @@ int start_io_events(uint32_t secs_to_run) {
                 	update_queued_pkts(curr_time_cycle);
 			prev_queue_cycle = curr_time_cycle;
 		}
+		
+		time_diff = get_time_diff(curr_time_cycle, prev_stats_calc, one_msec);
+		if(unlikely(time_diff > stats_calc_limit)) {
+			calc_global_stats();
+			prev_stats_calc = curr_time_cycle;
+		}
 
 		time_diff = get_time_diff(curr_time_cycle, prev_stats_cycle, one_msec);
 		printf("time diff %lu, stat update limit %d\n", time_diff, stats_update_limit);
 		if(unlikely(time_diff > stats_update_limit)) {
 			printf("send stats pkts\n");
 			send_stats_pkt();
+			print_global_stats();
 			prev_stats_cycle = curr_time_cycle;
 		}
 

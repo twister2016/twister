@@ -9,6 +9,8 @@
 
 struct timestamp_option timestamp;
 
+uint64_t curr_rate_cycle = 0, prev_rate_cycle = 0, diff_rate = 0;
+
 int main (int, char **);
 int launch_one_lcore(__attribute__((unused)) void *);
 void print_payload(int, void *, int, struct sock_conn_t);
@@ -47,6 +49,7 @@ int parse_user_params(char * file_name) {
 		user_params.testRuntime = convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring, 3);
 		user_params.StatsServerIP = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "StatsServerIP")->valuestring);
 		user_params.StatsServerPort = convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
+		global_pps_limit = user_params.ppsLimit;
 	}
 	printf("server ip %u, payload %u, pps %u, runtime %u, stats ip %u, statsport %u\n", user_params.ServerIP, user_params.PayloadSize, user_params.ppsLimit, user_params.testRuntime, user_params.StatsServerIP, user_params.StatsServerPort);
 	return 0;
@@ -60,12 +63,17 @@ int main(int argc, char **argv ) {
 }
 
 void send_timestamp(int sock_fd) {
-	add_timestamp(&timestamp);
-	printf("Sending timestamp %u\n", timestamp.timestamp);
-	udp_send(sock_fd,(void *)&timestamp,sizeof(struct timestamp_option),convert_ip_str_to_dec("11.11.7.166"),8787);
+	curr_rate_cycle = get_current_timer_cycles();
+	diff_rate = get_time_diff(curr_rate_cycle, prev_rate_cycle, one_nsec);
+	if(diff_rate >= global_pps_delay) {
+		add_timestamp(&timestamp);
+		//printf("Sending timestamp %u\n", timestamp.timestamp);
+		udp_send(sock_fd,(void *)&timestamp,sizeof(struct timestamp_option),convert_ip_str_to_dec("11.11.7.166"),8787);
+	}
 }
 
 int launch_one_lcore(__attribute__((unused)) void *dummy) {
+	open_stats_socket(user_params.StatsServerIP, user_params.StatsServerPort); //stats pkts will be sent if port is opened
         int sockfd = udp_socket(port_info[0].start_ip_addr,7898);
 	void (*rx_cb_func) (int, void *, int, struct sock_conn_t) = print_payload;
 	void (*tx_cb_func) (int) = send_timestamp;

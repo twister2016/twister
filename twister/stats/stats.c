@@ -6,7 +6,6 @@ uint8_t ip_hdr_size=20;
 uint8_t eth_hdr_size=20;
 uint32_t test_runtime = 0; //TODO init file, initate the testruntime
 uint64_t pps_limit = 0; //TODO
-uint64_t pps_delay = 0; //TODO
 struct average_filter *root_rtt_average = NULL;
 struct average_filter *end_rtt_average = NULL;
 const uint8_t average_filter_len = 255;
@@ -16,8 +15,13 @@ struct rte_eth_stats* port_stats;
 uint64_t stats_time_period=0;
 uint8_t average_list_size = 0;
 int stats_fd = -1;
+uint32_t stats_server_ip = 0;
+uint16_t l4_stats_port = 0;
+uint64_t prev_pkts_rx = 0, prev_pkts_tx = 0;
+uint64_t global_pps_limit = 0;
+uint64_t global_pps_delay = 0;
 
-void clearScr(void)
+void clear_scr(void)
 {
         const char clr[] = { 27, '[', '2', 'J', '\0' };
         const char topLeft[] = { 27, '[', '1', ';', '1', 'H','\0' };
@@ -26,17 +30,44 @@ void clearScr(void)
         printf("%s%s", clr, topLeft);
 }
 
-int open_stats_socket(void) {
-	stats_server_ip = "11.11.7.111";
+int open_stats_socket(uint32_t server_ip, uint16_t server_port) {
+	stats_server_ip = server_ip;
+	l4_stats_port = server_port;
 	stats_fd = udp_socket(port_info[stats_port].start_ip_addr, l4_stats_port);
 	return stats_fd;
 }
 
 int send_stats_pkt(void) {
-	global_stats_option.timestamp = get_current_timer_cycles();
-	printf("pkts tx %lu\n", global_stats_option.pkts_tx);
-	udp_send(stats_fd, (void *) &global_stats_option, sizeof(struct stats_option), convert_ip_str_to_dec(stats_server_ip), l4_stats_port);
+	if(stats_server_ip) {  //if stats_server_ip is not zero
+		global_stats_option.timestamp = get_current_timer_cycles();
+		printf("pkts tx %lu\n", global_stats_option.pkts_tx);
+		udp_send(stats_fd, (void *) &global_stats_option, sizeof(struct stats_option), stats_server_ip, l4_stats_port);
+	}
 	return 0;
+}
+
+int calc_global_stats(void) {
+	global_stats_option.secs_passed++;
+	global_stats_option.rx_pps = global_stats_option.pkts_rx - prev_pkts_rx;
+	global_stats_option.tx_pps = global_stats_option.pkts_tx - prev_pkts_tx;
+	prev_pkts_rx = global_stats_option.pkts_rx;
+	prev_pkts_tx = global_stats_option.pkts_tx;
+	if(global_pps_delay > 10) {
+		float change = ((float)pps_limit - global_stats_option.tx_pps)/pps_limit;
+		if(change != 0)
+			global_pps_delay -= (change * global_pps_delay);
+	}
+	if(global_stats_option.secs_passed <= 5) //TODO chack if this logic is required
+	{
+		global_pps_delay = global_pps_delay * 5;
+	}
+	return 0;
+}
+
+void print_global_stats(void) {
+	clear_scr();
+	printf("****Global Stats****\n");
+	printf("Secs Passed %lu\nRX PPS %lu\nTX PPS %lu\nPkts RX %lu\nPkts TX %lu\n", global_stats_option.secs_passed, global_stats_option.rx_pps, global_stats_option.tx_pps, global_stats_option.pkts_rx, global_stats_option.pkts_tx);
 }
 
 int init_stats (uint8_t port_id, uint32_t dst_ip ) {
@@ -95,7 +126,8 @@ void calc_average_rtt(uint64_t time_clk)
 		rte_free(temp);
 	}
 }    
-    
+
+/* 
 void printXfgenStats(void)
 {	
 	seconds_passed = seconds_passed + stats_time_period; //since each time periodic timer expires, it get updated with that seconds.
@@ -196,7 +228,7 @@ void printXfgenStats(void)
 	prev_pkt_received = data_pkt_recvd;	
 	printf("-------------------------------------------------------\n");
 }
-
+*/
 void writeTestStats(void)
 {
 	unsigned count = 0;

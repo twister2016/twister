@@ -19,15 +19,19 @@
 #include <common.h>
 
 #define stats_port 0 		//Use port stats_port to send stats packets
-#define l4_stats_port 5555 	//TODO take input from user
 #define stats_update_limit 1000	// send stats pkt after stats_update_limit msec
+#define stats_calc_limit 1000	//calc stats parameters every 1000 millisecs
 
 struct rte_timer stats_timer;
 
 extern uint8_t stats_status;
 extern uint64_t stats_time_period;
 extern int stats_fd;
-const char * stats_server_ip; //"11.11.7.171"
+extern uint32_t stats_server_ip;
+extern uint16_t l4_stats_port;
+
+extern uint64_t global_pps_limit;
+extern uint64_t global_pps_delay;
 
 struct average_filter
 {	float   timestamp;
@@ -60,6 +64,7 @@ extern struct print_stats *end_test_stats ;
 
 
 struct stats_option {
+	uint64_t secs_passed;
 	uint64_t timestamp;
 	uint64_t rx_pps;
 	uint64_t tx_pps;
@@ -71,12 +76,15 @@ struct stats_option {
 
 struct stats_option global_stats_option;
 
-void clearScr(void);
+extern uint64_t prev_pkts_rx, prev_pkts_tx;
+
+void clear_scr(void);
 int init_stats (uint8_t, uint32_t );
-void printXfgenStats(void);
+//void printXfgenStats(void);
+void print_global_stats(void);
 void calc_average_rtt(uint64_t);
 void writeTestStats(void);
-int open_stats_socket(void);
+int open_stats_socket(uint32_t, uint16_t);
 int send_stats_pkt(void);
 
 uint64_t prev_pkt_transmitted;
@@ -92,7 +100,7 @@ uint32_t PKT_PAYLOAD_SIZE;//TODO init decide payload size
 
 extern uint32_t test_runtime ; //TODO init file, initate the testruntime
 extern uint64_t pps_limit ; //TODO
-extern uint64_t pps_delay ; //TODO
 
+int calc_global_stats(void);
 
 #endif
