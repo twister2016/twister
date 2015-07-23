@@ -62,9 +62,11 @@ int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			break;
 		case ETHER_TYPE_IPv4:
 			rte_pktmbuf_adj(pkt, sizeof(struct ether_hdr));
-			if(event_flags_global == GET_L3_PKTS)
+			if(event_flags_global == GET_L3_PKTS) {
 				printf("L3 PACKET Received /n");
-				//TODO user function should come here
+				//void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t) = root_event_io[rte_lcore_id()].event_cb;
+				//cb_func_with_flags(pkt, port_id);
+			}
 			else{
 				ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
 			}		

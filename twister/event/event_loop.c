@@ -33,6 +33,7 @@ reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_fl
         temp_event_io->sock_fd = sock_fd;
         temp_event_io->event_cb = cb_func;
         temp_event_io->next = NULL;
+	printf("event regd\n");
 	return temp_event_io;
 }
 
@@ -80,7 +81,7 @@ int start_io_events(uint32_t secs_to_run) {
 		if(unlikely(time_diff > stats_update_limit)) {
 			printf("send stats pkts\n");
 			send_stats_pkt();
-			print_global_stats();
+			//print_global_stats();
 			prev_stats_cycle = curr_time_cycle;
 		}
 

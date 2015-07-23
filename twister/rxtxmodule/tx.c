@@ -50,7 +50,8 @@ int twister_timely_burst(void) {
 }
 
 int add_pkt_to_tx_queue(struct rte_mbuf * m, uint8_t port) {
-    unsigned lcore_id, len;
+	rte_pktmbuf_dump(stdout, m, 100);
+	unsigned lcore_id, len;
 	struct lcore_conf *qconf;
 
 	lcore_id = rte_lcore_id();
