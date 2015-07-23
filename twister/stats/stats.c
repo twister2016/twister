@@ -40,7 +40,6 @@ int open_stats_socket(uint32_t server_ip, uint16_t server_port) {
 int send_stats_pkt(void) {
 	if(stats_server_ip) {  //if stats_server_ip is not zero
 		global_stats_option.timestamp = get_current_timer_cycles();
-		print_global_stats();
 		udp_send(stats_fd, (void *) &global_stats_option, sizeof(struct stats_option), sizeof(struct stats_option), stats_server_ip, l4_stats_port);
 	}
 	return 0;
@@ -48,6 +47,7 @@ int send_stats_pkt(void) {
 
 int calc_global_stats(void) {
 	global_stats_option.secs_passed++;
+	global_stats_option.rtt = average_rtt;
 	global_stats_option.rx_pps = global_stats_option.pkts_rx - prev_pkts_rx;
 	global_stats_option.tx_pps = global_stats_option.pkts_tx - prev_pkts_tx;
 	prev_pkts_rx = global_stats_option.pkts_rx;
@@ -67,7 +67,7 @@ int calc_global_stats(void) {
 void print_global_stats(void) {
 	clear_scr();
 	printf("****Global Stats****\n");
-	printf("Secs Passed %lu\nRX PPS %lu\nTX PPS %lu\nPkts RX %lu\nPkts TX %lu\n", global_stats_option.secs_passed, global_stats_option.rx_pps, global_stats_option.tx_pps, global_stats_option.pkts_rx, global_stats_option.pkts_tx);
+	printf("Secs Passed %lu\nRX PPS %lu\nTX PPS %lu\nPkts RX %lu\nPkts TX %lu\n RTT %lu\n", global_stats_option.secs_passed, global_stats_option.rx_pps, global_stats_option.tx_pps, global_stats_option.pkts_rx, global_stats_option.pkts_tx, global_stats_option.rtt);
 }
 
 int init_stats (uint8_t port_id, uint32_t dst_ip ) {

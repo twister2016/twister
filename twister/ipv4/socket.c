@@ -32,7 +32,6 @@ int udp_socket(uint32_t ip_addr,uint32_t port)
 
 int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint16_t total_payload_len, uint32_t dst_addr, uint16_t port)
 {
-	printf("sock fd %d, buf_len %d total_payload_len %d\n", sockfd, buf_len, total_payload_len);
 	struct rte_mbuf *pkt=app_get_buffer();
 	//rte_pktmbuf_append(pkt,buf_len + sizeof(struct udp_hdr ) + sizeof(struct ipv4_hdr) + 40);
 	//rte_pktmbuf_trim(pkt,buf_len + sizeof(struct udp_hdr ) + sizeof(struct ipv4_hdr) + 40);

@@ -6,6 +6,6 @@
       "ppsLimit"   : "1000000",
       "testRuntime"   : "999",
       "StatsServerIP" : "12.12.12.11",
-      "StatsServerPort" : "5454"
+      "StatsServerPort" : "4002"
     }
 ]

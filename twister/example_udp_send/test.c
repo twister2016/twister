@@ -28,7 +28,7 @@ struct user_params user_params;
 
 void print_payload(int sock_fd, void * payload_data, int payload_size, struct sock_conn_t conn) {
 	struct timestamp_option * temp_timestamp = (struct timestamp_option *) payload_data;
-        printf("Data received %u, of Length %d\n", temp_timestamp->timestamp, payload_size);
+	calc_average_rtt(temp_timestamp->echo_timestamp);
         rte_free(payload_data);
         return;
 }
@@ -51,7 +51,6 @@ int parse_user_params(char * file_name) {
 		user_params.StatsServerPort = convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
 		global_pps_limit = user_params.ppsLimit;
 	}
-	printf("server ip %u, payload %u, pps %u, runtime %u, stats ip %u, statsport %u\n", user_params.ServerIP, user_params.PayloadSize, user_params.ppsLimit, user_params.testRuntime, user_params.StatsServerIP, user_params.StatsServerPort);
 	return 0;
 }
 

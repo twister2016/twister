@@ -33,7 +33,6 @@ reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_fl
         temp_event_io->sock_fd = sock_fd;
         temp_event_io->event_cb = cb_func;
         temp_event_io->next = NULL;
-	printf("event regd\n");
 	return temp_event_io;
 }
 
@@ -60,12 +59,9 @@ int start_io_events(uint32_t secs_to_run) {
 	void (*tx_cb_func) (int);
 
 	do {
-		printf("\n**********event loop***********\n");
 		curr_time_cycle = get_current_timer_cycles();
 		time_diff = get_time_diff(curr_time_cycle, prev_queue_cycle, one_msec);
-		printf("time diff %lu\n", time_diff);
 		if(unlikely(time_diff > queue_update_limit)) {
-			printf("update queued pkts\n");
                 	update_queued_pkts(curr_time_cycle);
 			prev_queue_cycle = curr_time_cycle;
 		}
@@ -77,11 +73,9 @@ int start_io_events(uint32_t secs_to_run) {
 		}
 
 		time_diff = get_time_diff(curr_time_cycle, prev_stats_cycle, one_msec);
-		printf("time diff %lu, stat update limit %d\n", time_diff, stats_update_limit);
 		if(unlikely(time_diff > stats_update_limit)) {
-			printf("send stats pkts\n");
 			send_stats_pkt();
-			//print_global_stats();
+			print_global_stats();
 			prev_stats_cycle = curr_time_cycle;
 		}
 
@@ -131,5 +125,4 @@ int start_io_events(uint32_t secs_to_run) {
 
 	return 0;
 }
-
 

@@ -14,11 +14,10 @@ int launch_one_lcore(__attribute__((unused)) void *);
 void reply_payload(int, void *, uint16_t, struct sock_conn_t);
 
 void reply_payload(int sock_fd, void * payload_data, uint16_t payload_size, struct sock_conn_t conn) {
-	printf("test1\n");
 	pkt_timestamp = (struct timestamp_option *) payload_data;
 	parse_timestamp(pkt_timestamp);
 	add_timestamp(pkt_timestamp);
-	printf("Timestamp Received %u, Sending Timestamp %u\n", pkt_timestamp->echo_timestamp, pkt_timestamp->timestamp);
+	//printf("Timestamp Received %u, Sending Timestamp %u\n", pkt_timestamp->echo_timestamp, pkt_timestamp->timestamp);
 	udp_send(sock_fd,(void *) pkt_timestamp,sizeof(struct timestamp_option), payload_size, conn.dst_ip, conn.dst_port);
 	rte_free(payload_data);
 	return;

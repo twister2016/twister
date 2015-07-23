@@ -8,7 +8,6 @@ uint64_t queue_update_limit = 1; //update queued pkts every queue_update_limit m
 struct queued_pkt * root_queued_pkt = NULL;
 
 int add_pkt_to_queue(struct rte_mbuf * pkt, uint32_t arp_ip_of_pkt, uint16_t port_id) {
-	printf("add pkt to queue\n");
 	uint64_t curr_timer_cycle = get_current_timer_cycles();
 	struct queued_pkt * pkt_to_queue = root_queued_pkt;
 	if(pkt_to_queue == NULL) {
@@ -70,7 +69,6 @@ int delete_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt **
 }
 
 int send_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt ** curr_queued_pkt, struct ether_addr eth_mac) {
-	printf("send queued pkt\n");
 	struct rte_mbuf * pkt = (*curr_queued_pkt)->pkt; 
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
 	ether_addr_copy(&eth_mac, &(eth->d_addr));
@@ -86,7 +84,7 @@ int send_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt ** c
 }
 
 void print_queued_pkts(void) {
-	printf("print queued pkts\n");
+	printf("printing queued pkts\n");
 	struct queued_pkt * temp_queued_pkt = root_queued_pkt;
 	while(temp_queued_pkt) {
 		printf("queued pkt addr %p\n", temp_queued_pkt);

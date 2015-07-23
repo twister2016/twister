@@ -24,7 +24,6 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 	if(CHECK_IPv4_CKSUM) {
 		uint16_t ipchecksum = rte_ipv4_cksum(ipHdr);
 		if (ipchecksum != ipHdr->hdr_checksum) {
-			printf("Incorrect Checksum\n");
 			rte_pktmbuf_free(pkt);
 			return -1;
 		}
@@ -39,9 +38,8 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 			case (UDP_PROTO_ID):
 			rte_pktmbuf_adj(pkt, sizeof(struct ipv4_hdr));
 			if(event_flags_global == GET_L4_PKTS) {
-				printf("L4 PACKET Received /n");
-				//void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t) = root_event_io[rte_lcore_id()].event_cb;
-				//cb_func_with_flags(pkt, port_id);
+				void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t) = root_event_io[rte_lcore_id()]->event_cb;
+				cb_func_with_flags(pkt, port_id);
 			}
 			else
 			{
