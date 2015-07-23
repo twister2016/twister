@@ -30,7 +30,7 @@ int udp_socket(uint32_t ip_addr,uint32_t port)
 	return maxfd-1;
 }
 
-int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint16_t total_payload_len, uint32_t dst_addr, uint16_t port)
+int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint16_t total_payload_len, uint32_t dst_addr, uint16_t dst_port)
 {
 	struct rte_mbuf *pkt=app_get_buffer();
 	//rte_pktmbuf_append(pkt,buf_len + sizeof(struct udp_hdr ) + sizeof(struct ipv4_hdr) + 40);
@@ -39,7 +39,7 @@ int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint16_t total_payload
 	sockptr =&sockets[sockfd];
 	struct sock_conn_t dummy;
 	dummy.src_port=sockptr->port;
-	dummy.dst_port=port;
+	dummy.dst_port=dst_port;
 	dummy.src_ip=sockptr->ip_addr;
 	dummy.dst_ip=dst_addr;
 	if(total_payload_len < buf_len)
@@ -56,12 +56,12 @@ int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint16_t total_payload
 	return 0;
 }
 
-void add_packet_to_udp_queue(int sock_fd, struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip,uint16_t dst_port,uint16_t src_port){
+void add_packet_to_udp_queue(int sock_fd, struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip,uint16_t src_port,uint16_t dst_port){
 	struct sock_conn_t dummy;
-	dummy.src_port = src_port;
-	dummy.dst_port = dst_port;
-	dummy.src_ip = src_ip;
-	dummy.dst_ip = dst_ip;
+	dummy.src_port = dst_port;
+	dummy.dst_port = src_port;
+	dummy.src_ip = dst_ip;
+	dummy.dst_ip = src_ip;
 	sq_push(sock_fd, udp_socket_q, pkt, dummy);
 }
 
