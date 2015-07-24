@@ -1,6 +1,10 @@
 #ifndef SIMPLE_QUEUE_H
 #define SIMPLE_QUEUE_H
-
+/**
+ * @file
+ *
+ * Simple Queue Helpers in Twister
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,6 +1,10 @@
 #ifndef _STATS_H_
 #define _STATS_H_
-
+/**
+ * @file
+ *
+ * Stats Helpers in Twister
+ */
 #include <rte_memcpy.h>
 #include <rte_byteorder.h>
 #include <rte_mbuf.h>

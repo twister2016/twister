@@ -22,7 +22,11 @@
 
 #ifndef cJSON__h
 #define cJSON__h
-
+/**
+ * @file
+ *
+ * Json Helpers in Twister
+ */
 #ifdef __cplusplus
 extern "C"
 {

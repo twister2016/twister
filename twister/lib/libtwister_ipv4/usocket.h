@@ -1,6 +1,10 @@
 #ifndef _USOCKET_H_
 #define _USOCKET_H_
-
+/**
+ * @file
+ *
+ * Sockets Helpers in Twister
+ */
 #include<udp.h>
 
 #define MAX_UDP_PAYLOAD 1460 //TODO see if this can be increased

@@ -1,6 +1,10 @@
 #ifndef _VLAN_H_
 #define _VLAN_H_
-
+/**
+ * @file
+ *
+ * VLAN Helpers in Twister
+ */
 #include <rte_ether.h>
 
 

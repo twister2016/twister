@@ -1,6 +1,10 @@
 #ifndef _PERIODIC_TIMERS_H_
 #define _PERIODIC_TIMERS_H_
-
+/**
+ * @file
+ *
+ * Periodic Timers Helpers in Twister
+ */
 #include <timerfuncs.h>
 #include <stats.h>
 #include <rte_lcore.h>

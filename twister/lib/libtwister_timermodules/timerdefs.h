@@ -2,7 +2,11 @@
 #define _TIMEDEFS_H_
 #include <rte_timer.h>
 #include <rte_cycles.h>
-
+/**
+ * @file
+ *
+ * Timer Definitions Helpers in Twister
+ */
 #define USE_PERIODIC_TIMERS 1
 
 #define MILLION 1000000UL

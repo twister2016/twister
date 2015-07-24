@@ -1,6 +1,10 @@
 #ifndef _UDP_H_
 #define _UDP_H_
-
+/**
+ * @file
+ *
+ * UDP Helpers in Twister
+ */
 #define UDP_PROTO_ID	17
 #define TCP_PROTO_ID 06
 struct sock_conn_t

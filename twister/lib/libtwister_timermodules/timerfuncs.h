@@ -1,6 +1,10 @@
 #ifndef _TIMERFUNCS_H_
 #define _TIMERFUNCS_H_
-
+/**
+ * @file
+ *
+ * Timer Functions Helpers in Twister
+ */
 #include <timerdefs.h>
 
 inline uint64_t get_time_diff(uint64_t, uint64_t, uint64_t);

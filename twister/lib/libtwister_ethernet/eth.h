@@ -1,6 +1,10 @@
 #ifndef _ETH_H_
 #define _ETH_H_
-
+/**
+ * @file
+ *
+ * Ethernet Helpers in Twister
+ */
 #include <inttypes.h>
 #include <rte_ether.h>
 

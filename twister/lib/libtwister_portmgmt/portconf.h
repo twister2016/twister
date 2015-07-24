@@ -1,6 +1,10 @@
 #ifndef _PORTCONF_H_
 #define _PORTCONF_H_
-
+/**
+ * @file
+ *
+ * Port configurations Helpers in Twister
+ */
 #include <rte_config.h>
 #include <rte_ethdev.h>
 #include "mempoolconf.h"

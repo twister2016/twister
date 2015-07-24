@@ -1,6 +1,10 @@
 #ifndef _EVENT_LOOP_H_
 #define _EVENT_LOOP_H_
-
+/**
+ * @file
+ *
+ * Event Loop Helpers in Twister
+ */
 #include <rte_lcore.h>
 #include <simple_queue.h>
 

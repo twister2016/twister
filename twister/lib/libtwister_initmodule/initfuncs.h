@@ -1,6 +1,10 @@
 #ifndef _INITFUNCS_H_
 #define _INITFUNCS_H_
-
+/**
+ * @file
+ *
+ * Initialize Functions in Twister
+ */
 #include <getopt.h>
 #include <rte_config.h>
 #include <rte_eal.h>

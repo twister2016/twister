@@ -1,6 +1,10 @@
 #ifndef _QUEUED_PKTS_H_
 #define _QUEUED_PKTS_H_
-
+/**
+ * @file
+ *
+ * Queued Packets Helpers in Twister
+ */
 #include <rte_mbuf.h>
 #include <rte_memory.h>
 #include <timerfuncs.h>

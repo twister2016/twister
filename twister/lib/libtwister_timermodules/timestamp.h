@@ -1,6 +1,10 @@
 #ifndef _TIMESTAMP_H_
 #define _TIMESTAMP_H_
-
+/**
+ * @file
+ *
+ * Timer Stamp Helpers in Twister
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

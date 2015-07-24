@@ -1,6 +1,10 @@
 #ifndef _GTPU_H_
 #define _GTPU_H_
-
+/**
+ * @file
+ *
+ * GTPU Helpers in Twister
+ */
 #include <stdio.h>
 #include <stdlib.h>
 

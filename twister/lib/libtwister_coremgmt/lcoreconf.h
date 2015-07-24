@@ -1,6 +1,10 @@
 #ifndef _LCORECONF_H_
 #define _LCORECONF_H_
-
+/**
+ * @file
+ *
+ * Lcore Configuration Helpers in Twister
+ */
 #include <rte_per_lcore.h>
 #include <portconf.h>
 

@@ -1,6 +1,10 @@
 #ifndef _TX_H_
 #define _TX_H_
-
+/**
+ * @file
+ *
+ * TX Module Helpers in Twister
+ */
 #include <stdint.h>
 #include <rte_config.h>
 #include <rte_common.h>

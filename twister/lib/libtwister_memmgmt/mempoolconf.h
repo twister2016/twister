@@ -1,6 +1,10 @@
 #ifndef _MEMMGMT_H_
 #define _MEMMGMT_H_
-
+/**
+ * @file
+ *
+ * Memory pool configurations Helpers in Twister
+ */
 #include <rte_mempool.h>
 #include <rte_malloc.h>
 #include <rte_mbuf.h>

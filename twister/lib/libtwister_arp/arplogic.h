@@ -1,5 +1,10 @@
 #ifndef _ARPLOGIC_H_
 #define _ARPLOGIC_H_
+/**
+ * @file
+ *
+ * ARP Helpers in Twister
+ */
 
 #include <rte_arp.h>
 #include <rte_malloc.h>
@@ -11,10 +16,10 @@
 #define NUM_ARP_RETRIES 3
 
 struct arp_table {
-	uint32_t ip_addr;
-	struct ether_addr eth_mac;
-	uint8_t port_id;
-	struct arp_table * next;
+	uint32_t ip_addr;  /**< IP Address - ARP TABLE Field*. */
+	struct ether_addr eth_mac; /**< Ethernet MAC Address - ARP TABLE Field*. */
+	uint8_t port_id; /**< Port ID - ARP TABLE Field*. */
+	struct arp_table * next; /**< Next - To point to the next ARP TABLE ENTRY*. */
 } __attribute__((__packed__));
 
 extern struct ether_addr broadcastmac; 
