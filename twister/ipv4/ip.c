@@ -70,8 +70,7 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 
 
 
-void ip4_packet_create(struct rte_mbuf *pkt,uint8_t next_proto_id,uint32_t src_ip,uint32_t dst_ip,uint16_t length)
-{
+void ip4_packet_create(struct rte_mbuf *pkt,uint8_t next_proto_id,uint32_t src_ip,uint32_t dst_ip,uint16_t length) {
 
 	rte_pktmbuf_prepend(pkt, sizeof(struct ipv4_hdr));
 	struct ipv4_hdr *ip_hdr  = rte_pktmbuf_mtod(pkt, struct ipv4_hdr *);
@@ -81,9 +80,11 @@ void ip4_packet_create(struct rte_mbuf *pkt,uint8_t next_proto_id,uint32_t src_i
 	ip_hdr->dst_addr = rte_cpu_to_be_32(dst_ip);
 	ip_hdr->version_ihl = 0x45;
 	ip_hdr->time_to_live = 63;
+	ip_hdr->hdr_checksum = 0;
 	ip_hdr->hdr_checksum =rte_ipv4_cksum(ip_hdr);
 	int port_id = get_port_by_ip(src_ip);
 	if(port_id < 0) {
+		rte_pktmbuf_free(pkt);
 		return;
 	}
 	eth_pkt_ctor(pkt, port_id, ETHER_TYPE_IPv4, dst_ip );
