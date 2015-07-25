@@ -59,11 +59,11 @@ struct app_params {
 
 extern struct app_params app;
 
-extern int init_eal_env(int, char **);
-extern int parse_twister_args(int argc, char **argv);
-extern int init_global(int argc, char **);
-extern int init_user_given_vals(void);
-int display_usage(const char *);
-int parse_portmask(const char *);
+extern int init_eal_env(int, char **); /**< init_eal_env - This function initialize the Environment abstraction layer for DPDK application. */
+extern int parse_twister_args(int argc, char **argv); /**< parse_twister_args - This function parse the twister related arguments which include parsing the JSON file of the Port configuration containing IPs, Logical core configuration and RTE model configuration. */
+extern int init_global(int argc, char **); /**< init_global - This function calls all the respective function so using these functions you don't have to call each initialization function individually. */
+extern int init_user_given_vals(void); /**< init_user_given_vals - This function parse the user given configuration. */
+int display_usage(const char *); /**< display_usage - This function displays how to use the application, if invalid arguments are passed in the application. */
+int parse_portmask(const char *); /**< parse_portmask - This function parse the ports configuration. */
 
 #endif

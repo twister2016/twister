@@ -5,6 +5,5 @@
  *
  * Packet constructor Helpers in Twister
  */
-extern int pkt_ctor(struct rte_mbuf*, void*,uint32_t); 
-//extern int pkt_parser(struct rte_mbuf *, uint8_t);
+extern int pkt_ctor(struct rte_mbuf*, void*,uint32_t); /**< pkt_ctor - This function constructs the packet after receiving the packet from the application and calls the callback of the next layer (UDP LAYER). */
 #endif
