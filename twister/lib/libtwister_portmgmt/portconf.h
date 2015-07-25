@@ -72,8 +72,8 @@ static const struct rte_eth_conf port_conf = {
 };
 
 
-int eth_port_init(void);
-int get_port_by_ip(uint32_t);
-void check_all_ports_link(void);
+int eth_port_init(void); /**< eth_port_init - This function initialize the port and assigned the IP Address provided in the configuration file. */
+int get_port_by_ip(uint32_t); /**< get_port_by_ip - This function takes the IP address as input and return the port number associated by that IP Address. */
+void check_all_ports_link(void);  /**< check_all_ports_link - This function check the status of all the ports specified in the configuration to be used and make sure that there link is up. */
 
 #endif

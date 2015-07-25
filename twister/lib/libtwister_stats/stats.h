@@ -82,14 +82,13 @@ struct stats_option global_stats_option;
 
 extern uint64_t prev_pkts_rx, prev_pkts_tx;
 
-void clear_scr(void);
-int init_stats (uint8_t, uint32_t );
-//void printXfgenStats(void);
-void print_global_stats(void);
-void calc_average_rtt(uint64_t);
-void writeTestStats(void);
-int open_stats_socket(uint32_t, uint16_t);
-int send_stats_pkt(void);
+void clear_scr(void); /**< clear_scr - This function clear the console screen. */
+int init_stats (uint8_t, uint32_t );  /**< init_stats - This function initialize the statistics. */
+void print_global_stats(void); /**< print_global_stats - This function print the statistics on the console. */
+void calc_average_rtt(uint64_t); /**< calc_average_rtt - This function calculate the average Round trip time of the packet. */
+void writeTestStats(void); /**< writeTestStats - This function writes the statistics to a file. */
+int open_stats_socket(uint32_t, uint16_t); /**< open_stats_socket - This function open the socket to send the statistics to the global Server. */
+int send_stats_pkt(void); /**< send_stats_pkt - This function send the packet containing statistics to the global Server. */
 
 uint64_t prev_pkt_transmitted;
 uint64_t prev_pkt_received;
@@ -105,6 +104,6 @@ uint32_t PKT_PAYLOAD_SIZE;//TODO init decide payload size
 extern uint32_t test_runtime ; //TODO init file, initate the testruntime
 extern uint64_t pps_limit ; //TODO
 
-int calc_global_stats(void);
+int calc_global_stats(void); /**< calc_global_stats - This function calculates the statistics. */
 
 #endif

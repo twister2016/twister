@@ -13,8 +13,8 @@
 #include <lcoreconf.h>
 #include <stats.h>
 
-int get_pkt_from_rx_queue(struct mbuf_table * m, uint8_t port, uint8_t queue_id);
-int rx_for_each_queue(struct mbuf_table *);
+int get_pkt_from_rx_queue(struct mbuf_table * m, uint8_t port, uint8_t queue_id); /**< get_pkt_from_rx_queue - This function gets the packets from each RX queue. Arguments include: The pointer to the packets, The port and queue ID from which the function has to RX the packets. */
+int rx_for_each_queue(struct mbuf_table *); /**< rx_for_each_queue - This function RX for each queue managed by the logical core. */
 
 
 #endif

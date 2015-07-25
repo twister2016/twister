@@ -25,10 +25,10 @@ struct queued_pkt {
 
 extern struct queued_pkt * root_queued_pkt;
 
-int add_pkt_to_queue(struct rte_mbuf *, uint32_t, uint16_t);
-int update_queued_pkts(uint64_t);
-int delete_queued_pkt(struct queued_pkt **, struct queued_pkt **);
-int send_queued_pkt(struct queued_pkt **, struct queued_pkt **, struct ether_addr);
-void print_queued_pkts(void);
+int add_pkt_to_queue(struct rte_mbuf *, uint32_t, uint16_t); /**< add_pkt_to_queue - This function when call add the packets to the queue. */
+int update_queued_pkts(uint64_t);  /**< update_queued_pkts - This function when call update the number of the packets in the queue. */
+int delete_queued_pkt(struct queued_pkt **, struct queued_pkt **); /**< update_queued_pkts - This function when call delete specified queue packet. */
+int send_queued_pkt(struct queued_pkt **, struct queued_pkt **, struct ether_addr); /**< send_queued_pkt - This function when call send the specified queue packet that was waiting for the ARP. */
+void print_queued_pkts(void); /**< print_queued_pkts - This function when call print all the packets currently residing in the queue. */
 
 #endif
