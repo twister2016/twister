@@ -1,11 +1,11 @@
 [
-    { "ServerIP"   : "12.12.12.22",
+    { "ServerIP"   : "34.34.34.71",
       "ServerIPRange"   : "1",
       "Protocol"   : "UDP",
       "PayloadSize"   : "0022",
       "ppsLimit"   : "1000000",
       "testRuntime"   : "999",
-      "StatsServerIP" : "12.12.12.11",
+      "StatsServerIP" : "34.34.34.111",
       "StatsServerPort" : "4002"
     }
 ]

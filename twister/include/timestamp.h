@@ -28,14 +28,14 @@ struct timestamp_option
 {
 	uint8_t type;
 	uint8_t length;
-	uint32_t timestamp;        
-	uint32_t echo_timestamp;
+	uint64_t timestamp;        
+	uint64_t echo_timestamp;
 } __attribute__ ((__packed__));
 
 
 enum {
 	TIMESTAMP_TYPE 	= 0x8,
-	TIMESTAMP_LENGTH = 0xA
+	TIMESTAMP_LENGTH = 0x12
 };
 
 inline void add_timestamp (struct timestamp_option *timestamp, uint64_t curr_timer_cycles)  {
@@ -48,7 +48,7 @@ inline void add_timestamp (struct timestamp_option *timestamp, uint64_t curr_tim
 void parse_timestamp (struct timestamp_option *timestamp, uint64_t curr_timer_cycles) {
 	if(timestamp->type  == TIMESTAMP_TYPE) {
 		last_received_timestamp = timestamp->timestamp;
-		calc_average_rtt(get_time_diff(curr_timer_cycles, last_received_timestamp, one_usec));
+		calc_average_rtt(get_time_diff(curr_timer_cycles, timestamp->echo_timestamp, one_usec));
 	}
 }
 
