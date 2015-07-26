@@ -1,7 +1,7 @@
-common.o: /home/dell/hvc2_local/twister/common/common.c \
+common.o: /home/dell/hvc2/twister/common/common.c \
  /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
- /home/dell/hvc2_local/twister/include/common.h /usr/include/stdio.h \
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/dell/hvc2/twister/include/common.h /usr/include/stdio.h \
  /usr/include/features.h /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \

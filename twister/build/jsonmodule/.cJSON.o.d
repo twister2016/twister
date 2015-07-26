@@ -1,6 +1,6 @@
-cJSON.o: /home/dell/hvc2_local/twister/jsonmodule/cJSON.c \
+cJSON.o: /home/dell/hvc2/twister/jsonmodule/cJSON.c \
  /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
  /usr/include/string.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -48,4 +48,4 @@ cJSON.o: /home/dell/hvc2_local/twister/jsonmodule/cJSON.c \
  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
  /usr/include/linux/limits.h \
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h /usr/include/ctype.h \
- /home/dell/hvc2_local/twister/jsonmodule/cJSON.h
+ /home/dell/hvc2/twister/jsonmodule/cJSON.h

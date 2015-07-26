@@ -38,19 +38,17 @@ enum {
 	TIMESTAMP_LENGTH = 0xA
 };
 
-inline void add_timestamp (struct timestamp_option *timestamp)
-{
+inline void add_timestamp (struct timestamp_option *timestamp, uint64_t curr_timer_cycles)  {
 	timestamp->type 		= TIMESTAMP_TYPE;
 	timestamp->length 		= TIMESTAMP_LENGTH;
-	timestamp->timestamp 		= rte_rdtsc()/one_usec;
+	timestamp->timestamp 		= curr_timer_cycles;
 	timestamp->echo_timestamp	= last_received_timestamp;
 }
 
-void parse_timestamp (struct timestamp_option *timestamp) {
+void parse_timestamp (struct timestamp_option *timestamp, uint64_t curr_timer_cycles) {
 	if(timestamp->type  == TIMESTAMP_TYPE) {
 		last_received_timestamp = timestamp->timestamp;
-		uint32_t curr_time = rte_rdtsc()/one_usec;		
-		calc_average_rtt(abs(curr_time - timestamp->echo_timestamp));
+		calc_average_rtt(get_time_diff(curr_timer_cycles, last_received_timestamp, one_usec));
 	}
 }
 

@@ -1,8 +1,8 @@
-timerdefs.o: /home/dell/hvc2_local/twister/timermodules/timerdefs.c \
+timerdefs.o: /home/dell/hvc2/twister/timermodules/timerdefs.c \
  /usr/include/stdc-predef.h /usr/include/x86_64-linux-gnu/bits/predefs.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
- /home/dell/hvc2_local/twister/include/timerdefs.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_timer.h \
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_config.h \
+ /home/dell/hvc2/twister/include/timerdefs.h \
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_timer.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -19,10 +19,10 @@ timerdefs.o: /home/dell/hvc2_local/twister/timermodules/timerdefs.c \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_debug.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_cycles.h \
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_cycles.h \
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_debug.h \
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/emmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/mmintrin.h \
@@ -42,6 +42,6 @@ timerdefs.o: /home/dell/hvc2_local/twister/timermodules/timerdefs.c \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
- /home/dell/hvc2_local/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/generic/rte_atomic.h \
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_atomic_64.h \
+ /home/dell/hvc2/twister/../dpdk/x86_64-native-linuxapp-gcc/include/rte_branch_prediction.h

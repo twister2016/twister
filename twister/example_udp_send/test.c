@@ -28,7 +28,8 @@ struct user_params user_params;
 
 void print_payload(int sock_fd, void * payload_data, int payload_size, struct sock_conn_t conn) {
 	struct timestamp_option * temp_timestamp = (struct timestamp_option *) payload_data;
-	calc_average_rtt(temp_timestamp->echo_timestamp);
+	uint64_t curr_time = get_current_timer_cycles();
+	parse_timestamp(temp_timestamp, curr_time);
         rte_free(payload_data);
         return;
 }
@@ -65,7 +66,7 @@ void send_timestamp(int sock_fd) {
 	curr_rate_cycle = get_current_timer_cycles();
 	diff_rate = get_time_diff(curr_rate_cycle, prev_rate_cycle, one_nsec);
 	if(diff_rate >= global_pps_delay) {
-		add_timestamp(&timestamp);
+		add_timestamp(&timestamp, curr_rate_cycle);
 		//printf("Sending timestamp %u\n", timestamp.timestamp);
 		udp_send(sock_fd,(void *)&timestamp,sizeof(struct timestamp_option), user_params.PayloadSize, user_params.ServerIP, 7777);
 	}
