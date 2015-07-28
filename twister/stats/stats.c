@@ -5,7 +5,7 @@ uint8_t tcp_hdr_size = 32;
 uint8_t ip_hdr_size=20;
 uint8_t eth_hdr_size=20;
 uint32_t test_runtime = 0; //TODO init file, initate the testruntime
-uint64_t pps_limit = 0; //TODO
+//uint64_t pps_limit = 0;
 struct average_filter *root_rtt_average = NULL;
 struct average_filter *end_rtt_average = NULL;
 const uint8_t average_filter_len = 255;
@@ -52,12 +52,15 @@ int calc_global_stats(void) {
 	global_stats_option.tx_pps = global_stats_option.pkts_tx - prev_pkts_tx;
 	prev_pkts_rx = global_stats_option.pkts_rx;
 	prev_pkts_tx = global_stats_option.pkts_tx;
-	if(global_pps_delay > 10) {
-		float change = ((float)pps_limit - global_stats_option.tx_pps)/pps_limit;
+	//if(global_pps_delay > 10) {
+		float change = ((float)global_pps_limit - global_stats_option.tx_pps)/global_pps_limit;
+		printf("change %f\n", change);
+		if(global_pps_delay == 0)
+			global_pps_delay = 10;
 		if(change != 0)
 			global_pps_delay -= (change * global_pps_delay);
-	}
-	if(global_stats_option.secs_passed <= 5) //TODO chack if this logic is required
+	//}
+	if(global_stats_option.secs_passed <= 5) //TODO check if this logic is required
 	{
 		global_pps_delay = global_pps_delay * 5;
 	}
@@ -65,9 +68,9 @@ int calc_global_stats(void) {
 }
 
 void print_global_stats(void) {
-	clear_scr();
+	//clear_scr();
 	printf("****Global Stats****\n");
-	printf("Secs Passed %lu\nRX PPS %lu\nTX PPS %lu\nPkts RX %lu\nPkts TX %lu\n RTT %lu\n", global_stats_option.secs_passed, global_stats_option.rx_pps, global_stats_option.tx_pps, global_stats_option.pkts_rx, global_stats_option.pkts_tx, global_stats_option.rtt);
+	printf("Secs Passed %lu\nRX PPS %lu\nTX PPS %lu\nPkts RX %lu\nPkts TX %lu\nRTT %lu\nglobal_pps_limit %lu\nglobal_pps_delay %lu\n", global_stats_option.secs_passed, global_stats_option.rx_pps, global_stats_option.tx_pps, global_stats_option.pkts_rx, global_stats_option.pkts_tx, global_stats_option.rtt, global_pps_limit, global_pps_delay);
 }
 
 int init_stats (uint8_t port_id, uint32_t dst_ip ) {
@@ -229,6 +232,8 @@ void printXfgenStats(void)
 	printf("-------------------------------------------------------\n");
 }
 */
+
+/*
 void writeTestStats(void)
 {
 	unsigned count = 0;
@@ -251,4 +256,4 @@ void writeTestStats(void)
 
 	
 }
-
+*/

@@ -45,6 +45,7 @@ int start_io_events(uint32_t secs_to_run) {
 		global_pps_delay = 10000000000/global_pps_limit;
 	else
 		global_pps_delay = 0;
+	printf("global_pps_limit %lu, global_pps_delay %lu", global_pps_limit, global_pps_delay);
 	int core_id = rte_lcore_id();
 	uint64_t curr_time_cycle = 0, prev_stats_cycle= 0, prev_stats_calc = 0, prev_queue_cycle = 0, time_diff = 0;
 	uint64_t loop_start_time = get_current_timer_cycles();
@@ -83,7 +84,7 @@ int start_io_events(uint32_t secs_to_run) {
 
 		if(temp_event == NULL) 
 			rte_exit(EXIT_FAILURE,"NO EVENTS REGISTERED\n"); 
-                sleep(1);
+                //sleep(1);
                 twister_timely_burst();
 		num_rx_pkts = rx_for_each_queue(m);
 		if(num_rx_pkts > 0) {	//TODO Enable rx and tx check

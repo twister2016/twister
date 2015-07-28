@@ -8,6 +8,8 @@
 #include <initfuncs.h>
 #include <runtime.h>
 
+#define MAX_QUEUED_PKTS 1024
+
 extern uint64_t queued_pkt_time_limit;		//--!TODO get the value from user
 extern uint64_t queue_update_limit;
 

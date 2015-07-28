@@ -14,7 +14,7 @@
 
 //static struct ether_addr eth_port_mac[MAX_ETH_PORTS];
 int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_t dst_ip ) {
-
+	
 	//uint8_t socket_id = rte_eth_dev_socket_id(port_id);
 	//struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
 	rte_pktmbuf_prepend(m, sizeof ( struct ether_hdr ));

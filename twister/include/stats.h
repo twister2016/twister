@@ -99,7 +99,7 @@ uint8_t l4_proto ; //TODO init at run time, if protocl used is to be udp or tcp
 uint32_t PKT_PAYLOAD_SIZE;//TODO init decide payload size    
 
 extern uint32_t test_runtime ; //TODO init file, initate the testruntime
-extern uint64_t pps_limit ; //TODO
+//extern uint64_t pps_limit ;
 
 int calc_global_stats(void);
 
