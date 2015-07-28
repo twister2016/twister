@@ -22,6 +22,7 @@ struct user_params {
 	uint32_t testRuntime;
 	uint32_t StatsServerIP;
 	uint16_t StatsServerPort;
+	uint32_t tagHeatIP;
 };
 
 struct user_params user_params;
@@ -50,6 +51,8 @@ int parse_user_params(char * file_name) {
 		user_params.testRuntime = convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring, 3);
 		user_params.StatsServerIP = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "StatsServerIP")->valuestring);
 		user_params.StatsServerPort = convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
+		user_params.tagHeatIP = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "vm_ip")->valuestring);
+		global_stats_option.tag_heat_ip = user_params.tagHeatIP;
 		global_pps_limit = user_params.ppsLimit;
 	}
 	return 0;

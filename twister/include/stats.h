@@ -72,6 +72,7 @@ struct stats_option {
 	uint64_t pkts_tx;
 	uint64_t pkts_dropped;
 	uint64_t rtt;
+	uint32_t tag_heat_ip;
 } __attribute__ ((__packed__));
 
 struct stats_option global_stats_option;
