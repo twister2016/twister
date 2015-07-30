@@ -18,9 +18,6 @@
 int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 {
 	struct ipv4_hdr *ipHdr = rte_pktmbuf_mtod(pkt, struct ipv4_hdr *);
-    //uint16_t ipchecksum = rte_ipv4_cksum(ipHdr);	
- /*   if (ipchecksum == ipHdr->hdr_checksum && ipHdr->version_ihl > 20 && ipHdr->time_to_live >= 0)
-	{*/
 	if(CHECK_IPv4_CKSUM) {
 		uint16_t ipchecksum = rte_ipv4_cksum(ipHdr);
 		if (ipchecksum != ipHdr->hdr_checksum) {
@@ -30,9 +27,8 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 	}
 	uint32_t dst_ip  = rte_be_to_cpu_32(ipHdr->dst_addr);
 	uint32_t src_ip = rte_be_to_cpu_32(ipHdr->src_addr);
-	if (((dst_ip >= port_info[port_id].start_ip_addr) && (dst_ip <= (port_info[port_id].start_ip_addr + port_info[port_id].num_ip_addrs))) || dst_ip == LOCAL_HOST_IP) 	//--!TODO Add IP range logic
+	if (((dst_ip >= port_info[port_id].start_ip_addr) && (dst_ip <= (port_info[port_id].start_ip_addr + port_info[port_id].num_ip_addrs))) || dst_ip == LOCAL_HOST_IP)
 	{	
-		rte_pktmbuf_adj(pkt, ipHdr->version_ihl);
 		switch(ipHdr->next_proto_id)
 		{
 			case (UDP_PROTO_ID):
@@ -48,6 +44,7 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 			break;
 			case (TCP_PROTO_ID):
 				//tcp_packet_parser(pkt);
+				rte_pktmbuf_free(pkt);
 				break;
 			default:
 				rte_pktmbuf_free(pkt);
@@ -58,13 +55,6 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 	{
 		rte_pktmbuf_free(pkt);	
 	}
-		
-/*	}
-    else
-    {
-		rte_pktmbuf_free(pkt);
-	}		
-	*/
 	return 0;
 }
 

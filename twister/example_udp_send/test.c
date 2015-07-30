@@ -14,6 +14,7 @@ uint64_t curr_rate_cycle = 0, prev_rate_cycle = 0, diff_rate = 0;
 int main (int, char **);
 int launch_one_lcore(__attribute__((unused)) void *);
 void print_payload(int, void *, int, struct sock_conn_t);
+void send_timestamp(int);
 
 struct user_params {
 	uint32_t ServerIP;
@@ -27,12 +28,22 @@ struct user_params {
 
 struct user_params user_params;
 
-void print_payload(int sock_fd, void * payload_data, int payload_size, struct sock_conn_t conn) {
+void parse_payload(int sock_fd, void * payload_data, int payload_size, struct sock_conn_t conn) {
 	struct timestamp_option * temp_timestamp = (struct timestamp_option *) payload_data;
 	uint64_t curr_time = get_current_timer_cycles();
 	parse_timestamp(temp_timestamp, curr_time);
         rte_free(payload_data);
         return;
+}
+
+void send_timestamp(int sock_fd) {
+	curr_rate_cycle = get_current_timer_cycles();
+	diff_rate = get_time_diff(curr_rate_cycle, prev_rate_cycle, one_nsec);
+	if(diff_rate >= global_pps_delay) {
+		add_timestamp(&timestamp, curr_rate_cycle);
+		//printf("Sending timestamp %u\n", timestamp.timestamp);
+		udp_send(sock_fd,(void *)&timestamp,sizeof(struct timestamp_option), user_params.PayloadSize, user_params.ServerIP, 7777);
+	}
 }
 
 int parse_user_params(char * file_name) {
@@ -65,24 +76,14 @@ int main(int argc, char **argv ) {
 	return 0;
 }
 
-void send_timestamp(int sock_fd) {
-	curr_rate_cycle = get_current_timer_cycles();
-	diff_rate = get_time_diff(curr_rate_cycle, prev_rate_cycle, one_nsec);
-	if(diff_rate >= global_pps_delay) {
-		add_timestamp(&timestamp, curr_rate_cycle);
-		//printf("Sending timestamp %u\n", timestamp.timestamp);
-		udp_send(sock_fd,(void *)&timestamp,sizeof(struct timestamp_option), user_params.PayloadSize, user_params.ServerIP, 7777);
-	}
-}
-
 int launch_one_lcore(__attribute__((unused)) void *dummy) {
 	open_stats_socket(user_params.StatsServerIP, user_params.StatsServerPort); //stats pkts will be sent if port is opened
-        int sockfd = udp_socket(port_info[0].start_ip_addr,7898);
-	void (*rx_cb_func) (int, void *, int, struct sock_conn_t) = print_payload;
+	int sockfd = udp_socket(port_info[0].start_ip_addr,7898);
+	void (*rx_cb_func) (int, void *, int, struct sock_conn_t) = parse_payload;
 	void (*tx_cb_func) (int) = send_timestamp;
 	event_flags_global = NO_FLAG_SET;
-	struct event_io * io_event_rx = reg_io_event(sockfd, rx_cb_func, REPEAT_EVENT, NO_FLAG_SET, RX_CALLBACK);
-	struct event_io * io_event_tx = reg_io_event(sockfd, tx_cb_func, REPEAT_EVENT, NO_FLAG_SET, TX_CALLBACK);
+	struct event_io * io_event_rx = reg_io_event(sockfd, rx_cb_func, REPEAT_EVENT, event_flags_global, RX_CALLBACK);
+	struct event_io * io_event_tx = reg_io_event(sockfd, tx_cb_func, REPEAT_EVENT, event_flags_global, TX_CALLBACK);
 	start_io_events(user_params.testRuntime); //Value of 0 is for infinite loop
         return 0;
 }

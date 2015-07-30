@@ -50,7 +50,7 @@ int update_queued_pkts(uint64_t curr_timer_cycle) {
 		if(likely(time_diff < queued_pkt_time_limit)) {
 			struct arp_table * arp_entry = search_arp_table(curr_queued_pkt->arp_ip);
 			if(unlikely(arp_entry != NULL))
-				send_queued_pkt(&prev_queued_pkt, &curr_queued_pkt, arp_entry->eth_mac); //TODO add arp retry logic
+				send_queued_pkt(&prev_queued_pkt, &curr_queued_pkt, arp_entry->eth_mac);
 			else
 				curr_queued_pkt = curr_queued_pkt->next;
 			continue;

@@ -9,7 +9,7 @@
 
 struct event_io * 
 reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_flags, uint8_t event_type) {
-	int core_id = rte_lcore_id();   //TODO modify if launch_one_lcore calling position changes
+	int core_id = rte_lcore_id();
 	struct event_io * temp_event_io;
 	
 	temp_event_io = root_event_io[core_id];
@@ -20,8 +20,6 @@ reg_io_event(int sock_fd, void * cb_func, uint8_t repeat_event, uint8_t event_fl
 	else {
 		while(temp_event_io->next != NULL)
 			temp_event_io = temp_event_io->next;
-		//if(event_flags != 0) 
-			//rte_exit(EXIT_FAILURE,"EVENT FLAG SETTING NOT ALLOWED\n"); //TODO end properly
 		temp_event_io->next = rte_malloc("struct event_io *", sizeof(struct event_io), RTE_CACHE_LINE_SIZE);
 		temp_event_io = temp_event_io->next;
 	}
@@ -40,7 +38,7 @@ int start_io_events(uint32_t secs_to_run) {
 	uint8_t infinite_loop = 0, continue_loop = 1;
 	if (secs_to_run == INFINITE_LOOP)
 		infinite_loop = 1;
-	int num_rx_pkts, pkt_count, payload_size = 0, i;
+	int num_rx_pkts = 0, pkt_count = 0, payload_size = 0, i;
 	if(global_pps_limit)
 		global_pps_delay = 10000000000/global_pps_limit;
 	else
@@ -86,12 +84,16 @@ int start_io_events(uint32_t secs_to_run) {
 			rte_exit(EXIT_FAILURE,"NO EVENTS REGISTERED\n"); 
                 //sleep(1);
                 twister_timely_burst();
-		num_rx_pkts = rx_for_each_queue(m);
-		if(num_rx_pkts > 0) {	//TODO Enable rx and tx check
-			for(i=0;i<qconf->num_queues;i++)
-			{
+		if(qconf->core_rx) //If RX for this core is enabled
+			num_rx_pkts = rx_for_each_queue(m);
+
+		if(num_rx_pkts > 0) {
+			for(i=0;i<qconf->num_queues;i++) {
 				for(pkt_count = 0;pkt_count < m[i].len;pkt_count++) {
 					pkt = m[i].m_table[pkt_count];	
+					if(unlikely(temp_event->type != RX_CALLBACK)) {
+						rte_exit(EXIT_FAILURE,"FIRST EVENT SHOULD BE AN RX EVENT\n");
+					}
 					if(event_flags_global == GET_L2_PKTS) {
 						cb_func_with_flags = temp_event->event_cb;
 						cb_func_with_flags(pkt, m[i].portid);
@@ -102,7 +104,8 @@ int start_io_events(uint32_t secs_to_run) {
 				}
 			}
 		}
-		if(event_flags_global == NO_FLAG_SET) {
+
+		if(event_flags_global == NO_FLAG_SET) { //Multiple RX and TX events can be registered in this case
 			while(temp_event != NULL) {
 				if(temp_event->type == RX_CALLBACK) {
 					rx_cb_func = temp_event->event_cb;
@@ -115,6 +118,16 @@ int start_io_events(uint32_t secs_to_run) {
 					tx_cb_func = temp_event->event_cb;
 					tx_cb_func(temp_event->sock_fd);
 				}
+				temp_event = temp_event->next;
+			}
+		}
+		else { //If event_flags_global is set for L2, L3 or L4 pkts
+			if(likely(temp_event->type != TX_CALLBACK)) {
+				temp_event = root_event_io[core_id]->next;
+			}
+			while(temp_event != NULL) { //Multiple TX events can be registered
+				tx_cb_func = temp_event->event_cb;
+				tx_cb_func(temp_event->sock_fd);
 				temp_event = temp_event->next;
 			}
 		}

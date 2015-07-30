@@ -34,11 +34,11 @@ int main(int argc, char **argv )
 }
 
 int launch_one_lcore(__attribute__((unused)) void *dummy)
- {
+{
 	void (*rx_cb_func) (int, void *, uint16_t, struct sock_conn_t) = reply_payload;
 	int sockfd = udp_socket(port_info[0].start_ip_addr, 7777);
 	event_flags_global = NO_FLAG_SET;
-	struct event_io * io_event_rx = reg_io_event(sockfd, rx_cb_func, REPEAT_EVENT, NO_FLAG_SET, RX_CALLBACK);
+	struct event_io * io_event_rx = reg_io_event(sockfd, rx_cb_func, REPEAT_EVENT, event_flags_global, RX_CALLBACK);
 	//struct event_io * io_event_tx = reg_io_event(sockfd, tx_cb_func, REPEAT_EVENT, NO_FLAG_SET, TX_CALLBACK);
 	start_io_events(INFINITE_LOOP);
         return 0;
