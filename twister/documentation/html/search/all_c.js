@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['m_5ftable',['m_table',['../structmbuf__table.html#ad1537d41718ee1c86f4032c64e7bd0b7',1,'mbuf_table::m_table()'],['../portconf_8h.html#ad1537d41718ee1c86f4032c64e7bd0b7',1,'m_table():&#160;portconf.h']]],
+  ['malloc_5ffn',['malloc_fn',['../structc_j_s_o_n___hooks.html#a374113337352589c53a5f0473fdcbff1',1,'cJSON_Hooks']]],
+  ['managed_5fport',['managed_port',['../structlcore__conf.html#ad27b4aa63c899f46d025d854157cd152',1,'lcore_conf']]],
+  ['map_5fqueue_5fto_5fcore',['map_queue_to_core',['../lcoreconf_8c.html#ac7119fefd5da9ec161c8a63e5b6c7b45',1,'lcoreconf.c']]],
+  ['master_5flcore',['MASTER_LCORE',['../lcoreconf_8h.html#a3e969f8df375e99629a19a472f5d4483',1,'lcoreconf.h']]],
+  ['max_5feth_5fports',['MAX_ETH_PORTS',['../portconf_8h.html#ab7f1291c97293a0bcd923134242279fe',1,'portconf.h']]],
+  ['max_5flcores',['MAX_LCORES',['../lcoreconf_8h.html#a4a27be2fcd2338143df04e37e0c65679',1,'MAX_LCORES():&#160;lcoreconf.h'],['../event__loop_8h.html#a4a27be2fcd2338143df04e37e0c65679',1,'MAX_LCORES():&#160;event_loop.h']]],
+  ['max_5fnuma_5fsockets',['MAX_NUMA_SOCKETS',['../mempoolconf_8h.html#ad6d67c6cb0cbdc3d5da608ebb119735c',1,'mempoolconf.h']]],
+  ['max_5fpkt_5fburst',['MAX_PKT_BURST',['../mempoolconf_8h.html#a07888c38e252992d1b95545baacad594',1,'mempoolconf.h']]],
+  ['max_5frx_5fqueues_5fper_5flcore',['MAX_RX_QUEUES_PER_LCORE',['../lcoreconf_8h.html#a330e0a7fb2e04ccb7160648445a8827a',1,'lcoreconf.h']]],
+  ['max_5ftx_5fpkt_5fburst',['MAX_TX_PKT_BURST',['../lcoreconf_8h.html#affc1d8a97dda102789ce9e7e1e0ee493',1,'lcoreconf.h']]],
+  ['max_5fudp_5fpayload',['MAX_UDP_PAYLOAD',['../usocket_8h.html#af0ac42afce410ea431e805e014145971',1,'usocket.h']]],
+  ['maxfd',['maxfd',['../socket_8c.html#a7a13a361801dcc59ce4946736fa26726',1,'maxfd():&#160;socket.c'],['../usocket_8h.html#a7a13a361801dcc59ce4946736fa26726',1,'maxfd():&#160;socket.c']]],
+  ['mbuf_5frx',['mbuf_rx',['../structapp__params.html#a35c218bba86e91bfd6818255f9750420',1,'app_params']]],
+  ['mbuf_5fsize',['MBUF_SIZE',['../mempoolconf_8h.html#a502c8aab5888819f96d107c249a83103',1,'mempoolconf.h']]],
+  ['mbuf_5ftable',['mbuf_table',['../structmbuf__table.html',1,'']]],
+  ['mbuf_5ftx',['mbuf_tx',['../structapp__params.html#a5600a769ed3f4f1363bcc8b75d9b2a13',1,'app_params']]],
+  ['mempoolconf_2ec',['mempoolconf.c',['../mempoolconf_8c.html',1,'']]],
+  ['mempoolconf_2eh',['mempoolconf.h',['../mempoolconf_8h.html',1,'']]],
+  ['mgmt_5fport',['MGMT_PORT',['../portconf_8h.html#ad044210fc49020f110a2955269163f6a',1,'portconf.h']]],
+  ['million',['MILLION',['../timerdefs_8h.html#a368e7704f92e34c8ea0a5c263a95a1b1',1,'timerdefs.h']]],
+  ['mngd_5fqueues',['mngd_queues',['../structlcore__conf.html#a50a0bfc2b104d3f0ad717402416ca92a',1,'lcore_conf']]]
+];
