@@ -34,8 +34,8 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
 		arp_ip = port_info[port_id].gateway_ip;
     	struct arp_table *  arp_table_ptr = search_arp_table(rte_cpu_to_be_32(arp_ip));
         if(arp_table_ptr == NULL) {
-		add_pkt_to_queue(m, arp_ip, port_id);
-         	construct_arp_packet(arp_ip, port_id); 
+		if(add_pkt_to_queue(m, arp_ip, port_id) == 0)
+         		construct_arp_packet(arp_ip, port_id); 
         }
         else {
             	ether_addr_copy(&(arp_table_ptr->eth_mac), &(eth->d_addr));
