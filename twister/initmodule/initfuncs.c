@@ -32,7 +32,6 @@ int init_eal_env(int argc, char **argv) {
 	int ret = rte_eal_init(argc, argv);
 	if (ret < 0)
 		rte_exit(EXIT_FAILURE, "Invalid EAL arguments\n");
-	printf("enhanced feature\n");
 	argc -= ret;
 	argv += ret;
 	ret = parse_twister_args(argc, argv);	//--! TODO implement parse_twister_args()

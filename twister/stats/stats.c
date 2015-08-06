@@ -58,7 +58,7 @@ int calc_global_stats(void) {
 }
 
 void print_global_stats(void) {
-	//clear_scr();
+	clear_scr();
 	printf("****Global Stats****\n");
 	printf("Secs Passed %lu\nRX PPS %lu\nTX PPS %lu\nPkts RX %lu\nPkts TX %lu\nRTT %lu\n", global_stats_option.secs_passed, global_stats_option.rx_pps, global_stats_option.tx_pps, global_stats_option.pkts_rx, global_stats_option.pkts_tx, global_stats_option.rtt);
 }
