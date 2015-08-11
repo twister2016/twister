@@ -19,6 +19,7 @@ struct rte_mempool * queued_pkts_mempool[MAX_NUMA_SOCKETS];
 
 int create_rx_tx_mempools(void);
 int create_queued_pkts_mempools(void);
+inline void tw_free(void *);
 extern struct rte_mbuf *app_get_buffer(void);
 
 #endif

@@ -1,6 +1,6 @@
 [
     {
-	"lcore_id" : "00",
+	"lcore_id" : "01",
 	"core_rx" : "1",
 	"core_tx" : "1",
 	"core_working" : "1",

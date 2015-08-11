@@ -148,7 +148,7 @@ app_init_rings(void)
 
 }
 
-int init_global(int argc, char **argv) {
+int tw_init_global(int argc, char **argv) {
 	init_user_given_vals();
     init_eal_env(argc, argv);
 	create_rx_tx_mempools();

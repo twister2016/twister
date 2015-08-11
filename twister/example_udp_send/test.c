@@ -4,6 +4,7 @@
 #include <initfuncs.h>
 #include <timestamp.h>
 #include <event_loop.h>
+#include <processing_engines.h>
 
 //int PIPELINE=0;
 
@@ -12,7 +13,7 @@ struct timestamp_option timestamp;
 uint64_t curr_rate_cycle = 0, prev_rate_cycle = 0, diff_rate = 0;
 
 int main (int, char **);
-int launch_one_lcore(__attribute__((unused)) void *);
+int user_app_main(__attribute__((unused)) void *);
 void print_payload(int, void *, int, struct sock_conn_t);
 void send_timestamp(int);
 
@@ -32,7 +33,7 @@ void parse_payload(int sock_fd, void * payload_data, int payload_size, struct so
 	struct timestamp_option * temp_timestamp = (struct timestamp_option *) payload_data;
 	uint64_t curr_time = get_current_timer_cycles();
 	parse_timestamp(temp_timestamp, curr_time);
-        rte_free(payload_data);
+        tw_free(payload_data);
         return;
 }
 
@@ -41,7 +42,6 @@ void send_timestamp(int sock_fd) {
 	diff_rate = get_time_diff(curr_rate_cycle, prev_rate_cycle, one_nsec);
 	if(diff_rate >= global_pps_delay) {
 		add_timestamp(&timestamp, curr_rate_cycle);
-		//printf("Sending timestamp %u\n", timestamp.timestamp);
 		udp_send(sock_fd,(void *)&timestamp,sizeof(struct timestamp_option), user_params.PayloadSize, user_params.ServerIP, 7777);
 	}
 }
@@ -70,13 +70,13 @@ int parse_user_params(char * file_name) {
 }
 
 int main(int argc, char **argv ) {
-	init_global(argc, argv);
+	tw_init_global(argc, argv);
 	parse_user_params("udp_traffic_data");
-	rte_eal_mp_remote_launch(launch_one_lcore, NULL, CALL_MASTER);
+	tw_launch_processing_engines(user_app_main, NULL, USE_ALL_ENGINES);
 	return 0;
 }
 
-int launch_one_lcore(__attribute__((unused)) void *dummy) {
+int user_app_main(__attribute__((unused)) void *dummy) {
 	open_stats_socket(user_params.StatsServerIP, user_params.StatsServerPort); //stats pkts will be sent if port is opened
 	int sockfd = udp_socket(port_info[0].start_ip_addr,7898);
 	void (*rx_cb_func) (int, void *, int, struct sock_conn_t) = parse_payload;
@@ -85,5 +85,5 @@ int launch_one_lcore(__attribute__((unused)) void *dummy) {
 	struct event_io * io_event_rx = reg_io_event(sockfd, rx_cb_func, REPEAT_EVENT, event_flags_global, RX_CALLBACK);
 	struct event_io * io_event_tx = reg_io_event(sockfd, tx_cb_func, REPEAT_EVENT, event_flags_global, TX_CALLBACK);
 	start_io_events(user_params.testRuntime); //Value of 0 is for infinite loop
-        return 0;
+	return 0;
 }

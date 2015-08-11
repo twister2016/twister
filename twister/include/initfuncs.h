@@ -57,7 +57,7 @@ extern struct app_params app;
 
 extern int init_eal_env(int, char **);
 extern int parse_twister_args(int argc, char **argv);
-extern int init_global(int argc, char **);
+extern int tw_init_global(int argc, char **);
 extern int init_user_given_vals(void);
 int display_usage(const char *);
 int parse_portmask(const char *);

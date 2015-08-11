@@ -27,6 +27,10 @@ struct rte_mbuf * app_get_buffer(void)
 	return rte_pktmbuf_alloc(tx_mempool[0]);
 }
 
+inline void tw_free(void * ptr) {
+	rte_free(ptr);
+}
+
 int create_queued_pkts_mempools(void) {		//--! To be used by queued packets including pakets waiting for an ARP reply
 	uint8_t numa_socket = 0;
         for(numa_socket=0;numa_socket<num_numa_sockets;numa_socket++) {
