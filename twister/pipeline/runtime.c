@@ -45,6 +45,7 @@
 
 #include <initfuncs.h>
 #include <runtime.h>
+#include <event_loop.h>
 
 void
 app_main_loop_rx(void) {
@@ -115,7 +116,7 @@ app_main_loop_worker(void) {
 			// Remove this for loop
     	for (j = 0; j < app.burst_size_worker_read; j++) {
 				m = (struct rte_mbuf *)worker_mbuf->m_table[j];
-				eth_pkt_parser(m, i);
+				eth_pkt_parser(m, i, LOOP_PROCESS, NULL);
 				
 			}
 	}

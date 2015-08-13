@@ -24,7 +24,7 @@ int get_pkt_from_rx_queue(struct mbuf_table * m, uint8_t port,uint8_t queue_id) 
 	unsigned nb_pkt_rx = 0;
 	nb_pkt_rx = rte_eth_rx_burst(port, queue_id, m->m_table, MAX_PKT_BURST);
 	//printf("%d num pkt rx\n", nb_pkt_rx);
-	global_stats_option.pkts_rx += nb_pkt_rx; //global variable in stats.h
+	global_stats_option[rte_lcore_id()].pkts_rx += nb_pkt_rx; //global variable in stats.h
 	return nb_pkt_rx;
 }
 

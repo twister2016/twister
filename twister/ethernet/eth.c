@@ -49,7 +49,7 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
     	return 0;
 }
 
-int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
+int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id, uint8_t processing_flag, void * cb_func) {
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
 	uint8_t accept_brdcast = is_broadcast_ether_addr(&(eth->d_addr)) & ACCEPT_BRDCAST;
 	if(is_same_ether_addr(&(eth->d_addr), port_info[port_id].eth_mac) || accept_brdcast) {
@@ -58,17 +58,17 @@ int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			arp_parser(pkt, port_id);
 			break;
 		case ETHER_TYPE_VLAN:
-			vlan_parser(pkt, port_id);
+			vlan_parser(pkt, port_id, processing_flag, cb_func);
 			break;
 		case ETHER_TYPE_IPv4:
-			rte_pktmbuf_adj(pkt, sizeof(struct ether_hdr));
-			if(event_flags_global == GET_L3_PKTS) {
-				void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t) = root_event_io[rte_lcore_id()]->event_cb;
-				cb_func_with_flags(pkt, port_id);
+			//rte_pktmbuf_adj(pkt, sizeof(struct ether_hdr));
+			if(processing_flag == LOOP_PROCESS) {
+				ip4_packet_parser(pkt, port_id, sizeof(struct ether_hdr), processing_flag, NULL);	//--!TODO implement ipv6
 			}
 			else{
-				ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
-			}		
+				void (* eth_cb_func) (struct rte_mbuf *, uint8_t) = cb_func;
+				eth_cb_func(pkt, port_id);
+			}
 			break;
 		default:
 			rte_pktmbuf_free(pkt);

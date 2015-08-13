@@ -4,7 +4,21 @@
 #include<udp.h>
 
 #define MAX_UDP_PAYLOAD 1460 //TODO see if this can be increased
+
+#define	TW_SOCK_STREAM		1	// stream socket 
+#define	TW_SOCK_DGRAM		2	// datagram socket 
+#define	TW_SOCK_RAW			3	// raw-protocol interface 
+#define	TW_SOCK_RDM			4	// reliably-delivered message 
+#define	TW_SOCK_SEQPACKET	5	// sequenced packet stream
+
+#define TW_IPPROTO_IP	0               // dummy for IP
+#define TW_IPPROTO_UDP	17              // user datagram protocol
+#define TW_IPPROTO_TCP	6               // tcp 
+#define TW_IPPROTO_RAW	255				//For raw socket
+
 struct socket_info{
+	uint8_t type;
+	uint8_t proto;
 	uint32_t ip_addr;
 	uint32_t port;
 };

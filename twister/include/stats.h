@@ -7,6 +7,7 @@
 #include <rte_udp.h>
 #include <rte_malloc.h>
 #include <portconf.h>
+#include <lcoreconf.h>
 #include <ip.h>
 #include <udp.h>
 #include <eth.h>
@@ -29,8 +30,8 @@ extern int stats_fd;
 extern uint32_t stats_server_ip;
 extern uint16_t l4_stats_port;
 
-extern uint64_t global_pps_limit;
-extern uint64_t global_pps_delay;
+extern uint64_t global_pps_limit[MAX_LCORES];
+extern uint64_t global_pps_delay[MAX_LCORES];
 
 struct average_filter
 {	float   timestamp;
@@ -55,7 +56,7 @@ struct stats_option {
 	uint32_t tag_heat_ip;
 } __attribute__ ((__packed__));
 
-struct stats_option global_stats_option;
+struct stats_option global_stats_option[MAX_LCORES];
 
 extern uint64_t prev_pkts_rx, prev_pkts_tx;
 

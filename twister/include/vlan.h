@@ -6,7 +6,7 @@
 
 
 /**********************************************/
-int vlan_parser(struct rte_mbuf *, uint8_t);
+int vlan_parser(struct rte_mbuf *, uint8_t, uint8_t, void *);
 /*********************************************/
 /**********************************************/
 int vlan_ctor(struct rte_mbuf *, uint8_t, uint16_t);

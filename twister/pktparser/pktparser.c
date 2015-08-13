@@ -3,8 +3,8 @@
 
 #include <pktparser.h>
 
-int parse_pkt(struct rte_mbuf * pkt, uint8_t port_id) {
-	eth_pkt_parser(pkt, port_id);
+int parse_pkt(__attribute__((unused)) struct rte_mbuf * pkt, __attribute__((unused)) uint8_t port_id) {   //TODO Use seperate protocol parsing
+	//eth_pkt_parser(pkt, port_id);
 	return 0;
 }
  

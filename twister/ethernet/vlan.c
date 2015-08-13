@@ -7,7 +7,7 @@
 #include <arplogic.h>
 #include <event_loop.h>
 
-int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id) {
+int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id, uint8_t processing_flag, void * cb_func) {
 	rte_vlan_strip(pkt);			//--? should the vlan be compared with the vlan value in port_info[port_id]???
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
 	switch(eth->ether_type) {
@@ -18,12 +18,12 @@ int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			vlan_parser(pkt, port_id);
 			break; */
 		case ETHER_TYPE_IPv4:
-			if(event_flags_global == GET_L3_PKTS) {
-				void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t) = root_event_io[rte_lcore_id()]->event_cb;
-				cb_func_with_flags(pkt, port_id);
+			if(processing_flag == LOOP_PROCESS) {
+				ip4_packet_parser(pkt, port_id, sizeof(struct ether_hdr), processing_flag, NULL);	//--!TODO implement ipv6
 			}
 			else{
-				ip4_packet_parser(pkt, port_id);	//--!TODO implement ipv6
+				void (* vlan_cb_func) (struct rte_mbuf *, uint8_t) = cb_func;
+				vlan_cb_func(pkt, port_id);
 			}	
 			break;
 		default:

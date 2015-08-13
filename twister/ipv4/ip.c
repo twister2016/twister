@@ -12,12 +12,11 @@
 #include <eth.h>
 #include <event_loop.h>
 
-#define LOCAL_HOST_IP 213
+#define LOCAL_HOST_IP 2130706433     //127.0.0.1
 
-
-int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
+int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id, uint8_t prev_hdr_size, uint8_t processing_flag, void * cb_func)
 {
-	struct ipv4_hdr *ipHdr = rte_pktmbuf_mtod(pkt, struct ipv4_hdr *);
+	struct ipv4_hdr *ipHdr = rte_pktmbuf_mtod(pkt, struct ipv4_hdr *) + prev_hdr_size; //--???
 	if(CHECK_IPv4_CKSUM) {
 		uint16_t ipchecksum = rte_ipv4_cksum(ipHdr);
 		if (ipchecksum != ipHdr->hdr_checksum) {
@@ -32,18 +31,19 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id)
 		switch(ipHdr->next_proto_id)
 		{
 			case (UDP_PROTO_ID):
-			rte_pktmbuf_adj(pkt, sizeof(struct ipv4_hdr));
-			if(event_flags_global == GET_L4_PKTS) {
-				void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t) = root_event_io[rte_lcore_id()]->event_cb;
-				cb_func_with_flags(pkt, port_id);
-			}
-			else
-			{
-				udp_packet_parser(pkt,src_ip,dst_ip);	//--!TODO implement ipv6
-			}
-			break;
+				//rte_pktmbuf_adj(pkt, sizeof(struct ipv4_hdr));
+				prev_hdr_size += sizeof(struct ipv4_hdr);
+				if(processing_flag == LOOP_PROCESS) {
+					udp_packet_parser(pkt,src_ip,dst_ip, prev_hdr_size, processing_flag, NULL);
+				}
+				else
+				{
+					void (*ip_cb_func) (struct rte_mbuf *, uint8_t) = cb_func;
+					ip_cb_func(pkt, port_id);
+				}
+				break;
 			case (TCP_PROTO_ID):
-				//tcp_packet_parser(pkt);
+				//tcp_packet_parser(pkt);    //TODO Implement TCP
 				rte_pktmbuf_free(pkt);
 				break;
 			default:
