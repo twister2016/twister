@@ -8,6 +8,6 @@ enum {
 	RESERVE_FIRST_ENGINE = 1
 };
 
-void tw_launch_processing_engines(void *, void *, int);
+void tw_launch_engine(void *, void *, int);
 
 #endif

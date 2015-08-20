@@ -1,0 +1,1805 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="dpdk">
+        <df name="app">
+          <df name="cmdline_test">
+            <in>cmdline_test.c</in>
+            <in>commands.c</in>
+          </df>
+          <df name="dump_cfg">
+            <in>main.c</in>
+          </df>
+          <df name="test">
+            <in>commands.c</in>
+            <in>packet_burst_generator.c</in>
+            <in>test.c</in>
+            <in>test_acl.c</in>
+            <in>test_alarm.c</in>
+            <in>test_atomic.c</in>
+            <in>test_byteorder.c</in>
+            <in>test_cmdline.c</in>
+            <in>test_cmdline_cirbuf.c</in>
+            <in>test_cmdline_etheraddr.c</in>
+            <in>test_cmdline_ipaddr.c</in>
+            <in>test_cmdline_lib.c</in>
+            <in>test_cmdline_num.c</in>
+            <in>test_cmdline_portlist.c</in>
+            <in>test_cmdline_string.c</in>
+            <in>test_common.c</in>
+            <in>test_cpuflags.c</in>
+            <in>test_cycles.c</in>
+            <in>test_debug.c</in>
+            <in>test_devargs.c</in>
+            <in>test_distributor.c</in>
+            <in>test_distributor_perf.c</in>
+            <in>test_eal_flags.c</in>
+            <in>test_eal_fs.c</in>
+            <in>test_errno.c</in>
+            <in>test_func_reentrancy.c</in>
+            <in>test_hash.c</in>
+            <in>test_hash_perf.c</in>
+            <in>test_interrupts.c</in>
+            <in>test_ivshmem.c</in>
+            <in>test_kni.c</in>
+            <in>test_kvargs.c</in>
+            <in>test_link_bonding.c</in>
+            <in>test_link_bonding_mode4.c</in>
+            <in>test_logs.c</in>
+            <in>test_lpm.c</in>
+            <in>test_lpm6.c</in>
+            <in>test_malloc.c</in>
+            <in>test_mbuf.c</in>
+            <in>test_memcpy.c</in>
+            <in>test_memcpy_perf.c</in>
+            <in>test_memory.c</in>
+            <in>test_mempool.c</in>
+            <in>test_mempool_perf.c</in>
+            <in>test_memzone.c</in>
+            <in>test_meter.c</in>
+            <in>test_mp_secondary.c</in>
+            <in>test_pci.c</in>
+            <in>test_per_lcore.c</in>
+            <in>test_pmd_perf.c</in>
+            <in>test_pmd_ring.c</in>
+            <in>test_power.c</in>
+            <in>test_power_acpi_cpufreq.c</in>
+            <in>test_power_kvm_vm.c</in>
+            <in>test_prefetch.c</in>
+            <in>test_red.c</in>
+            <in>test_reorder.c</in>
+            <in>test_ring.c</in>
+            <in>test_ring_perf.c</in>
+            <in>test_rwlock.c</in>
+            <in>test_sched.c</in>
+            <in>test_spinlock.c</in>
+            <in>test_string_fns.c</in>
+            <in>test_table.c</in>
+            <in>test_table_acl.c</in>
+            <in>test_table_combined.c</in>
+            <in>test_table_pipeline.c</in>
+            <in>test_table_ports.c</in>
+            <in>test_table_tables.c</in>
+            <in>test_tailq.c</in>
+            <in>test_timer.c</in>
+            <in>test_timer_perf.c</in>
+            <in>test_version.c</in>
+            <in>virtual_pmd.c</in>
+          </df>
+          <df name="test-acl">
+            <in>main.c</in>
+          </df>
+          <df name="test-pipeline">
+            <in>config.c</in>
+            <in>init.c</in>
+            <in>main.c</in>
+            <in>pipeline_acl.c</in>
+            <in>pipeline_hash.c</in>
+            <in>pipeline_lpm.c</in>
+            <in>pipeline_lpm_ipv6.c</in>
+            <in>pipeline_stub.c</in>
+            <in>runtime.c</in>
+          </df>
+          <df name="test-pmd">
+            <in>cmdline.c</in>
+            <in>config.c</in>
+            <in>csumonly.c</in>
+            <in>flowgen.c</in>
+            <in>icmpecho.c</in>
+            <in>ieee1588fwd.c</in>
+            <in>iofwd.c</in>
+            <in>macfwd-retry.c</in>
+            <in>macfwd.c</in>
+            <in>macswap.c</in>
+            <in>mempool_anon.c</in>
+            <in>parameters.c</in>
+            <in>rxonly.c</in>
+            <in>testpmd.c</in>
+            <in>txonly.c</in>
+          </df>
+        </df>
+        <df name="examples">
+          <df name="cmdline">
+            <in>commands.c</in>
+            <in>main.c</in>
+            <in>parse_obj_list.c</in>
+          </df>
+          <df name="dpdk_qat">
+            <in>crypto.c</in>
+            <in>main.c</in>
+          </df>
+          <df name="exception_path">
+            <in>main.c</in>
+          </df>
+          <df name="ip_fragmentation">
+            <in>main.c</in>
+          </df>
+          <df name="ip_pipeline">
+            <in>cmdline.c</in>
+            <in>config.c</in>
+            <in>init.c</in>
+            <in>main.c</in>
+            <in>pipeline_firewall.c</in>
+            <in>pipeline_flow_classification.c</in>
+            <in>pipeline_ipv4_frag.c</in>
+            <in>pipeline_ipv4_ras.c</in>
+            <in>pipeline_passthrough.c</in>
+            <in>pipeline_routing.c</in>
+            <in>pipeline_rx.c</in>
+            <in>pipeline_tx.c</in>
+          </df>
+          <df name="l3fwd">
+            <in>main.c</in>
+          </df>
+          <df name="l3fwd-acl">
+            <in>main.c</in>
+          </df>
+          <df name="load_balancer">
+            <in>config.c</in>
+            <in>init.c</in>
+            <in>main.c</in>
+            <in>runtime.c</in>
+          </df>
+          <df name="packet_ordering">
+            <in>main.c</in>
+          </df>
+          <df name="qos_meter">
+            <in>main.c</in>
+            <in>rte_policer.c</in>
+          </df>
+          <df name="skeleton">
+            <in>basicfwd.c</in>
+          </df>
+          <df name="timer">
+            <in>main.c</in>
+          </df>
+          <df name="vm_power_manager">
+            <in>channel_manager.c</in>
+            <in>channel_monitor.c</in>
+            <in>main.c</in>
+            <in>power_manager.c</in>
+            <in>vm_power_cli.c</in>
+          </df>
+          <df name="vmdq_dcb">
+            <in>main.c</in>
+          </df>
+        </df>
+        <df name="lib">
+          <df name="librte_acl">
+            <in>acl_bld.c</in>
+            <in>acl_gen.c</in>
+            <in>acl_run_avx2.c</in>
+            <in>acl_run_scalar.c</in>
+            <in>acl_run_sse.c</in>
+            <in>rte_acl.c</in>
+            <in>tb_mem.c</in>
+          </df>
+          <df name="librte_cfgfile">
+            <in>rte_cfgfile.c</in>
+          </df>
+          <df name="librte_cmdline">
+            <in>cmdline.c</in>
+            <in>cmdline_cirbuf.c</in>
+            <in>cmdline_parse.c</in>
+            <in>cmdline_parse_etheraddr.c</in>
+            <in>cmdline_parse_ipaddr.c</in>
+            <in>cmdline_parse_num.c</in>
+            <in>cmdline_parse_portlist.c</in>
+            <in>cmdline_parse_string.c</in>
+            <in>cmdline_rdline.c</in>
+            <in>cmdline_socket.c</in>
+            <in>cmdline_vt100.c</in>
+          </df>
+          <df name="librte_distributor">
+            <in>rte_distributor.c</in>
+          </df>
+          <df name="librte_eal">
+            <df name="common">
+              <in>eal_common_cpuflags.c</in>
+              <in>eal_common_dev.c</in>
+              <in>eal_common_devargs.c</in>
+              <in>eal_common_errno.c</in>
+              <in>eal_common_hexdump.c</in>
+              <in>eal_common_launch.c</in>
+              <in>eal_common_log.c</in>
+              <in>eal_common_memory.c</in>
+              <in>eal_common_memzone.c</in>
+              <in>eal_common_options.c</in>
+              <in>eal_common_pci.c</in>
+              <in>eal_common_string_fns.c</in>
+              <in>eal_common_tailqs.c</in>
+              <in>eal_common_thread.c</in>
+            </df>
+            <df name="linuxapp">
+              <df name="eal">
+                <in>eal.c</in>
+                <in>eal_alarm.c</in>
+                <in>eal_debug.c</in>
+                <in>eal_hugepage_info.c</in>
+                <in>eal_interrupts.c</in>
+                <in>eal_ivshmem.c</in>
+                <in>eal_lcore.c</in>
+                <in>eal_log.c</in>
+                <in>eal_memory.c</in>
+                <in>eal_pci.c</in>
+                <in>eal_pci_uio.c</in>
+                <in>eal_pci_vfio.c</in>
+                <in>eal_pci_vfio_mp_sync.c</in>
+                <in>eal_thread.c</in>
+                <in>eal_timer.c</in>
+                <in>eal_xen_memory.c</in>
+              </df>
+            </df>
+          </df>
+          <df name="librte_ether">
+            <in>rte_ethdev.c</in>
+          </df>
+          <df name="librte_hash">
+            <in>rte_fbk_hash.c</in>
+            <in>rte_hash.c</in>
+          </df>
+          <df name="librte_ip_frag">
+            <in>ip_frag_internal.c</in>
+            <in>rte_ip_frag_common.c</in>
+            <in>rte_ipv4_fragmentation.c</in>
+            <in>rte_ipv4_reassembly.c</in>
+            <in>rte_ipv6_fragmentation.c</in>
+            <in>rte_ipv6_reassembly.c</in>
+          </df>
+          <df name="librte_ivshmem">
+            <in>rte_ivshmem.c</in>
+          </df>
+          <df name="librte_jobstats">
+            <in>rte_jobstats.c</in>
+          </df>
+          <df name="librte_kni">
+            <in>rte_kni.c</in>
+          </df>
+          <df name="librte_kvargs">
+            <in>rte_kvargs.c</in>
+          </df>
+          <df name="librte_lpm">
+            <in>rte_lpm.c</in>
+            <in>rte_lpm6.c</in>
+          </df>
+          <df name="librte_malloc">
+            <in>malloc_elem.c</in>
+            <in>malloc_heap.c</in>
+            <in>rte_malloc.c</in>
+          </df>
+          <df name="librte_mbuf">
+            <in>rte_mbuf.c</in>
+          </df>
+          <df name="librte_mempool">
+            <in>rte_dom0_mempool.c</in>
+            <in>rte_mempool.c</in>
+          </df>
+          <df name="librte_meter">
+            <in>rte_meter.c</in>
+          </df>
+          <df name="librte_pipeline">
+            <in>rte_pipeline.c</in>
+          </df>
+          <df name="librte_pmd_af_packet">
+            <in>rte_eth_af_packet.c</in>
+          </df>
+          <df name="librte_pmd_bond">
+            <in>rte_eth_bond_8023ad.c</in>
+            <in>rte_eth_bond_alb.c</in>
+            <in>rte_eth_bond_api.c</in>
+            <in>rte_eth_bond_args.c</in>
+            <in>rte_eth_bond_pmd.c</in>
+          </df>
+          <df name="librte_pmd_e1000">
+            <in>em_ethdev.c</in>
+            <in>em_rxtx.c</in>
+            <in>igb_ethdev.c</in>
+            <in>igb_pf.c</in>
+            <in>igb_rxtx.c</in>
+          </df>
+          <df name="librte_pmd_enic">
+            <in>enic_clsf.c</in>
+            <in>enic_ethdev.c</in>
+            <in>enic_main.c</in>
+            <in>enic_res.c</in>
+          </df>
+          <df name="librte_pmd_fm10k">
+            <in>fm10k_ethdev.c</in>
+            <in>fm10k_rxtx.c</in>
+          </df>
+          <df name="librte_pmd_i40e">
+            <in>i40e_ethdev.c</in>
+            <in>i40e_ethdev_vf.c</in>
+            <in>i40e_fdir.c</in>
+            <in>i40e_pf.c</in>
+            <in>i40e_rxtx.c</in>
+          </df>
+          <df name="librte_pmd_ixgbe">
+            <in>ixgbe_82599_bypass.c</in>
+            <in>ixgbe_bypass.c</in>
+            <in>ixgbe_ethdev.c</in>
+            <in>ixgbe_fdir.c</in>
+            <in>ixgbe_pf.c</in>
+            <in>ixgbe_rxtx.c</in>
+            <in>ixgbe_rxtx_vec.c</in>
+          </df>
+          <df name="librte_pmd_mlx4">
+            <in>mlx4.c</in>
+          </df>
+          <df name="librte_pmd_null">
+            <in>rte_eth_null.c</in>
+          </df>
+          <df name="librte_pmd_pcap">
+            <in>rte_eth_pcap.c</in>
+          </df>
+          <df name="librte_pmd_ring">
+            <in>rte_eth_ring.c</in>
+          </df>
+          <df name="librte_pmd_virtio">
+            <in>virtio_ethdev.c</in>
+            <in>virtio_pci.c</in>
+            <in>virtio_rxtx.c</in>
+            <in>virtqueue.c</in>
+          </df>
+          <df name="librte_pmd_vmxnet3">
+            <in>vmxnet3_ethdev.c</in>
+            <in>vmxnet3_rxtx.c</in>
+          </df>
+          <df name="librte_pmd_xenvirt">
+            <in>rte_eth_xenvirt.c</in>
+            <in>rte_mempool_gntalloc.c</in>
+            <in>rte_xen_lib.c</in>
+          </df>
+          <df name="librte_port">
+            <in>rte_port_ethdev.c</in>
+            <in>rte_port_frag.c</in>
+            <in>rte_port_ras.c</in>
+            <in>rte_port_ring.c</in>
+            <in>rte_port_sched.c</in>
+            <in>rte_port_source_sink.c</in>
+          </df>
+          <df name="librte_power">
+            <in>guest_channel.c</in>
+            <in>rte_power.c</in>
+            <in>rte_power_acpi_cpufreq.c</in>
+            <in>rte_power_kvm_vm.c</in>
+          </df>
+          <df name="librte_reorder">
+            <in>rte_reorder.c</in>
+          </df>
+          <df name="librte_ring">
+            <in>rte_ring.c</in>
+          </df>
+          <df name="librte_sched">
+            <in>rte_approx.c</in>
+            <in>rte_red.c</in>
+            <in>rte_sched.c</in>
+          </df>
+          <df name="librte_table">
+            <in>rte_table_acl.c</in>
+            <in>rte_table_array.c</in>
+            <in>rte_table_hash_ext.c</in>
+            <in>rte_table_hash_key16.c</in>
+            <in>rte_table_hash_key32.c</in>
+            <in>rte_table_hash_key8.c</in>
+            <in>rte_table_hash_lru.c</in>
+            <in>rte_table_lpm.c</in>
+            <in>rte_table_lpm_ipv6.c</in>
+            <in>rte_table_stub.c</in>
+          </df>
+          <df name="librte_timer">
+            <in>rte_timer.c</in>
+          </df>
+          <df name="librte_vhost">
+            <in>vhost_rxtx.c</in>
+            <in>virtio-net.c</in>
+          </df>
+        </df>
+      </df>
+      <df name="twister">
+        <df name="arp">
+          <in>arplogic.c</in>
+        </df>
+        <df name="common">
+          <in>common.c</in>
+        </df>
+        <df name="coremgmt">
+          <in>lcoreconf.c</in>
+          <in>processing_engines.c</in>
+        </df>
+        <df name="ethernet">
+          <in>eth.c</in>
+          <in>vlan.c</in>
+        </df>
+        <df name="event">
+          <in>event_loop.c</in>
+        </df>
+        <df name="example_pipeline">
+          <in>main.c</in>
+        </df>
+        <df name="example_udp_echo">
+          <in>test.c</in>
+        </df>
+        <df name="example_udp_send">
+          <in>test.c</in>
+        </df>
+        <df name="gtpu">
+          <in>gtpu.c</in>
+        </df>
+        <df name="initmodule">
+          <in>initfuncs.c</in>
+        </df>
+        <df name="ipv4">
+          <in>ip.c</in>
+          <in>socket.c</in>
+          <in>udp.c</in>
+        </df>
+        <df name="jsonmodule">
+          <in>cJSON.c</in>
+          <in>jsonparser.c</in>
+        </df>
+        <df name="lib">
+          <df name="libtwister_arp">
+            <in>arplogic.c</in>
+          </df>
+          <df name="libtwister_common">
+            <in>common.c</in>
+          </df>
+          <df name="libtwister_coremgmt">
+            <in>lcoreconf.c</in>
+          </df>
+          <df name="libtwister_ethernet">
+            <in>eth.c</in>
+            <in>vlan.c</in>
+          </df>
+          <df name="libtwister_event">
+            <in>event_loop.c</in>
+          </df>
+          <df name="libtwister_initmodule">
+            <in>initfuncs.c</in>
+          </df>
+          <df name="libtwister_ipv4">
+            <in>ip.c</in>
+            <in>socket.c</in>
+            <in>udp.c</in>
+          </df>
+          <df name="libtwister_jsonmodule">
+            <in>cJSON.c</in>
+            <in>jsonparser.c</in>
+          </df>
+          <df name="libtwister_memmgmt">
+            <in>mempoolconf.c</in>
+          </df>
+          <df name="libtwister_pipeline">
+            <in>runtime.c</in>
+          </df>
+          <df name="libtwister_pktctor">
+            <in>pktctor.c</in>
+          </df>
+          <df name="libtwister_pktparser">
+            <in>pktparser.c</in>
+          </df>
+          <df name="libtwister_portmgmt">
+            <in>portconf.c</in>
+          </df>
+          <df name="libtwister_queue">
+            <in>simple_queue.c</in>
+          </df>
+          <df name="libtwister_rxtxmodule">
+            <in>queued_pkts.c</in>
+            <in>rx.c</in>
+            <in>tx.c</in>
+          </df>
+          <df name="libtwister_stats">
+            <in>stats.c</in>
+          </df>
+          <df name="libtwister_timermodules">
+            <in>periodic_timers.c</in>
+            <in>timerdefs.c</in>
+            <in>timerfuncs.c</in>
+          </df>
+        </df>
+        <df name="memmgmt">
+          <in>mempoolconf.c</in>
+        </df>
+        <df name="pipeline">
+          <in>runtime.c</in>
+        </df>
+        <df name="pktctor">
+          <in>pktctor.c</in>
+        </df>
+        <df name="pktparser">
+          <in>pktparser.c</in>
+        </df>
+        <df name="portmgmt">
+          <in>portconf.c</in>
+        </df>
+        <df name="queue">
+          <in>simple_queue.c</in>
+        </df>
+        <df name="rxtxmodule">
+          <in>queued_pkts.c</in>
+          <in>rx.c</in>
+          <in>tx.c</in>
+        </df>
+        <df name="stats">
+          <in>stats.c</in>
+        </df>
+        <df name="timermodules">
+          <in>periodic_timers.c</in>
+          <in>timerdefs.c</in>
+          <in>timerfuncs.c</in>
+        </df>
+      </df>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>twister/Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>twister/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>twister</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+      </makefileType>
+      <item path="dpdk/app/cmdline_test/cmdline_test.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/cmdline_test/commands.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/dump_cfg/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-acl/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pipeline/config.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pipeline/init.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pipeline/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pipeline/pipeline_acl.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pipeline/pipeline_hash.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pipeline/pipeline_lpm.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pipeline/pipeline_lpm_ipv6.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pipeline/pipeline_stub.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pipeline/runtime.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/cmdline.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/config.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/csumonly.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/flowgen.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/icmpecho.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/ieee1588fwd.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/iofwd.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/macfwd-retry.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/macfwd.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/macswap.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/mempool_anon.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/parameters.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/rxonly.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/testpmd.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test-pmd/txonly.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/commands.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/packet_burst_generator.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_acl.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_alarm.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_atomic.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_byteorder.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_cmdline.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_cmdline_cirbuf.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_cmdline_etheraddr.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_cmdline_ipaddr.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_cmdline_lib.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_cmdline_num.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_cmdline_portlist.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_cmdline_string.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_common.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_cpuflags.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_cycles.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_debug.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_devargs.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_distributor.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_distributor_perf.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_eal_flags.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_eal_fs.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_errno.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_func_reentrancy.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_hash.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_hash_perf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_interrupts.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_ivshmem.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_kni.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_kvargs.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_link_bonding.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_link_bonding_mode4.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_logs.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_lpm.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_lpm6.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_malloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_mbuf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_memcpy.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_memcpy_perf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_memory.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_mempool.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_mempool_perf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_memzone.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_meter.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_mp_secondary.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_pci.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_per_lcore.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_pmd_perf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_pmd_ring.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_power.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_power_acpi_cpufreq.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_power_kvm_vm.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_prefetch.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_red.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_reorder.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_ring.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_ring_perf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_rwlock.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_sched.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_spinlock.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_string_fns.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_table.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_table_acl.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_table_combined.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_table_pipeline.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_table_ports.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_table_tables.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_tailq.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_timer.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_timer_perf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/test_version.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/app/test/virtual_pmd.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/cmdline/commands.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/cmdline/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/cmdline/parse_obj_list.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/dpdk_qat/crypto.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/dpdk_qat/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/exception_path/main.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_fragmentation/main.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/cmdline.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/config.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/init.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/pipeline_firewall.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/pipeline_flow_classification.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/pipeline_ipv4_frag.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/pipeline_ipv4_ras.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/pipeline_passthrough.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/pipeline_routing.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/pipeline_rx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/ip_pipeline/pipeline_tx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/l3fwd-acl/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/l3fwd/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/load_balancer/config.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/load_balancer/init.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/load_balancer/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/load_balancer/runtime.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/packet_ordering/main.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/qos_meter/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/qos_meter/rte_policer.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/skeleton/basicfwd.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/timer/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/examples/vm_power_manager/channel_manager.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/vm_power_manager/channel_monitor.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/vm_power_manager/main.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/vm_power_manager/power_manager.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/vm_power_manager/vm_power_cli.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/examples/vmdq_dcb/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_acl/acl_bld.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_acl/acl_gen.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_acl/acl_run_avx2.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_acl/acl_run_scalar.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_acl/acl_run_sse.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_acl/rte_acl.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_acl/tb_mem.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cfgfile/rte_cfgfile.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline_cirbuf.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline_parse.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline_parse_etheraddr.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline_parse_ipaddr.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline_parse_num.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline_parse_portlist.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline_parse_string.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline_rdline.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline_socket.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_cmdline/cmdline_vt100.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_distributor/rte_distributor.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_cpuflags.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_dev.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_devargs.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_errno.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_hexdump.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_launch.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_log.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_memory.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_memzone.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_options.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_pci.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_string_fns.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_tailqs.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/common/eal_common_thread.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_alarm.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_debug.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_hugepage_info.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_interrupts.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_ivshmem.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_lcore.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_log.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_memory.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_pci.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_pci_uio.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_pci_vfio.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_pci_vfio_mp_sync.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_thread.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_timer.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_eal/linuxapp/eal/eal_xen_memory.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_ether/rte_ethdev.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_hash/rte_fbk_hash.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_hash/rte_hash.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_ip_frag/ip_frag_internal.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_ip_frag/rte_ip_frag_common.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_ip_frag/rte_ipv4_fragmentation.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_ip_frag/rte_ipv4_reassembly.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_ip_frag/rte_ipv6_fragmentation.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_ip_frag/rte_ipv6_reassembly.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_ivshmem/rte_ivshmem.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_jobstats/rte_jobstats.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_kni/rte_kni.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_kvargs/rte_kvargs.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_lpm/rte_lpm.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_lpm/rte_lpm6.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_malloc/malloc_elem.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_malloc/malloc_heap.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_malloc/rte_malloc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_mbuf/rte_mbuf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_mempool/rte_dom0_mempool.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_mempool/rte_mempool.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_meter/rte_meter.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pipeline/rte_pipeline.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_af_packet/rte_eth_af_packet.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_bond/rte_eth_bond_8023ad.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_bond/rte_eth_bond_alb.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_bond/rte_eth_bond_api.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_bond/rte_eth_bond_args.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_bond/rte_eth_bond_pmd.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_e1000/em_ethdev.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_e1000/em_rxtx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_e1000/igb_ethdev.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_e1000/igb_pf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_e1000/igb_rxtx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_enic/enic_clsf.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_enic/enic_ethdev.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_enic/enic_main.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_enic/enic_res.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_fm10k/fm10k_ethdev.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_fm10k/fm10k_rxtx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_i40e/i40e_ethdev.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_i40e/i40e_ethdev_vf.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_i40e/i40e_fdir.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_i40e/i40e_pf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_i40e/i40e_rxtx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_ixgbe/ixgbe_82599_bypass.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_ixgbe/ixgbe_bypass.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_ixgbe/ixgbe_ethdev.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_ixgbe/ixgbe_fdir.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_ixgbe/ixgbe_pf.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_ixgbe/ixgbe_rxtx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_ixgbe/ixgbe_rxtx_vec.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_mlx4/mlx4.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_null/rte_eth_null.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_pcap/rte_eth_pcap.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_ring/rte_eth_ring.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_virtio/virtio_ethdev.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_virtio/virtio_pci.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_virtio/virtio_rxtx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_virtio/virtqueue.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_vmxnet3/vmxnet3_ethdev.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_vmxnet3/vmxnet3_rxtx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_xenvirt/rte_eth_xenvirt.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_xenvirt/rte_mempool_gntalloc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_pmd_xenvirt/rte_xen_lib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_port/rte_port_ethdev.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_port/rte_port_frag.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_port/rte_port_ras.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_port/rte_port_ring.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_port/rte_port_sched.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_port/rte_port_source_sink.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_power/guest_channel.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_power/rte_power.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_power/rte_power_acpi_cpufreq.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_power/rte_power_kvm_vm.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_reorder/rte_reorder.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_ring/rte_ring.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_sched/rte_approx.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_sched/rte_red.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_sched/rte_sched.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_table/rte_table_acl.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_table/rte_table_array.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_table/rte_table_hash_ext.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_table/rte_table_hash_key16.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_table/rte_table_hash_key32.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_table/rte_table_hash_key8.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_table/rte_table_hash_lru.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_table/rte_table_lpm.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_table/rte_table_lpm_ipv6.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_table/rte_table_stub.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_timer/rte_timer.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_vhost/vhost_rxtx.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="dpdk/lib/librte_vhost/virtio-net.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/arp/arplogic.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/common/common.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/coremgmt/lcoreconf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/coremgmt/processing_engines.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/ethernet/eth.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/ethernet/vlan.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/event/event_loop.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/example_pipeline/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/example_udp_echo/test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/example_udp_send/test.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/gtpu/gtpu.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/initmodule/initfuncs.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/ipv4/ip.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/ipv4/socket.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/ipv4/udp.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/jsonmodule/cJSON.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/jsonmodule/jsonparser.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_arp/arplogic.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_common/common.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_coremgmt/lcoreconf.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_ethernet/eth.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_ethernet/vlan.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_event/event_loop.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_initmodule/initfuncs.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_ipv4/ip.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_ipv4/socket.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_ipv4/udp.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_jsonmodule/cJSON.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_jsonmodule/jsonparser.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_memmgmt/mempoolconf.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_pipeline/runtime.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_pktctor/pktctor.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_pktparser/pktparser.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_portmgmt/portconf.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_queue/simple_queue.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_rxtxmodule/queued_pkts.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_rxtxmodule/rx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_rxtxmodule/tx.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_stats/stats.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_timermodules/periodic_timers.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_timermodules/timerdefs.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/lib/libtwister_timermodules/timerfuncs.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/memmgmt/mempoolconf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/pipeline/runtime.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/pktctor/pktctor.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/pktparser/pktparser.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/portmgmt/portconf.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/queue/simple_queue.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/rxtxmodule/queued_pkts.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/rxtxmodule/rx.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/rxtxmodule/tx.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/stats/stats.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/timermodules/periodic_timers.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="twister/timermodules/timerdefs.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="twister/timermodules/timerfuncs.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

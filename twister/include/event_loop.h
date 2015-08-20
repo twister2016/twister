@@ -99,23 +99,29 @@ struct event_io {
 
 struct tw_udp_s {
 	void * handle_ptr;
-        uint64_t last_run_time;
-        struct tw_udp_s * next;
+	uint64_t last_run_time;
 	int sock_fd;
+	struct tw_sockaddr_in * addr;
+	uint8_t flags;
+	void * alloc_cb;
+	void * recv_cb;
+	struct tw_udp_s * next;
+	
 	/* read-only */
 	/*
    	* Number of bytes queued for sending. This field strictly shows how much
    	* information is currently queued.
    	*/
-  	size_t send_queue_size;
+  	//size_t send_queue_size;
   	/*
    	* Number of send requests currently in the queue awaiting to be processed.
    	*/
-  	size_t send_queue_count;
+  	//size_t send_queue_count;
   	//UV_UDP_PRIVATE_FIELDS
 };
 
 typedef struct tw_udp_s tw_udp_t;
+typedef void tw_buf_t;
 
 struct tw_sockaddr_in {   //TODO standardise
 	uint32_t sock_ip;
@@ -124,11 +130,12 @@ struct tw_sockaddr_in {   //TODO standardise
 
 int tw_loop_init(tw_loop_t *);
 //int tw_loop_close(tw_loop_t *);
-int tw_loop_stop(tw_loop_t *);
-int tw_loop_run(tw_loop_t *);
-tw_loop_t * tw_default_loop(void);
+int tw_stop(tw_loop_t *);
+int tw_run(tw_loop_t *);
+tw_loop_t * tw_default_loop(uint16_t);
 int tw_udp_init(tw_loop_t *, tw_udp_t *);
 int tw_udp_bind(tw_udp_t *, struct tw_sockaddr_in *, uint8_t);
 struct tw_sockaddr_in * tw_ip4_addr(char *, uint16_t);
+int tw_udp_recv_start(tw_udp_t *, void *, void *);
 
 #endif

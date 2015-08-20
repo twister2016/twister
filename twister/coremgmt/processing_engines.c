@@ -3,7 +3,7 @@
 
 #include <processing_engines.h>
 
-void tw_launch_processing_engines(void * func, void * arg, int launch_type) {
+void tw_launch_engine(void * func, void * arg, int launch_type) {
 	
 	if(launch_type == USE_ALL_ENGINES)
 		rte_eal_mp_remote_launch(func, arg, CALL_MASTER);

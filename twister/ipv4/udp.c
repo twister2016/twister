@@ -16,12 +16,12 @@ void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip, u
 	src_port = rte_be_to_cpu_16(udp_hdr_d->src_port);	
 	int temp_port = 0;
    	struct socket_info * sockptr = NULL;
-    	for (temp_port=0;temp_port<=maxfd;temp_port++){			//TODO see if code can be improved ito performance
-        	sockptr =&sockets[temp_port];
-        	if(sockptr->port==dst_port){
-            		break;
-            	}
-    	}	
+	for (temp_port=0;temp_port<=maxfd;temp_port++){			//TODO see if code can be improved ito performance
+		sockptr =&sockets[temp_port];
+		if(sockptr->port==dst_port){
+				break;
+			}
+	}
 	if (temp_port >= maxfd){
 		rte_pktmbuf_free(pkt);
 		return;

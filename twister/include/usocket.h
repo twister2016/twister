@@ -13,7 +13,7 @@
 
 #define TW_IPPROTO_IP	0               // dummy for IP
 #define TW_IPPROTO_UDP	17              // user datagram protocol
-#define TW_IPPROTO_TCP	6               // tcp 
+#define TW_IPPROTO_TCP	6               // TCP 
 #define TW_IPPROTO_RAW	255				//For raw socket
 
 struct socket_info{
