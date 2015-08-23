@@ -8,43 +8,32 @@
 
 //int PIPELINE=0;
 
+struct user_app_parameters {
+	int arg_count;
+	char ** arg_vals;
+};
+
+struct user_app_parameters user_app_params;
 struct timestamp_option timestamp;
 
 uint64_t curr_rate_cycle = 0, prev_rate_cycle = 0, diff_rate = 0;
 
 int main (int, char **);
 int user_app_main(__attribute__((unused)) void *);
-void print_payload(int, void *, int, struct sock_conn_t);
-void send_timestamp(int);
+void print_payload(tw_udp_t *, int, tw_buf_t *, struct tw_sockaddr_in *, uint8_t);
+void send_timestamp(tw_tx_t * tx_handle);
 
 struct user_params {
 	uint32_t ServerIP;
 	uint16_t PayloadSize;
 	uint32_t ppsLimit;
 	uint32_t testRuntime;
-	uint32_t StatsServerIP;
+	char * StatsServerIP;
 	uint16_t StatsServerPort;
 	uint32_t tagHeatIP;
 };
 
 struct user_params user_params;
-
-void parse_payload(int sock_fd, void * payload_data, int payload_size, struct sock_conn_t conn) {
-	struct timestamp_option * temp_timestamp = (struct timestamp_option *) payload_data;
-	uint64_t curr_time = get_current_timer_cycles();
-	parse_timestamp(temp_timestamp, curr_time);
-        tw_free(payload_data);
-        return;
-}
-
-void send_timestamp(int sock_fd) {
-	curr_rate_cycle = get_current_timer_cycles();
-	diff_rate = get_time_diff(curr_rate_cycle, prev_rate_cycle, one_nsec);
-	if(diff_rate >= global_pps_delay) {
-		add_timestamp(&timestamp, curr_rate_cycle);
-		udp_send(sock_fd,(void *)&timestamp,sizeof(struct timestamp_option), user_params.PayloadSize, user_params.ServerIP, 7777);
-	}
-}
 
 int parse_user_params(char * file_name) {
 	uint8_t i;
@@ -60,30 +49,113 @@ int parse_user_params(char * file_name) {
 		user_params.PayloadSize = convert_str_to_int(cJSON_GetObjectItem(subitem, "PayloadSize")->valuestring, 4);
 		user_params.ppsLimit = convert_str_to_int(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring, 7);
 		user_params.testRuntime = convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring, 3);
-		user_params.StatsServerIP = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "StatsServerIP")->valuestring);
+		user_params.StatsServerIP = cJSON_GetObjectItem(subitem, "StatsServerIP")->valuestring;
 		user_params.StatsServerPort = convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
 		user_params.tagHeatIP = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "vm_ip")->valuestring);
-		global_stats_option.tag_heat_ip = user_params.tagHeatIP;
-		global_pps_limit = user_params.ppsLimit;
+		global_stats_option[tw_current_engine()].tag_heat_ip = user_params.tagHeatIP;
+		global_pps_limit[tw_current_engine()] = user_params.ppsLimit;
 	}
 	return 0;
+}
+
+void parse_payload(tw_udp_t * handle, int payload_size, tw_buf_t * buffer, struct tw_sockaddr_in * dst_addr, uint8_t flags) {
+	struct timestamp_option * temp_timestamp = (struct timestamp_option *) buffer->data;
+	uint64_t curr_time = tw_get_current_timer_cycles();
+	parse_timestamp(temp_timestamp, curr_time);
+    tw_free_buffer(buffer);
+    return;
+}
+
+void send_timestamp(tw_tx_t * tx_handle) {
+	tw_buf_t * buffer = tw_new_buffer(sizeof(struct timestamp_option));
+	struct timestamp_option * temp_timestamp = (struct timestamp_option *) buffer->data;
+	tw_add_timestamp(temp_timestamp);
+	tw_udp_send(tx_handle->sock_fd, buffer, sizeof(struct timestamp_option), 0, tx_handle->dst_addr);
+	return;
+}
+
+void send_stats(tw_timer_t * timer_handle) {
+	tw_buf_t * buffer = tw_new_buffer(sizeof(struct stats_option));
+	tw_memcpy(buffer->data, (void *) &global_stats_option[tw_current_engine()], sizeof(struct stats_option));
+	tw_udp_send(timer_handle->sock_fd, buffer, sizeof(struct stats_option), 0, timer_handle->dst_addr);
+	return;
 }
 
 int main(int argc, char **argv ) {
 	tw_init_global(argc, argv);
 	parse_user_params("udp_traffic_data");
-	tw_launch_processing_engines(user_app_main, NULL, USE_ALL_ENGINES);
+	user_app_params.arg_count = argc;
+	user_app_params.arg_vals = argv;
+	tw_launch_engine(user_app_main, (void *) &user_app_params, USE_ALL_ENGINES); //TODO per engine modification
 	return 0;
 }
 
 int user_app_main(__attribute__((unused)) void *dummy) {
-	open_stats_socket(user_params.StatsServerIP, user_params.StatsServerPort); //stats pkts will be sent if port is opened
-	int sockfd = udp_socket(port_info[0].start_ip_addr,7898);
-	void (*rx_cb_func) (int, void *, int, struct sock_conn_t) = parse_payload;
-	void (*tx_cb_func) (int) = send_timestamp;
-	event_flags_global = NO_FLAG_SET;
-	struct event_io * io_event_rx = reg_io_event(sockfd, rx_cb_func, REPEAT_EVENT, event_flags_global, RX_CALLBACK);
-	struct event_io * io_event_tx = reg_io_event(sockfd, tx_cb_func, REPEAT_EVENT, event_flags_global, TX_CALLBACK);
-	start_io_events(user_params.testRuntime); //Value of 0 is for infinite loop
+
+	tw_loop_t * tw_loop = tw_default_loop(INFINITE_LOOP); //TODO no time_to_run in standard libuv
+	
+	struct tw_sockaddr_in * stats_addr;
+	uint64_t timeout = 1000;
+	tw_tx_t * tx_handle;
+	tw_timer_t * stats_timer;
+	tw_udp_t * client;
+	int status;
+	
+	stats_addr = tw_ip4_addr(user_params.StatsServerIP, user_params.StatsServerPort);
+	
+	printf("test1\n");
+	
+	status = tw_timer_init(tw_loop, stats_timer);
+	if(status) {
+		printf("Error in timer init\n");
+		exit(1);
+	}
+	printf("test2\n");
+	status = tw_timer_start(stats_timer, send_stats, timeout, 1);   //timeout in millisecs
+	
+	struct tw_sockaddr_in * client_addr;
+	
+	status = tw_udp_init(tw_loop, client);
+	if(status) {
+		printf("Error in UDP init\n");
+		exit(1);
+	}
+	printf("test3\n");
+	client_addr = tw_ip4_addr("11.11.11.13", 4001);   //TODO add tw0 logic
+	printf("test3.11\n");
+	status = tw_udp_bind(client, client_addr, 0);
+	if(status) {
+		printf("Error in UDP bind\n");
+		exit(1);
+	}
+	printf("test3.5\n");
+	status = tw_udp_recv_start(client, NULL, parse_payload);
+	if(status) {
+		printf("Error in UDP receive start\n");
+		exit(1);
+	}
+	
+	
+	printf("test3.7\n");
+	status = tw_udp_tx_init(tw_loop, tx_handle);
+	if(status) {
+		printf("Error in TX callback init\n");
+		exit(1);
+	}
+	
+	status = tw_udp_tx_bind(tx_handle, NULL, client->sock_fd, 0);
+	if(status) {
+		printf("Error in TX bind\n");
+		exit(1);
+	}
+	printf("test4\n");
+	status = tw_udp_tx_start(tx_handle, send_timestamp);
+	printf("tx callback value %p, val of cb %p\n", tx_handle->tx_cb, send_timestamp);
+	if(status) {
+		printf("Error in TX start\n");
+		exit(1);
+	}
+	
+	tw_run(tw_loop);
 	return 0;
 }

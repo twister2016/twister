@@ -15,7 +15,7 @@ inline uint8_t is_timer_expired(uint64_t curr_timer_freq, uint64_t prev_timer_fr
 		return 1;
 }
 
-inline uint64_t get_current_timer_cycles(void) {
+inline uint64_t tw_get_current_timer_cycles(void) {
 	return rte_get_timer_cycles();
 }
 

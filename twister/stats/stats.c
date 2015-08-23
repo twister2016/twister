@@ -31,7 +31,7 @@ int open_stats_socket(uint32_t server_ip, uint16_t server_port) {
 int send_stats_pkt(void) {
 	int proc_engine_id = rte_lcore_id();
 	if(stats_server_ip) {  //if stats_server_ip is not zero
-		global_stats_option[proc_engine_id].timestamp = get_current_timer_cycles();
+		global_stats_option[proc_engine_id].timestamp = tw_get_current_timer_cycles();
 		tw_buf_t * stats_to_send = tw_new_buffer(sizeof(struct stats_option));
 		struct tw_sockaddr_in stats_addr; 
 		stats_addr.sock_ip = stats_server_ip;
@@ -61,6 +61,7 @@ int calc_global_stats(void) {
 	{
 		global_pps_delay[proc_engine_id] = global_pps_delay[proc_engine_id] * 5;
 	}
+	global_stats_option[proc_engine_id].timestamp = tw_get_current_timer_cycles(); //TODO get current time from event loop
 	return 0;
 }
 

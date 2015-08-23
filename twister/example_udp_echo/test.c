@@ -40,28 +40,28 @@ int main(int argc, char **argv) {
 
 int user_app_main(__attribute__((unused)) void * app_params) {
 
-	tw_udp_t server;
+	tw_udp_t * server;
 
 	int status;
 	struct tw_sockaddr_in * addr;
 	tw_loop_t * tw_loop = tw_default_loop(INFINITE_LOOP); //TODO no time to run in standard libuv
 
 	
-	status = tw_udp_init(tw_loop, &server);
+	status = tw_udp_init(tw_loop, server);
 	if(status) {
 		printf("Error in UDP init\n");
 		exit(1);
 	}
 	
-	addr = tw_ip4_addr("11.11.11.13", 4001);
+	addr = tw_ip4_addr("11.11.11.13", 4001);   //TODO add tw0 logic
 	
-	status = tw_udp_bind(&server, addr, 0);
+	status = tw_udp_bind(server, addr, 0);
 	if(status) {
 		printf("Error in UDP bind\n");
 		exit(1);
 	}
 	
-	status = tw_udp_recv_start(&server, NULL, reply_payload);
+	status = tw_udp_recv_start(server, NULL, reply_payload);
 	if(status) {
 		printf("Error in UDP receive start\n");
 		exit(1);

@@ -38,7 +38,8 @@ enum {
 	TIMESTAMP_LENGTH = 0x12
 };
 
-inline void add_timestamp (struct timestamp_option *timestamp, uint64_t curr_timer_cycles)  {
+inline void tw_add_timestamp (struct timestamp_option *timestamp)  {
+	uint64_t curr_timer_cycles = tw_get_current_timer_cycles();
 	timestamp->type 		= TIMESTAMP_TYPE;
 	timestamp->length 		= TIMESTAMP_LENGTH;
 	timestamp->timestamp 		= curr_timer_cycles;

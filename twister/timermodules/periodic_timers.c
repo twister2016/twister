@@ -13,7 +13,7 @@ uint64_t prev_periodic_freq = 0;
 
 
 inline void init_periodic_timers(void) {
-	prev_periodic_freq = get_current_timer_cycles();
+	prev_periodic_freq = tw_get_current_timer_cycles();
 	return;
 }
 
@@ -25,7 +25,7 @@ int create_periodic_timer(struct rte_timer * timer_name, uint64_t time_period, \
 }
 
 int update_periodic_timers(uint64_t time_limit) {							//Time limit will be in millisecs
-	curr_periodic_freq = get_current_timer_cycles();
+	curr_periodic_freq = tw_get_current_timer_cycles();
 	if (is_timer_expired(curr_periodic_freq, prev_periodic_freq, one_msec, time_limit)) {
 		rte_timer_manage();
 		prev_periodic_freq = curr_periodic_freq;

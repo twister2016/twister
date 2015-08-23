@@ -28,11 +28,12 @@ tw_loop_t * tw_default_loop(uint16_t time_to_run) {
 }
 
 int tw_udp_init(tw_loop_t * loop, tw_udp_t * udp_handle) {
-		
-	tw_handle_t * temp_handle = loop->rx_handle_queue;
+	printf("tw_udp_init\n");
+	tw_udp_t * temp_handle = loop->rx_handle_queue;
         if(temp_handle == NULL) {
                 temp_handle = rte_malloc("tw_udp_t", sizeof(tw_udp_t), RTE_CACHE_LINE_SIZE);
                 loop->rx_handle_queue = temp_handle;
+				printf("1st udp handle\n");
         }
         else {
                 while(temp_handle->next != NULL)
@@ -42,18 +43,86 @@ int tw_udp_init(tw_loop_t * loop, tw_udp_t * udp_handle) {
         }
 	
 	//TODO populate tw_loop_t entries if needed
-	temp_handle = (tw_handle_t *) udp_handle;
-	temp_handle->handle_type = TW_UDP_HANDLE;
+	udp_handle = temp_handle;
+	udp_handle->handle_type = TW_UDP_HANDLE;
 	loop->active_handles++;
 	return 0;
 }
 
+int tw_timer_init(tw_loop_t * loop, tw_timer_t * timer_handle) {
+		
+	tw_timer_t * temp_handle = loop->timer_handle_queue;
+        if(temp_handle == NULL) {
+                temp_handle = rte_malloc("tw_timer_t", sizeof(tw_timer_t), RTE_CACHE_LINE_SIZE);
+                loop->timer_handle_queue = temp_handle;
+        }
+        else {
+                while(temp_handle->next != NULL)
+                        temp_handle = temp_handle->next;
+                temp_handle->next = rte_malloc("tw_timer_t", sizeof(tw_timer_t), RTE_CACHE_LINE_SIZE);
+                temp_handle = temp_handle->next;
+        }
+	
+	//TODO populate tw_loop_t entries if needed
+	timer_handle = (tw_timer_t *) temp_handle;
+	timer_handle->handle_type = TW_TIMER_HANDLE;
+	loop->active_handles++;
+	return 0;
+}
+
+int tw_udp_tx_init(tw_loop_t * loop, tw_tx_t * tx_handle) {
+	printf("tw_udp_tx_init\n");
+	tw_tx_t * temp_handle = loop->tx_handle_queue;
+        if(temp_handle == NULL) {
+                temp_handle = rte_malloc("tw_tx_t", sizeof(tw_tx_t), RTE_CACHE_LINE_SIZE);
+				printf("first tx callback reqistered\n");
+                loop->tx_handle_queue = temp_handle;
+        }
+        else {
+                while(temp_handle->next != NULL)
+                        temp_handle = temp_handle->next;
+                temp_handle->next = rte_malloc("tw_tx_t", sizeof(tw_tx_t), RTE_CACHE_LINE_SIZE);
+                temp_handle = temp_handle->next;
+        }
+	
+	tx_handle = (tw_tx_t *) temp_handle;
+	tx_handle->handle_type = TW_UDP_TX_HANDLE;
+	loop->active_handles++;
+	return 0;
+}
+
+int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t timeout, uint64_t repeat) {
+	if(timer_handle == NULL)
+		return -1;
+	timer_handle->timer_cb = timer_cb;
+	timer_handle->timeout = timeout;
+	timer_handle->repeat = repeat;
+	return 0;
+}
+
 int tw_udp_bind(tw_udp_t * udp_handle, struct tw_sockaddr_in * addr, uint8_t flags) {
+	//if(udp_handle == NULL)
+	printf("UDP handle %p\n", udp_handle);
+	
+	printf("handle0.1 %u and %u\n", udp_handle->handle_type, TW_UDP_HANDLE);
 	udp_handle->addr = NULL;
 	udp_handle->sock_fd = udp_socket(addr->sock_ip, addr->sock_port);
+	printf("udp handle1\n");
 	udp_sockets[udp_handle->sock_fd].type = TW_SOCK_DGRAM;
 	udp_sockets[udp_handle->sock_fd].proto = TW_IPPROTO_UDP;
+	printf("udp handle2\n");
 	udp_handle->flags = flags;
+	return 0;
+}
+
+int tw_udp_tx_bind(tw_tx_t * tx_handle, struct tw_sockaddr_in * addr, int sock_fd, uint8_t flags) {
+	tx_handle->flags = flags;
+	if(addr == NULL) {
+		tx_handle->sock_fd = sock_fd;
+	}
+	else {
+		tx_handle->sock_fd = udp_socket(addr->sock_ip, addr->sock_port);
+	}
 	return 0;
 }
 
@@ -73,33 +142,43 @@ int tw_udp_recv_start(tw_udp_t * udp_handle, void * alloc_cb, void * recv_cb) {
 	return 0;
 }
 
+int tw_udp_tx_start(tw_tx_t * tx_handle, void * tx_cb) {
+	if(tx_handle == NULL)
+		return -1;
+	if(tx_cb == NULL)
+		printf("The UDP TX callbacl is NULL *************\n");
+	tx_handle->tx_cb = tx_cb;
+	return 0;
+}
+
 int tw_run(tw_loop_t * event_loop) {
 	
 	uint8_t infinite_loop = 0, continue_loop = 1;
 	if (event_loop->secs_to_run == INFINITE_LOOP)
 		infinite_loop = 1;
 	int num_rx_pkts = 0, pkt_count = 0, i;
-	//int core_id = rte_lcore_id();
 	uint64_t curr_time_cycle = 0, prev_queued_pkts_cycle = 0, prev_stats_calc = 0, time_diff = 0;
-	uint64_t loop_start_time = get_current_timer_cycles();
+	uint64_t loop_start_time = tw_get_current_timer_cycles();
 	struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()];
 	struct mbuf_table m[qconf->num_queues];
 	struct rte_mbuf * pkt;
 	tw_buf_t temp_buffer;
 	int payload_size;
-	//struct sock_conn_t conn;
-	//void * payload_data = NULL;
-	tw_handle_t * temp_handle_queue;
+	
+	//tw_handle_t * temp_handle_queue;
 	tw_udp_t * temp_udp_handle;
 	tw_tx_t * temp_tx_handle;
+	tw_timer_t * temp_timer_handle;
+	
 	void (*tw_udp_recv_cb) (tw_udp_t *, uint16_t, tw_buf_t *, struct tw_sockaddr_in *, uint8_t);
-	//void (*rx_cb_func) (int, void *, uint16_t, struct sock_conn_t);
-	void (*tw_tx_cb) (int);
+	void (*tw_tx_cb) (tw_tx_t *);
+	void (*tw_timer_cb) (tw_timer_t *);
 
 	do {
+		printf("event1\n");
 		if(event_loop->stop_flag)
 			return 0;
-		curr_time_cycle = get_current_timer_cycles();
+		curr_time_cycle = tw_get_current_timer_cycles();
 		time_diff = get_time_diff(curr_time_cycle, prev_queued_pkts_cycle, one_msec);
 		if(unlikely(time_diff > queue_update_limit)) {
             update_queued_pkts(curr_time_cycle);
@@ -111,23 +190,11 @@ int tw_run(tw_loop_t * event_loop) {
 			calc_global_stats();
 			prev_stats_calc = curr_time_cycle;
 		}
-		/*
-		time_diff = get_time_diff(curr_time_cycle, prev_stats_cycle, one_msec);
-		if(unlikely(time_diff > stats_update_limit)) {
-			send_stats_pkt();
-			print_global_stats();
-			prev_stats_cycle = curr_time_cycle;
-		}
-		*/
-		//temp_event = root_event_io[core_id];
 
-		
-		
-		//if(qconf->core_tx) //If TX for this core is enabled
 		twister_timely_burst();
 		
-		temp_handle_queue = event_loop->rx_handle_queue;
-		if(temp_handle_queue != NULL)
+		temp_udp_handle = event_loop->rx_handle_queue;
+		if(temp_udp_handle != NULL)
 			num_rx_pkts = rx_for_each_queue(m);
 
 		if(num_rx_pkts > 0) {
@@ -139,52 +206,52 @@ int tw_run(tw_loop_t * event_loop) {
 			}
 		}
 		
+		printf("event2\n");
+		
 		if(event_loop->active_handles > 0) {
-			while(temp_handle_queue != NULL) {
-				switch(temp_handle_queue->handle_type) {
+			printf("event3\n");
+			while(temp_udp_handle != NULL) {
+				printf("event3.1\n");
+				switch(temp_udp_handle->handle_type) {
 					case(TW_UDP_HANDLE):
-						temp_udp_handle = (tw_udp_t *) temp_handle_queue;
+						//temp_udp_handle = (tw_udp_t *) temp_handle_queue;
 						while(udp_sock_queue[temp_udp_handle->sock_fd].n_pkts > 0) {
+							printf("event3.2\n");
 							tw_udp_recv_cb = temp_udp_handle->recv_cb;
 							payload_size = udp_queue_pop(temp_udp_handle->sock_fd, temp_udp_handle->addr, &temp_buffer);
-							tw_udp_recv_cb(temp_udp_handle, payload_size, &temp_buffer, temp_udp_handle->addr, 0);	//TODO manage temp_pkt
+							tw_udp_recv_cb(temp_udp_handle, payload_size, &temp_buffer, temp_udp_handle->addr, 0);
 						}
 						break;
 					default:
 						break;
 				}
-				temp_handle_queue = temp_handle_queue->next;
+				temp_udp_handle = temp_udp_handle->next;
 			}
-			
-			temp_handle_queue = event_loop->tx_handle_queue;
-			while(temp_handle_queue != NULL) {
-				temp_tx_handle = (tw_tx_t *) temp_handle_queue;
+			printf("event4\n");
+			temp_tx_handle = event_loop->tx_handle_queue;
+			printf("event4.1\n");
+			while(temp_tx_handle != NULL) {
+				//temp_tx_handle = (tw_tx_t *) temp_handle_queue;
 				tw_tx_cb = temp_tx_handle->tx_cb;
-				tw_tx_cb(temp_tx_handle->sock_fd);
-				temp_handle_queue = temp_handle_queue->next;
+				printf("event4.8 %p\n", tw_tx_cb);
+				tw_tx_cb(temp_tx_handle);
+				printf("event4.9\n");
+				temp_tx_handle = temp_tx_handle->next;
 			}
-			temp_handle_queue = event_loop->timer_handle_queue;
-			while(temp_handle_queue != NULL) {
-				temp_handle_queue = temp_handle_queue->next;
-			}
-		}
-		/*
-		while(temp_handle_queue != NULL) {
-			if(temp_event->type == RX_CALLBACK) {
-				rx_cb_func = temp_event->event_cb;
-				while(udp_socket_q[temp_event->sock_fd].n_pkts > 0) {	//Implemented for UDP sockets only
-					payload_size = sq_pop(temp_event->sock_fd, udp_socket_q, &payload_data, &conn);
-					rx_cb_func(temp_event->sock_fd, payload_data, payload_size, conn);
+			printf("event5\n");
+			temp_timer_handle = event_loop->timer_handle_queue;
+			while(temp_timer_handle != NULL) {
+				//temp_timer_handle = (tw_timer_t *) temp_handle_queue;
+				time_diff = get_time_diff(curr_time_cycle, temp_timer_handle->last_run_time, one_msec);
+				if(unlikely(time_diff > temp_timer_handle->timeout)) {
+					tw_timer_cb = temp_timer_handle->timer_cb;
+					tw_timer_cb(temp_timer_handle);  //TODO add time logic
+					temp_timer_handle->last_run_time = curr_time_cycle;
 				}
+				temp_timer_handle = temp_timer_handle->next;
 			}
-			else { //TX_CALLBACK
-				tx_cb_func = temp_event->event_cb;
-				tx_cb_func(temp_event->sock_fd);
-			}
-			temp_event = temp_event->next;
 		}
-		*/
-		
+		printf("event6\n");
 		if(!infinite_loop) {
 			if(get_time_diff(curr_time_cycle, loop_start_time, one_sec) >= event_loop->secs_to_run)
 				continue_loop = 0;

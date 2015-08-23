@@ -13,4 +13,8 @@ void tw_launch_engine(void * func, void * arg, int launch_type) {
 	return;
 }
 
+unsigned tw_current_engine(void) {
+	return rte_lcore_id();
+}
+
 #endif

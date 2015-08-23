@@ -29,6 +29,10 @@ tw_buf_t * tw_new_buffer(uint16_t buffer_size) {
 	return tw_buff;
 }
 
+void tw_memcpy (void * dst, const void * src, size_t n) {
+	rte_memcpy(dst, src, n);
+	return;
+}
 
 struct rte_mbuf * app_get_buffer(void)
 {
@@ -39,7 +43,7 @@ inline void tw_free(void * ptr) {
 	rte_free(ptr);
 }
 
-inline void tw_free_no_tx(tw_buf_t * ptr) {
+inline void tw_free_buffer(tw_buf_t * ptr) {
 	rte_pktmbuf_free(ptr->pkt);
 	rte_free((void *) ptr);
 	return;

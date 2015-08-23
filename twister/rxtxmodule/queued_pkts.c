@@ -14,7 +14,7 @@ int add_pkt_to_queue(struct rte_mbuf * pkt, uint32_t arp_ip_of_pkt, uint16_t por
 		return -1;
 	}
 		
-	uint64_t curr_timer_cycle = get_current_timer_cycles();
+	uint64_t curr_timer_cycle = tw_get_current_timer_cycles();
 	struct queued_pkt * pkt_to_queue = root_queued_pkt;
 	if(pkt_to_queue == NULL) {
 		pkt_to_queue = rte_malloc("struct queued_pkt", sizeof(struct queued_pkt), RTE_CACHE_LINE_SIZE);

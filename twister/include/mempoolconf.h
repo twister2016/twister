@@ -4,6 +4,7 @@
 #include <rte_mempool.h>
 #include <rte_malloc.h>
 #include <rte_mbuf.h>
+#include <rte_memcpy.h>
 
 #define MAX_NUMA_SOCKETS 2				//--? is there a scenario to have more than 2 NUMA nodes???
 
@@ -27,9 +28,10 @@ struct rte_mempool * queued_pkts_mempool[MAX_NUMA_SOCKETS];
 
 int create_rx_tx_mempools(void);
 int create_queued_pkts_mempools(void);
-inline void tw_free_no_tx(tw_buf_t *);
+inline void tw_free_buffer(tw_buf_t *);
 inline void tw_free(void *);
 extern struct rte_mbuf *app_get_buffer(void);
 tw_buf_t * tw_new_buffer(uint16_t);
+void tw_memcpy (void *, const void *, size_t);
 
 #endif
