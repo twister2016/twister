@@ -2,12 +2,7 @@
 #include <rte_memcpy.h>
 #include <rte_byteorder.h>
 #include <rte_mbuf.h>
-
-#include <portconf.h>
-#include <usocket.h>
 #include <udp.h>
-#include <ip.h>
-#include <event_loop.h>
 
 void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip, uint8_t prev_hdr_size, uint8_t processing_flag, void * cb_func) {
 	uint16_t dst_port, src_port;
@@ -17,7 +12,7 @@ void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip, u
 	int temp_port = 0;
    	struct socket_info * sockptr = NULL;
 	for (temp_port=0;temp_port<=maxfd;temp_port++){			//TODO see if code can be improved ito performance
-		sockptr =&sockets[temp_port];
+		sockptr =&udp_sockets[temp_port];
 		if(sockptr->port==dst_port){
 				break;
 			}
@@ -27,8 +22,8 @@ void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip, u
 		return;
 	}
 	if(processing_flag == LOOP_PROCESS) {
-		if(sockets[temp_port].type == TW_SOCK_RAW) {
-			switch(sockets[temp_port].proto) {
+		if(udp_sockets[temp_port].type == TW_SOCK_RAW) {
+			switch(udp_sockets[temp_port].proto) {
 				case(TW_IPPROTO_UDP): 	//pass the UDP layer and payload
 					rte_pktmbuf_adj(pkt, prev_hdr_size);
 					break;
@@ -43,7 +38,8 @@ void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip, u
 		}
 		else		//pass only the payload of UDP
 			rte_pktmbuf_adj(pkt, sizeof(struct udp_hdr) + prev_hdr_size);
-		add_packet_to_udp_queue(temp_port,pkt,src_ip,dst_ip,src_port,dst_port);
+			
+		add_packet_to_udp_queue(temp_port, pkt, dst_ip, dst_port);
 	}
 	else
 	{

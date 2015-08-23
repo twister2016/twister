@@ -19,7 +19,15 @@ int create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_init" before us
 	return 0;
 }
 
-
+tw_buf_t * tw_new_buffer(uint16_t buffer_size) {
+	struct rte_mbuf * pkt = app_get_buffer();
+	if(buffer_size)
+		rte_pktmbuf_append(pkt, buffer_size);
+	tw_buf_t * tw_buff = rte_malloc("tw_buf_t *", sizeof(tw_buf_t), RTE_CACHE_LINE_SIZE);
+	tw_buff->pkt = pkt;
+	tw_buff->data = rte_pktmbuf_mtod(pkt, void *);
+	return tw_buff;
+}
 
 
 struct rte_mbuf * app_get_buffer(void)
@@ -29,6 +37,12 @@ struct rte_mbuf * app_get_buffer(void)
 
 inline void tw_free(void * ptr) {
 	rte_free(ptr);
+}
+
+inline void tw_free_no_tx(tw_buf_t * ptr) {
+	rte_pktmbuf_free(ptr->pkt);
+	rte_free((void *) ptr);
+	return;
 }
 
 int create_queued_pkts_mempools(void) {		//--! To be used by queued packets including pakets waiting for an ARP reply

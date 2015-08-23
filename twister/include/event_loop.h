@@ -8,6 +8,13 @@
 #define INFINITE_LOOP 0
 #define LOOP_PROCESS 1
 
+enum {
+	TW_UDP_HANDLE	= 0x01,
+	TW_TCP_HANDLE	= 0x02,
+	TW_TX_HANDLE	= 0x03,
+	TW_TIMER_HANDLE	= 0x04
+};
+
 ///////////////////////////////////////
 
 /*
@@ -65,7 +72,7 @@ struct uv_timer_s {
 ///////////////////////////////////////
 
 struct tw_handle_s {
-	void * handle_ptr;
+	uint8_t handle_type;
 	uint64_t last_run_time;
 	struct tw_handle_s * next;
 	//UV_HANDLE_FIELDS
@@ -76,7 +83,9 @@ struct tw_loop_s {
 	void* data;
 	/* Loop reference counting. */
 	uint8_t active_handles;
-	struct tw_handle_s * handle_queue;
+	struct tw_handle_s * rx_handle_queue;
+	struct tw_handle_s * tx_handle_queue;
+	struct tw_handle_s * timer_handle_queue;
 	//void* active_reqs[2];
 	/* Internal flag to signal loop stop. */
 	unsigned int stop_flag;
@@ -86,6 +95,8 @@ struct tw_loop_s {
 
 typedef struct tw_loop_s tw_loop_t;
 typedef struct tw_handle_s tw_handle_t;
+//tw_loop_t default_loop[MAX_LCORES];
+
 
 struct event_io {
 	uint8_t type;
@@ -98,35 +109,28 @@ struct event_io {
 };
 
 struct tw_udp_s {
-	void * handle_ptr;
+	uint8_t handle_type;
 	uint64_t last_run_time;
+	struct tw_handle_s * next;
 	int sock_fd;
 	struct tw_sockaddr_in * addr;
 	uint8_t flags;
 	void * alloc_cb;
 	void * recv_cb;
-	struct tw_udp_s * next;
-	
-	/* read-only */
-	/*
-   	* Number of bytes queued for sending. This field strictly shows how much
-   	* information is currently queued.
-   	*/
-  	//size_t send_queue_size;
-  	/*
-   	* Number of send requests currently in the queue awaiting to be processed.
-   	*/
-  	//size_t send_queue_count;
-  	//UV_UDP_PRIVATE_FIELDS
+};
+
+struct tw_tx_s {
+	uint8_t handle_type;
+	uint64_t last_run_time;
+	struct tw_handle_s * next;
+	int sock_fd;
+	struct tw_sockaddr_in * addr;
+	uint8_t flags;
+	void * tx_cb;
 };
 
 typedef struct tw_udp_s tw_udp_t;
-typedef void tw_buf_t;
-
-struct tw_sockaddr_in {   //TODO standardise
-	uint32_t sock_ip;
-	uint16_t sock_port;
-};
+typedef struct tw_tx_s tw_tx_t;
 
 int tw_loop_init(tw_loop_t *);
 //int tw_loop_close(tw_loop_t *);

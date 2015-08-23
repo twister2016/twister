@@ -5,7 +5,7 @@
 #include <rte_ethdev.h>
 #include "mempoolconf.h"
 
-#define MAX_ETH_PORTS 3
+#define MAX_ETH_PORTS 8
 #define RX_QUEUES_PER_PORT 1
 #define TX_QUEUES_PER_PORT 1	//--! SRIOV NICs only support 1 rx and 1 tx queue per port
 
@@ -32,7 +32,7 @@ enum {
 
 struct mbuf_table {
 	int len;
-	struct rte_mbuf *m_table[MAX_PKT_BURST];
+	struct rte_mbuf *m_table[MAX_TX_PKT_BURST];
 	uint8_t portid;
 } __attribute__((__packed__));
 

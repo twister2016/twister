@@ -4,7 +4,7 @@
 #include <queued_pkts.h>
 
 uint64_t queued_pkt_time_limit = 10;  //keep a pkt in queue for queued_pkt_time_limit sec
-uint64_t queue_update_limit = 1; //update queued pkts every queue_update_limit millisecs
+uint64_t queue_update_limit = 10; //update queued pkts every queue_update_limit millisecs
 uint32_t total_queued_pkts = 0;
 struct queued_pkt * root_queued_pkt = NULL;
 

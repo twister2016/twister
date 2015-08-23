@@ -62,8 +62,8 @@ int add_pkt_to_tx_queue(struct rte_mbuf * m, uint8_t port) {
 	qconf->tx_mbufs[port].m_table[len] = m;
 	len++;
 	/* enough pkts to be sent */
-	if (unlikely(len == MAX_PKT_BURST)) {
-		twister_send_burst(qconf, MAX_PKT_BURST, port);
+	if (unlikely(len == MAX_TX_PKT_BURST)) {
+		twister_send_burst(qconf, MAX_TX_PKT_BURST, port);
 		len = 0;
 	}
 

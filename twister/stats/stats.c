@@ -32,7 +32,12 @@ int send_stats_pkt(void) {
 	int proc_engine_id = rte_lcore_id();
 	if(stats_server_ip) {  //if stats_server_ip is not zero
 		global_stats_option[proc_engine_id].timestamp = get_current_timer_cycles();
-		udp_send(stats_fd, (void *) &global_stats_option[proc_engine_id], sizeof(struct stats_option), sizeof(struct stats_option), stats_server_ip, l4_stats_port);
+		tw_buf_t * stats_to_send = tw_new_buffer(sizeof(struct stats_option));
+		struct tw_sockaddr_in stats_addr; 
+		stats_addr.sock_ip = stats_server_ip;
+		stats_addr.sock_port = l4_stats_port;
+		rte_memcpy(stats_to_send->data, (void *) &global_stats_option[proc_engine_id], sizeof(struct stats_option));
+		tw_udp_send(stats_fd, stats_to_send, sizeof(struct stats_option), sizeof(struct stats_option), &stats_addr);
 	}
 	return 0;
 }

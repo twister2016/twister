@@ -18,14 +18,15 @@ struct timestamp_option * pkt_timestamp;
 
 int main (int, char **);
 int user_app_main(void *);   //__attribute__((unused))
-void reply_payload(tw_udp_t *, uint16_t, tw_buf_t *, const struct tw_sockaddr_in *, uint8_t);
+void reply_payload(tw_udp_t *, int, tw_buf_t *, struct tw_sockaddr_in *, uint8_t);
 
 
-void reply_payload(tw_udp_t * handle, uint16_t payload_size, tw_buf_t * payload_data, const struct tw_sockaddr_in * dst_addr, uint8_t flags) {
-	pkt_timestamp = (struct timestamp_option *) payload_data;
+void reply_payload(tw_udp_t * handle, int payload_size, tw_buf_t * buffer, struct tw_sockaddr_in * dst_addr, uint8_t flags) {
+	pkt_timestamp = (struct timestamp_option *) buffer->data;
 	pkt_timestamp->echo_timestamp = pkt_timestamp->timestamp;
-	//udp_send(sock_fd,(void *) pkt_timestamp,sizeof(struct timestamp_option), payload_size, dst_addr->sock_ip, dst_addr->sock_port); //TODO
-	tw_free(payload_data);
+	//tw_buf_t * data_to_send = tw_new_buffer(sizeof(struct timestamp_option));
+	//data_to_send->data
+	tw_udp_send(handle->sock_fd, buffer, sizeof(struct timestamp_option), 0, dst_addr);
 	return;
 }
 

@@ -29,10 +29,10 @@ tw_loop_t * tw_default_loop(uint16_t time_to_run) {
 
 int tw_udp_init(tw_loop_t * loop, tw_udp_t * udp_handle) {
 		
-	tw_handle_t * temp_handle = loop->handle_queue;
+	tw_handle_t * temp_handle = loop->rx_handle_queue;
         if(temp_handle == NULL) {
                 temp_handle = rte_malloc("tw_udp_t", sizeof(tw_udp_t), RTE_CACHE_LINE_SIZE);
-                loop->handle_queue = temp_handle;
+                loop->rx_handle_queue = temp_handle;
         }
         else {
                 while(temp_handle->next != NULL)
@@ -43,6 +43,7 @@ int tw_udp_init(tw_loop_t * loop, tw_udp_t * udp_handle) {
 	
 	//TODO populate tw_loop_t entries if needed
 	temp_handle = (tw_handle_t *) udp_handle;
+	temp_handle->handle_type = TW_UDP_HANDLE;
 	loop->active_handles++;
 	return 0;
 }
@@ -50,8 +51,8 @@ int tw_udp_init(tw_loop_t * loop, tw_udp_t * udp_handle) {
 int tw_udp_bind(tw_udp_t * udp_handle, struct tw_sockaddr_in * addr, uint8_t flags) {
 	udp_handle->addr = NULL;
 	udp_handle->sock_fd = udp_socket(addr->sock_ip, addr->sock_port);
-	sockets[udp_handle->sock_fd].type = TW_SOCK_DGRAM;
-	sockets[udp_handle->sock_fd].proto = TW_IPPROTO_UDP;
+	udp_sockets[udp_handle->sock_fd].type = TW_SOCK_DGRAM;
+	udp_sockets[udp_handle->sock_fd].proto = TW_IPPROTO_UDP;
 	udp_handle->flags = flags;
 	return 0;
 }
@@ -78,19 +79,22 @@ int tw_run(tw_loop_t * event_loop) {
 	if (event_loop->secs_to_run == INFINITE_LOOP)
 		infinite_loop = 1;
 	int num_rx_pkts = 0, pkt_count = 0, i;
-	//int  payload_size = 0;
 	//int core_id = rte_lcore_id();
 	uint64_t curr_time_cycle = 0, prev_queued_pkts_cycle = 0, prev_stats_calc = 0, time_diff = 0;
 	uint64_t loop_start_time = get_current_timer_cycles();
 	struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()];
 	struct mbuf_table m[qconf->num_queues];
 	struct rte_mbuf * pkt;
+	tw_buf_t temp_buffer;
+	int payload_size;
 	//struct sock_conn_t conn;
 	//void * payload_data = NULL;
 	tw_handle_t * temp_handle_queue;
-	//void (*cb_func_with_flags) (struct rte_mbuf *, uint8_t);
+	tw_udp_t * temp_udp_handle;
+	tw_tx_t * temp_tx_handle;
+	void (*tw_udp_recv_cb) (tw_udp_t *, uint16_t, tw_buf_t *, struct tw_sockaddr_in *, uint8_t);
 	//void (*rx_cb_func) (int, void *, uint16_t, struct sock_conn_t);
-	//void (*tx_cb_func) (int);
+	void (*tw_tx_cb) (int);
 
 	do {
 		if(event_loop->stop_flag)
@@ -117,24 +121,51 @@ int tw_run(tw_loop_t * event_loop) {
 		*/
 		//temp_event = root_event_io[core_id];
 
-		temp_handle_queue = event_loop->handle_queue;
-		if(temp_handle_queue == NULL) {
-			printf("No Event Handles Registered\n");
-			return -1;
-		}
 		
-		if(qconf->core_tx) //If TX for this core is enabled
-			twister_timely_burst();
 		
-		if(qconf->core_rx) //If RX for this core is enabled
+		//if(qconf->core_tx) //If TX for this core is enabled
+		twister_timely_burst();
+		
+		temp_handle_queue = event_loop->rx_handle_queue;
+		if(temp_handle_queue != NULL)
 			num_rx_pkts = rx_for_each_queue(m);
 
 		if(num_rx_pkts > 0) {
 			for(i=0;i<qconf->num_queues;i++) {
 				for(pkt_count = 0;pkt_count < m[i].len;pkt_count++) {
-					pkt = m[i].m_table[pkt_count];	
+					pkt = m[i].m_table[pkt_count];
 					eth_pkt_parser(pkt, m[i].portid, LOOP_PROCESS, NULL);
 				}
+			}
+		}
+		
+		if(event_loop->active_handles > 0) {
+			while(temp_handle_queue != NULL) {
+				switch(temp_handle_queue->handle_type) {
+					case(TW_UDP_HANDLE):
+						temp_udp_handle = (tw_udp_t *) temp_handle_queue;
+						while(udp_sock_queue[temp_udp_handle->sock_fd].n_pkts > 0) {
+							tw_udp_recv_cb = temp_udp_handle->recv_cb;
+							payload_size = udp_queue_pop(temp_udp_handle->sock_fd, temp_udp_handle->addr, &temp_buffer);
+							tw_udp_recv_cb(temp_udp_handle, payload_size, &temp_buffer, temp_udp_handle->addr, 0);	//TODO manage temp_pkt
+						}
+						break;
+					default:
+						break;
+				}
+				temp_handle_queue = temp_handle_queue->next;
+			}
+			
+			temp_handle_queue = event_loop->tx_handle_queue;
+			while(temp_handle_queue != NULL) {
+				temp_tx_handle = (tw_tx_t *) temp_handle_queue;
+				tw_tx_cb = temp_tx_handle->tx_cb;
+				tw_tx_cb(temp_tx_handle->sock_fd);
+				temp_handle_queue = temp_handle_queue->next;
+			}
+			temp_handle_queue = event_loop->timer_handle_queue;
+			while(temp_handle_queue != NULL) {
+				temp_handle_queue = temp_handle_queue->next;
 			}
 		}
 		/*
