@@ -42,9 +42,11 @@ int tw_udp_send(int sockfd, tw_buf_t * buffer, uint16_t buf_len, uint16_t total_
 	dummy.dst_port = dst_addr->sock_port;
 	dummy.src_ip = sockptr->ip_addr;
 	dummy.dst_ip = dst_addr->sock_ip;
-	
+
 	if(total_payload_len > MAX_UDP_PAYLOAD)
 		total_payload_len = MAX_UDP_PAYLOAD;
+		
+
 	if(total_payload_len > buf_len)
 		rte_pktmbuf_append(buffer->pkt, total_payload_len - buf_len); //TODO Apply max limit on buf_len 
 

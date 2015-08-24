@@ -24,7 +24,7 @@ void print_payload(tw_udp_t *, int, tw_buf_t *, struct tw_sockaddr_in *, uint8_t
 void send_timestamp(tw_tx_t * tx_handle);
 
 struct user_params {
-	uint32_t ServerIP;
+	char * ServerIP;
 	uint16_t PayloadSize;
 	uint32_t ppsLimit;
 	uint32_t testRuntime;
@@ -45,7 +45,7 @@ int parse_user_params(char * file_name) {
 
 	for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {
 		cJSON * subitem = cJSON_GetArrayItem(json_file, i);
-		user_params.ServerIP = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "ServerIP")->valuestring);
+		user_params.ServerIP = cJSON_GetObjectItem(subitem, "ServerIP")->valuestring;
 		user_params.PayloadSize = convert_str_to_int(cJSON_GetObjectItem(subitem, "PayloadSize")->valuestring, 4);
 		user_params.ppsLimit = convert_str_to_int(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring, 7);
 		user_params.testRuntime = convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring, 3);
@@ -90,67 +90,71 @@ int main(int argc, char **argv ) {
 	return 0;
 }
 
-int user_app_main(__attribute__((unused)) void *dummy) {
+int user_app_main(__attribute__((unused)) void * app_params) {
 
 	tw_loop_t * tw_loop = tw_default_loop(INFINITE_LOOP); //TODO no time_to_run in standard libuv
 	
-	struct tw_sockaddr_in * stats_addr;
+	
 	uint64_t timeout = 1000;
 	tw_tx_t * tx_handle;
-	tw_timer_t * stats_timer;
+	tw_timer_t * timer_handle;
 	tw_udp_t * client;
 	int status;
 	
-	stats_addr = tw_ip4_addr(user_params.StatsServerIP, user_params.StatsServerPort);
-	
-	printf("test1\n");
-	
-	status = tw_timer_init(tw_loop, stats_timer);
-	if(status) {
-		printf("Error in timer init\n");
-		exit(1);
-	}
-	printf("test2\n");
-	status = tw_timer_start(stats_timer, send_stats, timeout, 1);   //timeout in millisecs
-	
 	struct tw_sockaddr_in * client_addr;
 	
-	status = tw_udp_init(tw_loop, client);
+	client = tw_udp_init(tw_loop);
+	/*
 	if(status) {
 		printf("Error in UDP init\n");
 		exit(1);
-	}
-	printf("test3\n");
-	client_addr = tw_ip4_addr("11.11.11.13", 4001);   //TODO add tw0 logic
-	printf("test3.11\n");
+	}*/
+
+	client_addr = tw_ip4_addr("34.34.34.11", 7777);   //TODO add tw0 logic
+	
 	status = tw_udp_bind(client, client_addr, 0);
 	if(status) {
 		printf("Error in UDP bind\n");
 		exit(1);
 	}
-	printf("test3.5\n");
 	status = tw_udp_recv_start(client, NULL, parse_payload);
 	if(status) {
 		printf("Error in UDP receive start\n");
 		exit(1);
 	}
 	
+	struct tw_sockaddr_in * stats_addr;
+	stats_addr = tw_ip4_addr(user_params.StatsServerIP, user_params.StatsServerPort);
 	
-	printf("test3.7\n");
-	status = tw_udp_tx_init(tw_loop, tx_handle);
+	timer_handle = tw_timer_init(tw_loop);
+	/*
+	if(status) {
+		printf("Error in timer init\n");
+		exit(1);
+	}*/
+	
+	tw_timer_bind(timer_handle, stats_addr, client->sock_fd, 0);
+
+	status = tw_timer_start(timer_handle, send_stats, timeout, 1);   //timeout in millisecs
+	
+	struct tw_sockaddr_in * server_addr;
+	server_addr = tw_ip4_addr(user_params.ServerIP, 7777);
+	
+	tx_handle = tw_udp_tx_init(tw_loop);
+	/*
 	if(status) {
 		printf("Error in TX callback init\n");
 		exit(1);
-	}
+	}*/
 	
-	status = tw_udp_tx_bind(tx_handle, NULL, client->sock_fd, 0);
+	status = tw_udp_tx_bind(tx_handle, server_addr, client->sock_fd, 0);
 	if(status) {
 		printf("Error in TX bind\n");
 		exit(1);
 	}
-	printf("test4\n");
+
 	status = tw_udp_tx_start(tx_handle, send_timestamp);
-	printf("tx callback value %p, val of cb %p\n", tx_handle->tx_cb, send_timestamp);
+
 	if(status) {
 		printf("Error in TX start\n");
 		exit(1);

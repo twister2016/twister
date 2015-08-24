@@ -47,11 +47,14 @@ int user_app_main(__attribute__((unused)) void * app_params) {
 	tw_loop_t * tw_loop = tw_default_loop(INFINITE_LOOP); //TODO no time to run in standard libuv
 
 	
-	status = tw_udp_init(tw_loop, server);
+	server = tw_udp_init(tw_loop);
+	/*
 	if(status) {
 		printf("Error in UDP init\n");
 		exit(1);
-	}
+	}*/
+	printf("test1 %p\n", server);
+	printf("server handle type %d\n", server->handle_type);
 	
 	addr = tw_ip4_addr("11.11.11.13", 4001);   //TODO add tw0 logic
 	

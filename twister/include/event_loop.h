@@ -55,12 +55,12 @@ struct event_io {
 struct tw_udp_s {
 	uint8_t handle_type;
 	uint64_t last_run_time;
-	struct tw_udp_s * next;
 	int sock_fd;
 	struct tw_sockaddr_in * addr;
 	uint8_t flags;
 	void * alloc_cb;
 	void * recv_cb;
+	struct tw_udp_s * next;
 };
 
 struct tw_tx_s {
@@ -96,14 +96,16 @@ int tw_loop_init(tw_loop_t *);
 int tw_stop(tw_loop_t *);
 int tw_run(tw_loop_t *);
 tw_loop_t * tw_default_loop(uint16_t);
-int tw_udp_init(tw_loop_t *, tw_udp_t *);
+//int tw_udp_init(tw_loop_t *, tw_udp_t *);
+tw_udp_t * tw_udp_init(tw_loop_t *);
 int tw_udp_bind(tw_udp_t *, struct tw_sockaddr_in *, uint8_t);
 struct tw_sockaddr_in * tw_ip4_addr(char *, uint16_t);
 int tw_udp_recv_start(tw_udp_t *, void *, void *);
 int tw_timer_start(tw_timer_t *, tw_timer_cb, uint64_t, uint64_t);
-int tw_udp_tx_init(tw_loop_t *, tw_tx_t *);
+tw_tx_t * tw_udp_tx_init(tw_loop_t *);
 int tw_udp_tx_bind(tw_tx_t *, struct tw_sockaddr_in *, int, uint8_t);
-int tw_timer_init(tw_loop_t *, tw_timer_t *);
+int tw_timer_bind(tw_timer_t *, struct tw_sockaddr_in *, int, uint8_t);
+tw_timer_t * tw_timer_init(tw_loop_t *);
 int tw_udp_tx_start(tw_tx_t *, void *);
 
 #endif
