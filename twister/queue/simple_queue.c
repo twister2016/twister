@@ -17,6 +17,7 @@ int udp_queue_push(struct rte_mbuf * pkt, uint16_t sock_fd, struct tw_sockaddr_i
 int udp_queue_pop(uint16_t sock_fd, struct tw_sockaddr_in * addr, tw_buf_t * temp_buffer) {
 	udp_sock_queue[sock_fd].n_pkts--;
 	temp_buffer->pkt = udp_sock_queue[sock_fd].pkt_queue[udp_sock_queue[sock_fd].n_pkts].pkt;
+	temp_buffer->data = rte_pktmbuf_mtod(temp_buffer->pkt, void *);
 	addr->sock_ip = udp_sock_queue[sock_fd].pkt_queue[udp_sock_queue[sock_fd].n_pkts].dst_addr.sock_ip;
 	addr->sock_port = udp_sock_queue[sock_fd].pkt_queue[udp_sock_queue[sock_fd].n_pkts].dst_addr.sock_port;
 	uint16_t pkt_size = temp_buffer->pkt->data_len;

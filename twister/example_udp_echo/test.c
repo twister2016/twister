@@ -24,8 +24,6 @@ void reply_payload(tw_udp_t *, int, tw_buf_t *, struct tw_sockaddr_in *, uint8_t
 void reply_payload(tw_udp_t * handle, int payload_size, tw_buf_t * buffer, struct tw_sockaddr_in * dst_addr, uint8_t flags) {
 	pkt_timestamp = (struct timestamp_option *) buffer->data;
 	pkt_timestamp->echo_timestamp = pkt_timestamp->timestamp;
-	//tw_buf_t * data_to_send = tw_new_buffer(sizeof(struct timestamp_option));
-	//data_to_send->data
 	tw_udp_send(handle->sock_fd, buffer, sizeof(struct timestamp_option), 0, dst_addr);
 	return;
 }
@@ -53,10 +51,8 @@ int user_app_main(__attribute__((unused)) void * app_params) {
 		printf("Error in UDP init\n");
 		exit(1);
 	}*/
-	printf("test1 %p\n", server);
-	printf("server handle type %d\n", server->handle_type);
 	
-	addr = tw_ip4_addr("11.11.11.13", 4001);   //TODO add tw0 logic
+	addr = tw_ip4_addr("34.34.34.12", 7777);   //TODO add tw0 logic
 	
 	status = tw_udp_bind(server, addr, 0);
 	if(status) {

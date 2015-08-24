@@ -130,7 +130,9 @@ int tw_timer_bind(tw_timer_t * timer_handle, struct tw_sockaddr_in * addr, int s
 
 struct tw_sockaddr_in * tw_ip4_addr(char * ip_str, uint16_t l4_port) {
 	struct tw_sockaddr_in * addr = rte_malloc("struct tw_sockaddr_in *", sizeof(struct tw_sockaddr_in), RTE_CACHE_LINE_SIZE);
-	uint32_t ip_addr = convert_ip_str_to_dec(ip_str);
+	uint32_t ip_addr = 0;
+	if(ip_str != NULL)
+		ip_addr = convert_ip_str_to_dec(ip_str);
 	addr->sock_ip = ip_addr;
 	addr->sock_port = l4_port;
 	return addr;
@@ -139,6 +141,8 @@ struct tw_sockaddr_in * tw_ip4_addr(char * ip_str, uint16_t l4_port) {
 int tw_udp_recv_start(tw_udp_t * udp_handle, void * alloc_cb, void * recv_cb) {
 	if(udp_handle == NULL)
 		return -1;
+	char * temp_ip = NULL;
+	udp_handle->addr = tw_ip4_addr(temp_ip, 0);
 	udp_handle->alloc_cb = alloc_cb;
 	udp_handle->recv_cb = recv_cb;
 	return 0;
@@ -181,13 +185,14 @@ int tw_run(tw_loop_t * event_loop) {
 		curr_time_cycle = tw_get_current_timer_cycles();
 		time_diff = get_time_diff(curr_time_cycle, prev_queued_pkts_cycle, one_msec);
 		if(unlikely(time_diff > queue_update_limit)) {
-            update_queued_pkts(curr_time_cycle);
+			update_queued_pkts(curr_time_cycle);
 			prev_queued_pkts_cycle = curr_time_cycle;
 		}
 		
 		time_diff = get_time_diff(curr_time_cycle, prev_stats_calc, one_msec);
 		if(unlikely(time_diff > stats_calc_limit)) {
 			calc_global_stats();
+			print_global_stats();
 			prev_stats_calc = curr_time_cycle;
 		}
 
@@ -198,6 +203,7 @@ int tw_run(tw_loop_t * event_loop) {
 			num_rx_pkts = rx_for_each_queue(m);
 
 		if(num_rx_pkts > 0) {
+			//printf("pkts rx %d\n", num_rx_pkts);
 			for(i=0;i<qconf->num_queues;i++) {
 				for(pkt_count = 0;pkt_count < m[i].len;pkt_count++) {
 					pkt = m[i].m_table[pkt_count];

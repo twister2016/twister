@@ -51,7 +51,7 @@ int tw_udp_send(int sockfd, tw_buf_t * buffer, uint16_t buf_len, uint16_t total_
 		rte_pktmbuf_append(buffer->pkt, total_payload_len - buf_len); //TODO Apply max limit on buf_len 
 
 	udp_packet_create(buffer->pkt,&dummy);
-	rte_free((void *) buffer);
+	//rte_free((void *) buffer);
 	return 0;
 }
 

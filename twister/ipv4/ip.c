@@ -14,9 +14,10 @@
 
 #define LOCAL_HOST_IP 2130706433     //127.0.0.1
 
-int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id, uint8_t prev_hdr_size, uint8_t processing_flag, void * cb_func)
-{
-	struct ipv4_hdr *ipHdr = rte_pktmbuf_mtod(pkt, struct ipv4_hdr *) + prev_hdr_size; //--???
+int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id, uint8_t prev_hdr_size, uint8_t processing_flag, void * cb_func) {
+	struct ipv4_hdr *ipHdr;
+	uint8_t * temp_ptr = rte_pktmbuf_mtod(pkt, uint8_t *) + (uint8_t) prev_hdr_size; //--???
+	ipHdr = (struct ipv4_hdr *) temp_ptr;
 	if(CHECK_IPv4_CKSUM) {
 		uint16_t ipchecksum = rte_ipv4_cksum(ipHdr);
 		if (ipchecksum != ipHdr->hdr_checksum) {

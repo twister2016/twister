@@ -6,9 +6,10 @@
 
 void udp_packet_parser(struct rte_mbuf *pkt, uint32_t src_ip, uint32_t dst_ip, uint8_t prev_hdr_size, uint8_t processing_flag, void * cb_func) {
 	uint16_t dst_port, src_port;
-	struct udp_hdr *udp_hdr_d = rte_pktmbuf_mtod(pkt, struct udp_hdr *) + prev_hdr_size; //--??
+	uint8_t * temp_ptr = rte_pktmbuf_mtod(pkt, uint8_t *) + prev_hdr_size;
+	struct udp_hdr * udp_hdr_d = (struct udp_hdr *) temp_ptr;
 	dst_port  = rte_be_to_cpu_16(udp_hdr_d->dst_port);
-	src_port = rte_be_to_cpu_16(udp_hdr_d->src_port);	
+	src_port = rte_be_to_cpu_16(udp_hdr_d->src_port);
 	int temp_port = 0;
    	struct socket_info * sockptr = NULL;
 	for (temp_port=0;temp_port<=maxfd;temp_port++){			//TODO see if code can be improved ito performance
