@@ -5,8 +5,12 @@
 #include <rte_lcore.h>
 
 enum {
-	USE_ALL_ENGINES = 0,
-	RESERVE_FIRST_ENGINE = 1
+	USE_ALL_ENGINES = 255,
+	ENGINE0 = 0,    //TODO use string in this case
+	ENGINE1 = 1,
+	ENGINE2 = 2,
+	ENGINE3 = 3,
+	RESERVE_FIRST_ENGINE = 254
 };
 
 void tw_launch_engine(void *, void *, int);

@@ -30,8 +30,7 @@ int udp_socket(uint32_t ip_addr,uint32_t port)
 	return maxfd-1;
 }
 
-int tw_udp_send(int sockfd, tw_buf_t * buffer, uint16_t buf_len, uint16_t total_payload_len, struct tw_sockaddr_in * dst_addr)
-{
+int tw_udp_send(int sockfd, tw_buf_t * buffer, uint16_t buf_len, uint16_t total_payload_len, struct tw_sockaddr_in * dst_addr) {
 	//struct rte_mbuf *pkt=app_get_buffer();
 	//rte_pktmbuf_append(pkt,buf_len + sizeof(struct udp_hdr ) + sizeof(struct ipv4_hdr) + 40);
 	//rte_pktmbuf_trim(pkt,buf_len + sizeof(struct udp_hdr ) + sizeof(struct ipv4_hdr) + 40);
@@ -46,7 +45,6 @@ int tw_udp_send(int sockfd, tw_buf_t * buffer, uint16_t buf_len, uint16_t total_
 	if(total_payload_len > MAX_UDP_PAYLOAD)
 		total_payload_len = MAX_UDP_PAYLOAD;
 		
-
 	if(total_payload_len > buf_len)
 		rte_pktmbuf_append(buffer->pkt, total_payload_len - buf_len); //TODO Apply max limit on buf_len 
 

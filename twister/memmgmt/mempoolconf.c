@@ -3,7 +3,7 @@
 
 #include <mempoolconf.h>
 
-uint8_t num_numa_sockets = 1;
+uint8_t num_numa_sockets = 1; //TODO generalize it
 
 int create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_init" before using this function
 	uint8_t numa_socket = 0;

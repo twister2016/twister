@@ -29,11 +29,11 @@ int map_queue_to_core(uint8_t core_id, uint8_t port_id) {
 int lcore_conf_init(void) {
 	uint8_t lcore_id = 0;
 	uint8_t lcore_info_counter=0;
-	char engine_string[10];
+	//char engine_string[10];
 	for(lcore_id=0;lcore_id<MAX_LCORES;lcore_id++) {
 		if(rte_lcore_is_enabled(lcore_id)) {
-			sprintf(engine_string, "engine%d", lcore_info_counter);
-			lcore_conf[lcore_id].core_name = engine_string;
+			//sprintf(engine_string, "engine%d", lcore_info_counter);
+			//lcore_conf[lcore_id].core_name = engine_string;
 			lcore_conf[lcore_id].core_id_external= lcore_info_counter;
 			lcore_info_counter++;
 			

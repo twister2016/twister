@@ -1,5 +1,5 @@
 [
-    { "ServerIP"   : "34.34.34.12",
+    { "ServerIP"   : "34.34.34.222",
       "ServerIPRange"   : "1",
       "Protocol"   : "UDP",
       "PayloadSize"   : "0022",

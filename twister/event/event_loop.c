@@ -165,6 +165,7 @@ int tw_run(tw_loop_t * event_loop) {
 	uint64_t curr_time_cycle = 0, prev_queued_pkts_cycle = 0, prev_stats_calc = 0, time_diff = 0;
 	uint64_t loop_start_time = tw_get_current_timer_cycles();
 	struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()];
+	printf("num queues %d\n", qconf->num_queues);
 	struct mbuf_table m[qconf->num_queues];
 	struct rte_mbuf * pkt;
 	tw_buf_t temp_buffer;
@@ -201,9 +202,7 @@ int tw_run(tw_loop_t * event_loop) {
 		temp_udp_handle = event_loop->rx_handle_queue;
 		if(temp_udp_handle != NULL)
 			num_rx_pkts = rx_for_each_queue(m);
-
 		if(num_rx_pkts > 0) {
-			//printf("pkts rx %d\n", num_rx_pkts);
 			for(i=0;i<qconf->num_queues;i++) {
 				for(pkt_count = 0;pkt_count < m[i].len;pkt_count++) {
 					pkt = m[i].m_table[pkt_count];
@@ -211,11 +210,9 @@ int tw_run(tw_loop_t * event_loop) {
 				}
 			}
 		}
-		
 		if(event_loop->active_handles > 0) {
 			while(temp_udp_handle != NULL) {
 				switch(temp_udp_handle->handle_type) {
-					printf("temp_udp_handle\n");
 					case(TW_UDP_HANDLE):
 						//temp_udp_handle = (tw_udp_t *) temp_handle_queue;
 						while(udp_sock_queue[temp_udp_handle->sock_fd].n_pkts > 0) {

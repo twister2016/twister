@@ -110,7 +110,7 @@ int user_app_main(__attribute__((unused)) void * app_params) {
 		exit(1);
 	}*/
 
-	client_addr = tw_ip4_addr("34.34.34.11", 7777);   //TODO add tw0 logic
+	client_addr = tw_ip4_addr("34.34.34.111", 7777);   //TODO add tw0 logic
 	
 	status = tw_udp_bind(client, client_addr, 0);
 	if(status) {
@@ -159,7 +159,7 @@ int user_app_main(__attribute__((unused)) void * app_params) {
 		printf("Error in TX start\n");
 		exit(1);
 	}
-	
+	printf("starting event loop\n");	
 	tw_run(tw_loop);
 	return 0;
 }

@@ -149,9 +149,12 @@ app_init_rings(void)
 }
 
 int tw_init_global(int argc, char **argv) {
-	
+	printf("tw_init_global1\n");
+	init_user_given_vals();
 	init_eal_env(argc, argv);
+	printf("tw_init_global1\n");
 	create_rx_tx_mempools();
+	printf("tw_init_global1\n");
 	create_queued_pkts_mempools();
 	if(PIPELINE==0)
 	{
@@ -163,7 +166,7 @@ int tw_init_global(int argc, char **argv) {
 		app_init_rings();
 	}
 	eth_port_init();
-	init_user_given_vals();
+	
 	init_timer_vals();
 	init_periodic_timers();
 	
@@ -172,8 +175,11 @@ int tw_init_global(int argc, char **argv) {
 }
 int init_user_given_vals(void) {
 	get_port_conf_json_vals("port_conf");
+	printf("init_user_given_vals1\n");
 	get_lcore_queue_conf_json_vals("lcore_queue_conf");
+	printf("init_user_given_vals1\n");
 	get_processing_conf_json_vals("processing_conf");
+	printf("init_user_given_vals1\n");
 	queued_pkt_time_limit = 10;			//--!TODO use file values parsed by jSON
 	return 0;				//--!JSON...port ips...num of rx/tx queues...flags...vlan tag
 }

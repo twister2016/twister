@@ -14,7 +14,6 @@
 
 //static struct ether_addr eth_port_mac[MAX_ETH_PORTS];
 int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_t dst_ip ) {
-	
 	//uint8_t socket_id = rte_eth_dev_socket_id(port_id);
 	//struct rte_mbuf * m = rte_pktmbuf_alloc ( tx_mempool[socket_id] );
 	rte_pktmbuf_prepend(m, sizeof ( struct ether_hdr ));
@@ -50,6 +49,7 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
 }
 
 int eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id, uint8_t processing_flag, void * cb_func) {
+	//rte_pktmbuf_dump(stdout, pkt, 100);
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
 	uint8_t accept_brdcast = is_broadcast_ether_addr(&(eth->d_addr)) & ACCEPT_BRDCAST;
 	if(is_same_ether_addr(&(eth->d_addr), port_info[port_id].eth_mac) || accept_brdcast) {

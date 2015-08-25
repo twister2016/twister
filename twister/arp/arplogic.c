@@ -42,7 +42,6 @@ int arp_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 		process_arp_reply(eth, port_id);
 		return 0;
 	}
-	
 	rte_pktmbuf_free(pkt);
 	return 0;
 }

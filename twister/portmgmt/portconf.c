@@ -52,8 +52,8 @@ int eth_port_init(void) {
 
 	//*****************PATCH*************************
 	
-	uint8_t port_info_counter=0;
-	char eth_string[10];
+	//uint8_t port_info_counter=0;
+	//char eth_string[10];
 	
 	
 	for (port_id = 0; port_id < total_eth_ports; port_id++) {
@@ -62,18 +62,18 @@ int eth_port_init(void) {
 			available_eth_ports--;
 			continue;
 		}
-		sprintf(eth_string, "tw%d", port_info_counter);
-		port_info[port_id].port_id_external = port_info_counter;
-		port_info[port_id].port_name= eth_string;
-		port_info_counter++;
+		//sprintf(eth_string, "tw%d", port_info_counter);
+		//port_info[port_id].port_id_external = port_info_counter;
+		//port_info[port_id].port_name= eth_string;
+		//port_info_counter++;
 		//TODO Setting RX TX QUEUES #1
-		port_info[port_id].num_rx_queues =1;
-		port_info[port_id].num_tx_queues = 1;
+		//port_info[port_id].num_rx_queues =1;
+		//port_info[port_id].num_tx_queues = 1;
 		
 		//*****************PATCH*************************
 		
 		
-		
+		printf("port_id %d, num_rx_queues %d, num_tx_queues %d\n", port_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues);
 		ret = rte_eth_dev_configure(port_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues, &port_conf);
 		//ret = rte_eth_dev_configure(port_id, 1, 1, &port_conf);
 		if (ret < 0)
@@ -138,5 +138,14 @@ void check_all_ports_link(void) {
 		rte_panic("Some NIC ports are DOWN\n");
 	return;
 }
+/*
+void print_port_info(void) {
+	int i = 0;
+	for(i = 0; i < MAX_ETH_PORTS; i++) {
+		printf("port name %s, extern id %d, start ip %d, num ip addrs %d, socket_id %d, num_rx_queues %d num_tx_queues %dn", port_info[i].port_name, port_info[i].port_id_external, );
+	}	
+	return;
+}
+*/
 
 #endif

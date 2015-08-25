@@ -12,5 +12,6 @@ cJSON * parse_json_file(const char *);
 int get_port_conf_json_vals(const char *);
 int get_lcore_queue_conf_json_vals(const char *);
 int get_processing_conf_json_vals(const char *);
+uint8_t tw_get_last_char(char *);
 
 #endif

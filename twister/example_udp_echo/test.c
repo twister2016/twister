@@ -32,7 +32,8 @@ int main(int argc, char **argv) {
 	tw_init_global(argc, argv);
 	user_params.arg_count = argc;
 	user_params.arg_vals = argv;
-	tw_launch_engine(user_app_main, (void *) &user_params, USE_ALL_ENGINES); //TODO per engine modification
+	tw_launch_engine(user_app_main, (void *) &user_params, USE_ALL_ENGINES);  //use string as engine name
+	//tw_launch_engine(user_app_main, (void *) &user_params, USE_ALL_ENGINES);
 	return 0;
 }
 
@@ -52,7 +53,7 @@ int user_app_main(__attribute__((unused)) void * app_params) {
 		exit(1);
 	}*/
 	
-	addr = tw_ip4_addr("34.34.34.12", 7777);   //TODO add tw0 logic
+	addr = tw_ip4_addr("34.34.34.222", 7777);   //TODO add tw0 logic
 	
 	status = tw_udp_bind(server, addr, 0);
 	if(status) {

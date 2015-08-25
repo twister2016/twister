@@ -30,41 +30,42 @@ cJSON * parse_json_file(const char * file_name) {
 }
 
 int get_port_conf_json_vals(const char * file_name) {
+
 	uint8_t i, j;
 	cJSON * json_file = parse_json_file(file_name);
 	if (!json_file) {
 		printf("Error before: [%s]\n",cJSON_GetErrorPtr());
 		return -1;
 	}
-	int prt_info_ind=0;
-	char eth_str_to_look[8];
-	printf("avail ports %d\n", available_eth_ports);
-	for(prt_info_ind=0; prt_info_ind<available_eth_ports; prt_info_ind++) {
-		strcpy(eth_str_to_look, port_info[prt_info_ind].port_name);
-		for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {			//For each prt_info_ind
+	for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {			//For each port_num
 
-			cJSON * subitem = cJSON_GetArrayItem(json_file, i);
-			char* curr_port_str = cJSON_GetObjectItem(subitem, "port_name")->valuestring;
-			if(strcmp(eth_str_to_look,curr_port_str)!=0)
-				continue;
-			cJSON * ip_addrs = cJSON_GetObjectItem(subitem, "ip_addrs");
+		cJSON * subitem = cJSON_GetArrayItem(json_file, i);
+		char * port_name = cJSON_GetObjectItem(subitem, "port_name")->valuestring;	//TODO Remove "2" and use sizeof 
+		int port_num = tw_get_last_char(port_name);
+		cJSON * ip_addrs = cJSON_GetObjectItem(subitem, "ip_addrs");
 
-			for (j = 0 ; j < cJSON_GetArraySize(ip_addrs) ; j++) {			//For each start_ip_addr and range
-					cJSON * subdictip = cJSON_GetArrayItem(ip_addrs, j);
-				port_info[prt_info_ind].start_ip_addr = convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "start_ip_addr")->valuestring);
-					port_info[prt_info_ind].num_ip_addrs = convert_str_to_int(cJSON_GetObjectItem(subdictip, "num_ip_addrs")->valuestring, 2);	//TODO add string lenght logic
-				}
-			port_info[prt_info_ind].gateway_ip = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "gateway_ip")->valuestring);
-			port_info[prt_info_ind].subnet_mask = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "subnet_mask")->valuestring);
-			port_info[prt_info_ind].vlan_tag = convert_str_to_int(cJSON_GetObjectItem(subitem, "vlan_tag")->valuestring, 4);
+		for (j = 0 ; j < cJSON_GetArraySize(ip_addrs) ; j++) {			//For each start_ip_addr and range
+	        	cJSON * subdictip = cJSON_GetArrayItem(ip_addrs, j);
+			port_info[port_num].start_ip_addr = convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "start_ip_addr")->valuestring);
+        		port_info[port_num].num_ip_addrs = convert_str_to_int(cJSON_GetObjectItem(subdictip, "num_ip_addrs")->valuestring, 2);	//TODO add string lenght logic
+    		}
+		port_info[port_num].gateway_ip = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "gateway_ip")->valuestring);
+		port_info[port_num].subnet_mask = convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "subnet_mask")->valuestring);
+		port_info[port_num].vlan_tag = convert_str_to_int(cJSON_GetObjectItem(subitem, "vlan_tag")->valuestring, 4);
 
-			port_info[prt_info_ind].flags = convert_str_to_hex(cJSON_GetObjectItem(subitem, "flags")->valuestring, sizeof(uint64_t));
-			port_info[prt_info_ind].num_rx_queues = convert_str_to_int(cJSON_GetObjectItem(subitem, "num_rx_queues")->valuestring, 2);
-			port_info[prt_info_ind].num_tx_queues = convert_str_to_int(cJSON_GetObjectItem(subitem, "num_tx_queues")->valuestring, 2);
-		}
+		port_info[port_num].flags = convert_str_to_hex(cJSON_GetObjectItem(subitem, "flags")->valuestring, sizeof(uint64_t));
+		port_info[port_num].num_rx_queues = convert_str_to_int(cJSON_GetObjectItem(subitem, "num_rx_queues")->valuestring, 2);
+		port_info[port_num].num_tx_queues = convert_str_to_int(cJSON_GetObjectItem(subitem, "num_tx_queues")->valuestring, 2);
 	}
-		
 	return 0;
+}
+
+uint8_t tw_get_last_char(char * str) {
+	uint8_t str_size = strLen(str);
+	uint8_t last_char;
+	char c = str[str_size - 1];
+	last_char = convert_str_to_int(&c, 1); //TODO make generic for all ints
+	return last_char;
 }
 
 int get_lcore_queue_conf_json_vals(const char * file_name) {
