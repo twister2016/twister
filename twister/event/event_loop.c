@@ -215,6 +215,7 @@ int tw_run(tw_loop_t * event_loop) {
 		if(event_loop->active_handles > 0) {
 			while(temp_udp_handle != NULL) {
 				switch(temp_udp_handle->handle_type) {
+					printf("temp_udp_handle\n");
 					case(TW_UDP_HANDLE):
 						//temp_udp_handle = (tw_udp_t *) temp_handle_queue;
 						while(udp_sock_queue[temp_udp_handle->sock_fd].n_pkts > 0) {
@@ -231,7 +232,6 @@ int tw_run(tw_loop_t * event_loop) {
 
 			temp_tx_handle = event_loop->tx_handle_queue;
 			while(temp_tx_handle != NULL) {
-				//temp_tx_handle = (tw_tx_t *) temp_handle_queue;
 				tw_tx_cb = temp_tx_handle->tx_cb;
 				tw_tx_cb(temp_tx_handle);
 				temp_tx_handle = temp_tx_handle->next;
@@ -239,7 +239,6 @@ int tw_run(tw_loop_t * event_loop) {
 
 			temp_timer_handle = event_loop->timer_handle_queue;
 			while(temp_timer_handle != NULL) {
-				//temp_timer_handle = (tw_timer_t *) temp_handle_queue;
 				time_diff = get_time_diff(curr_time_cycle, temp_timer_handle->last_run_time, one_msec);
 				if(unlikely(time_diff > temp_timer_handle->timeout)) {
 					tw_timer_cb = temp_timer_handle->timer_cb;

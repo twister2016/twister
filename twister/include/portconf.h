@@ -38,6 +38,8 @@ struct mbuf_table {
 
 struct port_info {
 	struct ether_addr * eth_mac;
+	char * port_name;
+	uint8_t port_id_external;
 	uint32_t start_ip_addr;		//One port can have IPs from same subnet, hence a single gateway and subnet mask
 	uint8_t num_ip_addrs;
 	uint32_t gateway_ip;
@@ -70,6 +72,7 @@ static const struct rte_eth_conf port_conf = {
 
 int eth_port_init(void);
 int get_port_by_ip(uint32_t);
+int eth_name_to_id(char*);
 void check_all_ports_link(void);
 
 #endif

@@ -15,6 +15,8 @@ struct lcore_port_queue {
 };
 
 struct lcore_conf {
+	char * core_name;
+	uint8_t core_id_external;
 	uint8_t socket_id;
 	uint8_t num_queues;
 	uint8_t core_rx;
@@ -29,6 +31,7 @@ struct lcore_conf {
 struct lcore_conf lcore_conf[MAX_LCORES];
 
 int lcore_conf_init(void);
+int engine_name_to_lcore_id(char*);
 int lcore_pipeline_init(void);
 
 

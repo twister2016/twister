@@ -11,7 +11,15 @@ uint8_t total_eth_ports = 0;
 uint8_t available_eth_ports = 0;
 uint16_t app_port_mask = 0;
 
-
+int eth_name_to_id(char* portName){
+	uint8_t i;
+	int prt_id=-1;
+	for(i=0;i<MAX_ETH_PORTS;i++){
+		if(strcmp(port_info[i].port_name, portName) == 0)
+			prt_id=i;
+	}
+	return prt_id;
+}
 int get_port_by_ip(uint32_t ip_addr)
 {
 	if(ip_addr == 0) {
@@ -42,14 +50,32 @@ int eth_port_init(void) {
 		total_eth_ports = MAX_ETH_PORTS;
 	available_eth_ports = total_eth_ports;
 
+	//*****************PATCH*************************
+	
+	uint8_t port_info_counter=0;
+	char eth_string[10];
+	
+	
 	for (port_id = 0; port_id < total_eth_ports; port_id++) {
 		/* skip ports that are not enabled */
 		if ((app_port_mask & (1 << port_id)) == 0) {
 			available_eth_ports--;
 			continue;
 		}
-
+		sprintf(eth_string, "tw%d", port_info_counter);
+		port_info[port_id].port_id_external = port_info_counter;
+		port_info[port_id].port_name= eth_string;
+		port_info_counter++;
+		//TODO Setting RX TX QUEUES #1
+		port_info[port_id].num_rx_queues =1;
+		port_info[port_id].num_tx_queues = 1;
+		
+		//*****************PATCH*************************
+		
+		
+		
 		ret = rte_eth_dev_configure(port_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues, &port_conf);
+		//ret = rte_eth_dev_configure(port_id, 1, 1, &port_conf);
 		if (ret < 0)
 			rte_exit(EXIT_FAILURE, "Cannot configure device: err=%d, port=%u\n",
 				  ret, (unsigned) port_id);

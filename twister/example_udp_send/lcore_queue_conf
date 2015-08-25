@@ -1,9 +1,9 @@
 [
     {
-	"lcore_id" : "01",
-	"core_rx" : "1",
-	"core_tx" : "1",
-	"core_working" : "1",
+	"engine_id" : "01",
+	"engine_rx" : "1",
+	"engine_tx" : "1",
+	"engine_working" : "1",
 	"ports" :  [    { "port_id":"00", "queue_id":"00"}
                  ]
     }

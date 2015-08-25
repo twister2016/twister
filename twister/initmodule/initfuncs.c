@@ -149,8 +149,8 @@ app_init_rings(void)
 }
 
 int tw_init_global(int argc, char **argv) {
-	init_user_given_vals();
-    init_eal_env(argc, argv);
+	
+	init_eal_env(argc, argv);
 	create_rx_tx_mempools();
 	create_queued_pkts_mempools();
 	if(PIPELINE==0)
@@ -163,6 +163,7 @@ int tw_init_global(int argc, char **argv) {
 		app_init_rings();
 	}
 	eth_port_init();
+	init_user_given_vals();
 	init_timer_vals();
 	init_periodic_timers();
 	
