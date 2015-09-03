@@ -19,6 +19,10 @@ inline uint64_t tw_get_current_timer_cycles(void) {
 	return rte_get_timer_cycles();
 }
 
+inline uint8_t tw_if_timeout_millisec(uint64_t curr_timer_cycles, uint64_t prev_timer_cycles, uint64_t num_millisecs) {
+    return is_timer_expired(curr_timer_cycles, prev_timer_cycles, one_msec, num_millisecs);
+}
+
 /**
  * This function provides a sleep in msec
  */

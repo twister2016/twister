@@ -12,6 +12,25 @@
 #include <vlan.h>
 #include <event_loop.h>
 
+inline int tw_match_port_ether_addr(struct ether_addr *ea, char * port_name) {
+    int port_id = eth_name_to_id(port_name);
+    return is_same_ether_addr(ea, port_info[port_id].eth_mac);
+}
+
+inline void tw_copy_ether_addr(struct ether_addr * s_addr, struct ether_addr * d_addr) {
+    ether_addr_copy(s_addr, d_addr);
+    return;
+}
+
+int tw_send_pkt(tw_buf_t * buffer, char * port_name) {
+    int ret = add_pkt_to_tx_queue(buffer->pkt, eth_name_to_id(port_name));
+    return ret;
+}
+
+struct ether_addr * tw_get_ether_addr(char * port_name) {
+    return (port_info[eth_name_to_id(port_name)].eth_mac);
+}
+
 //static struct ether_addr eth_port_mac[MAX_ETH_PORTS];
 int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_t dst_ip ) {
 	//uint8_t socket_id = rte_eth_dev_socket_id(port_id);
@@ -20,9 +39,6 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
 	struct ether_hdr* eth = rte_pktmbuf_mtod(m, struct ether_hdr *);
 	eth->ether_type = rte_cpu_to_be_16(eth_type);
 	ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
-	if ( eth_type == ETHER_TYPE_VLAN ) {
-        	vlan_ctor(m, port_id, ETHER_TYPE_IPv4); //TODO make it generic
-    	}
 	uint32_t arp_ip = 0;
     	uint32_t source_and = port_info[port_id].start_ip_addr & port_info[port_id].subnet_mask;
     	uint32_t dest_and = dst_ip & port_info[port_id].subnet_mask;
@@ -38,11 +54,6 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
         }
         else {
             	ether_addr_copy(&(arp_table_ptr->eth_mac), &(eth->d_addr));
-		if(PIPELINE==1)
-		{
-			add_packet_to_tx_pipeline(m, port_id);
-			return 0;
-		}
             	add_pkt_to_tx_queue(m, port_id);
         }
     	return 0;

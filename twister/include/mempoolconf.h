@@ -17,6 +17,8 @@
 struct tw_buf_s {
 	struct rte_mbuf * pkt;
 	void * data;
+        uint16_t size;
+        char * port_name;
 };
 
 typedef struct tw_buf_s tw_buf_t;
@@ -33,5 +35,6 @@ inline void tw_free(void *);
 extern struct rte_mbuf *app_get_buffer(void);
 tw_buf_t * tw_new_buffer(uint16_t);
 void tw_memcpy (void *, const void *, size_t);
+inline void tw_free_pkt(tw_buf_t *);
 
 #endif

@@ -14,9 +14,6 @@ int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id, uint8_t processing_flag,
 		case ETHER_TYPE_ARP:
 			arp_parser(pkt, port_id);
 			break;
-		/*case ETHER_TYPE_VLAN:					//--!Research...Case of double VLAN...should support or not???
-			vlan_parser(pkt, port_id);
-			break; */
 		case ETHER_TYPE_IPv4:
 			if(processing_flag == LOOP_PROCESS) {
 				ip4_packet_parser(pkt, port_id, sizeof(struct ether_hdr), processing_flag, NULL);	//--!TODO implement ipv6
@@ -31,15 +28,6 @@ int vlan_parser(struct rte_mbuf * pkt, uint8_t port_id, uint8_t processing_flag,
 			break;
 	}
 	return 0;
-}
-
-int vlan_ctor(struct rte_mbuf * pkt, uint8_t port_id, uint16_t ether_type) {
-    
-    rte_pktmbuf_prepend(pkt, sizeof (struct vlan_hdr) );
-    struct vlan_hdr* vlan_header = rte_pktmbuf_mtod (pkt, struct vlan_hdr *);
-    vlan_header->vlan_tci = port_info[port_id].vlan_tag ;
-    vlan_header->eth_proto = ether_type; 
-    return 0;
 }
 
 #endif

@@ -31,26 +31,26 @@ enum {
 } __attribute__((__packed__));
 
 struct mbuf_table {
-	int len;
-	struct rte_mbuf *m_table[MAX_TX_PKT_BURST];
-	uint8_t portid;
+    int len;
+    struct rte_mbuf *m_table[MAX_TX_PKT_BURST];
+    uint8_t portid;
 } __attribute__((__packed__));
 
 struct port_info {
-	struct ether_addr * eth_mac;
-	char * port_name;
-	uint8_t port_id_external;
-	uint32_t start_ip_addr;		//One port can have IPs from same subnet, hence a single gateway and subnet mask
-	uint8_t num_ip_addrs;
-	uint32_t gateway_ip;
-	uint32_t subnet_mask;
-	uint16_t vlan_tag;
-	uint64_t flags;
-	uint8_t socket_id;
-	uint8_t num_rx_queues;
-	uint8_t num_tx_queues;
-	struct mbuf_table tx_pkt_array[TX_QUEUES_PER_PORT];
-	//struct port_stats;	//--! add stats info
+    struct ether_addr * eth_mac;
+    char port_name[10];
+    uint8_t port_id_external;
+    uint32_t start_ip_addr;		//One port can have IPs from same subnet, hence a single gateway and subnet mask
+    uint8_t num_ip_addrs;
+    uint32_t gateway_ip;
+    uint32_t subnet_mask;
+    uint16_t vlan_tag;
+    uint64_t flags;
+    uint8_t socket_id;
+    uint8_t num_rx_queues;
+    uint8_t num_tx_queues;
+    struct mbuf_table tx_pkt_array[TX_QUEUES_PER_PORT];
+    //struct port_stats;	//--! add stats info
 } __attribute__((__packed__));
 
 struct port_info port_info[MAX_ETH_PORTS];

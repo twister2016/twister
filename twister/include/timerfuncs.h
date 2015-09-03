@@ -9,5 +9,6 @@ inline uint64_t tw_get_current_timer_cycles(void);
 inline void sleep_msec(unsigned);
 inline void sleep_usec(unsigned);
 inline void sleep_nsec(unsigned);
+inline uint8_t tw_if_timeout_millisec(uint64_t, uint64_t, uint64_t);
 
 #endif

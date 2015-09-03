@@ -48,34 +48,6 @@ int parse_twister_args(int argc, char **argv) {
 	static struct option lgopts[] = {
 		{NULL, 0, 0, 0}
 	};
-
-	/*if(PIPELINE==1)
-	{
-	uint32_t lcores[3], n_lcores, lcore_id;
-	n_lcores = 0;
-	for (lcore_id = 0; lcore_id < RTE_MAX_LCORE; lcore_id++) {
-		if (rte_lcore_is_enabled(lcore_id) == 0)
-			continue;
-
-		if (n_lcores >= 3) {
-			RTE_LOG(ERR, USER1, "Number of cores must be 3\n");
-			return -1;
-		}
-
-		lcores[n_lcores] = lcore_id;
-		n_lcores++;
-	}
-
-	if (n_lcores != 3) {
-		RTE_LOG(ERR, USER1, "Number of cores must be 3\n");
-		return -1;
-	}
-
-	app.core_rx = lcores[0];
-	app.core_worker = lcores[1];
-	app.core_tx = lcores[2];
-    }
-	*/
 	argvopt = argv;
 
 	while ((opt = getopt_long(argc, argvopt, "p:",
@@ -153,15 +125,7 @@ int init_global(int argc, char **argv) {
     init_eal_env(argc, argv);
 	create_rx_tx_mempools();
 	create_queued_pkts_mempools();
-	if(PIPELINE==0)
-	{
-		lcore_conf_init();
-	}
-	if(PIPELINE==1)
-	{
-		lcore_pipeline_init();
-		app_init_rings();
-	}
+	lcore_conf_init();
 	eth_port_init();
 	init_timer_vals();
 	init_periodic_timers();

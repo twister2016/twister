@@ -19,14 +19,14 @@ struct lcore_port_queue {
 };
 
 struct lcore_conf {
+	char core_name[10];
+	uint8_t core_id_external;
 	uint8_t socket_id;
-	uint8_t num_queues;
 	uint8_t core_rx;
 	uint8_t core_tx;
 	uint8_t core_working;
 	uint8_t num_port;
-	uint8_t managed_port[MAX_RX_QUEUES_PER_LCORE];
-	struct lcore_port_queue mngd_queues[MAX_RX_QUEUES_PER_LCORE];
+	uint8_t managed_port[MAX_ETH_PORTS];
 	struct mbuf_table tx_mbufs[MAX_ETH_PORTS];
 } __rte_cache_aligned;
 
@@ -34,6 +34,7 @@ struct lcore_conf lcore_conf[MAX_LCORES]; /**< lcore_conf - This array of struct
 
 int lcore_conf_init(void); /**< lcore_conf_init - This function initialize all the lcore respective configurations.  */
 int lcore_pipeline_init(void); /**< lcore_pipeline_init - This function initialize all the lcore respective configurations related to the pipeline model  */
-
+int tw_map_port_to_engine(char*, char*); /**< tw_map_port_to_engine - This function initialize maps the user give ports to engine given in arguments  */
+int engine_name_to_lcore_id(char*); /**< engine_name_to_lcore_id - This function returns the engine_id of engine name */
 
 #endif

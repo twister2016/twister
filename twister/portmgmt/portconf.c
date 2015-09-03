@@ -12,14 +12,30 @@ uint8_t available_eth_ports = 0;
 uint16_t app_port_mask = 0;
 
 int eth_name_to_id(char* portName){
-	uint8_t i;
+	int i;
 	int prt_id=-1;
 	for(i=0;i<MAX_ETH_PORTS;i++){
-		if(strcmp(port_info[i].port_name, portName) == 0)
-			prt_id=i;
+	    //printf("portinfo[%d].port_name=%s\n", i,port_info[i].port_name );
+	    if ( port_info[i].port_name!=NULL ) {
+	        if(strcmp(port_info[i].port_name, portName) == 0)
+	        {
+	        prt_id=i;
+	        //printf ("strcmp is zero now =%d with port_info(%s) with argument=%s\n",prt_id, port_info[i].port_name, portName);
+	        }
+			    
+	    }
+	    else{
+	    //printf("NULL VALUE FROM JSON.eth_name_to_id....................\n");
+	    //printf("%s\n", portName);
+	    //printf("%d\n", i);
+	    
+	    }
+		
 	}
+	//printf ("ending successfully eth_name_to_id with porti=%d\n",prt_id);
 	return prt_id;
 }
+
 int get_port_by_ip(uint32_t ip_addr)
 {
 	if(ip_addr == 0) {

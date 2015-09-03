@@ -36,7 +36,7 @@ OBJ=UDP_ECHO
 
 
 hellomake: test.c
-	@$(CC) test.c $(TFLAGS) -o $(OBJ)
+	@$(CC) test.c $(TWFLAGS) -o $(OBJ)
 
 .PHONY: clean
 

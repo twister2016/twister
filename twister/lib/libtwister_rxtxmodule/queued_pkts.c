@@ -75,11 +75,7 @@ int send_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt ** c
 	uint8_t port_id = (*curr_queued_pkt)->port_id;
 	
 	delete_queued_pkt(prev_queued_pkt, curr_queued_pkt);
-		
-	if(PIPELINE==1)
-		add_packet_to_tx_pipeline(pkt, port_id);
-	else
-		add_pkt_to_tx_queue(pkt, port_id);
+	add_pkt_to_tx_queue(pkt, port_id);
 	return 0;
 }
 

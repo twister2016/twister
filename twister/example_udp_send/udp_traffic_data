@@ -2,7 +2,7 @@
     { "ServerIP"   : "34.34.34.222",
       "ServerIPRange"   : "1",
       "Protocol"   : "UDP",
-      "PayloadSize"   : "0022",
+      "PayloadSize"   : "0064",
       "ppsLimit"   : "1000000",
       "testRuntime"   : "999",
       "StatsServerIP" : "34.34.34.2",

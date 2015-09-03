@@ -15,7 +15,6 @@
 #include <jsonparser.h>
 #include <portconf.h>
 
-int PIPELINE; 
 
 struct app_params {
 	/* CPU cores */

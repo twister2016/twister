@@ -5,14 +5,18 @@
 
 uint8_t num_numa_sockets = 1; //TODO generalize it
 
-int create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_init" before using this function
+int create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_conf_init" before using this function
 	uint8_t numa_socket = 0;
+	char  rx_mempool_name[15];
+	char  tx_mempool_name[15];
 	for(numa_socket=0;numa_socket<num_numa_sockets;numa_socket++) {
 		printf("%d socket id %d NB_MBUF, %lu MBUF_SIZE, %d numa_socket\n", rte_socket_id(), NB_MBUF, MBUF_SIZE, numa_socket);
-		rx_mempool[numa_socket] = rte_mempool_create("rx_mempool_" + numa_socket, NB_MBUF, MBUF_SIZE, 32, sizeof(struct rte_pktmbuf_pool_private), rte_pktmbuf_pool_init, NULL, rte_pktmbuf_init, NULL, rte_socket_id(), 0);	//--!TODO Is 32 the best cache align val???
+		sprintf(rx_mempool_name, "rx_mempool_%u", numa_socket);
+		rx_mempool[numa_socket] = rte_mempool_create(rx_mempool_name, NB_MBUF, MBUF_SIZE, 32, sizeof(struct rte_pktmbuf_pool_private), rte_pktmbuf_pool_init, NULL, rte_pktmbuf_init, NULL, rte_socket_id(), 0);	//--!TODO Is 32 the best cache align val???
 		if (rx_mempool[numa_socket] == NULL)
 			rte_exit(EXIT_FAILURE, "Cannot init rx mempool on NUMA node %d\n", numa_socket);
-		tx_mempool[numa_socket] = rte_mempool_create("tx_mempool_" + numa_socket, NB_MBUF, MBUF_SIZE, 32, sizeof(struct rte_pktmbuf_pool_private), rte_pktmbuf_pool_init, NULL, rte_pktmbuf_init, NULL, rte_socket_id(), 0);
+		sprintf(tx_mempool_name, "tx_mempool_%u", numa_socket);
+		tx_mempool[numa_socket] = rte_mempool_create(tx_mempool_name, NB_MBUF, MBUF_SIZE, 32, sizeof(struct rte_pktmbuf_pool_private), rte_pktmbuf_pool_init, NULL, rte_pktmbuf_init, NULL, rte_socket_id(), 0);
 		if (tx_mempool[numa_socket] == NULL)
 			rte_exit(EXIT_FAILURE, "Cannot init tx mempool on NUMA node %d\n", numa_socket);
 	}
@@ -49,7 +53,12 @@ inline void tw_free_buffer(tw_buf_t * ptr) {
 	return;
 }
 
-int create_queued_pkts_mempools(void) {		//--! To be used by queued packets including pakets waiting for an ARP reply
+inline void tw_free_pkt(tw_buf_t * ptr) {
+    rte_pktmbuf_free(ptr->pkt);
+    return;
+}
+
+/*int create_queued_pkts_mempools(void) {		//--! To be used by queued packets including pakets waiting for an ARP reply
 	uint8_t numa_socket = 0;
         for(numa_socket=0;numa_socket<num_numa_sockets;numa_socket++) {
                 queued_pkts_mempool[numa_socket] = rte_mempool_create("queued_pkts_mempool" + numa_socket, NB_MBUF, MBUF_SIZE, 32, sizeof(struct rte_pktmbuf_pool_private), rte_pktmbuf_pool_init, NULL, rte_pktmbuf_init, NULL, numa_socket, 0);
@@ -58,5 +67,5 @@ int create_queued_pkts_mempools(void) {		//--! To be used by queued packets incl
 	}
 	return 0;
 }
-
+*/
 #endif

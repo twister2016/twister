@@ -2,19 +2,21 @@
 #include <event_loop.h>
 
 int rx_for_each_queue(struct mbuf_table * m) {
+    
 	unsigned lcore_id,nb_pkt_rx=0;
 	struct lcore_conf *qconf;
 	uint32_t total_pkts_rx = 0;
 	lcore_id = rte_lcore_id();
 	qconf = &lcore_conf[lcore_id];
-	int i=0;
-	for(i=0;i<qconf->num_queues;i++)
-	{
-		nb_pkt_rx += get_pkt_from_rx_queue(&m[i],qconf->mngd_queues[i].port_id,qconf->mngd_queues[i].queue_id);
-		m[i].portid=qconf->mngd_queues[i].port_id;
-		m[i].len=nb_pkt_rx;
-		total_pkts_rx +=nb_pkt_rx;
-	}
+        int portiter =0;
+        for (portiter =0;portiter< qconf->num_port;portiter++ ){
+            
+            nb_pkt_rx += get_pkt_from_rx_queue(&m[portiter],qconf->managed_port[portiter],0);
+		    m[portiter].portid=qconf->managed_port[portiter];
+		    m[portiter].len=nb_pkt_rx;
+		    total_pkts_rx +=nb_pkt_rx;    
+    
+        }	
 	return total_pkts_rx;
 }
 

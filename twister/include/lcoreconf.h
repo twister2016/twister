@@ -9,22 +9,23 @@
 #define MAX_TX_PKT_BURST 32
 #define MASTER_LCORE 0
 
+/*
 struct lcore_port_queue {
 	uint8_t port_id;
 	uint8_t queue_id;
 };
+*/
 
 struct lcore_conf {
-	char * core_name;
+	char core_name[10];
 	uint8_t core_id_external;
 	uint8_t socket_id;
-	uint8_t num_queues;
 	uint8_t core_rx;
 	uint8_t core_tx;
 	uint8_t core_working;
 	uint8_t num_port;
-	uint8_t managed_port[MAX_RX_QUEUES_PER_LCORE];
-	struct lcore_port_queue mngd_queues[MAX_RX_QUEUES_PER_LCORE];
+	uint8_t managed_port[MAX_ETH_PORTS];
+	//struct lcore_port_queue mngd_queues[MAX_RX_QUEUES_PER_LCORE];
 	struct mbuf_table tx_mbufs[MAX_ETH_PORTS];
 } __rte_cache_aligned;
 
@@ -33,6 +34,8 @@ struct lcore_conf lcore_conf[MAX_LCORES];
 int lcore_conf_init(void);
 int engine_name_to_lcore_id(char*);
 int lcore_pipeline_init(void);
+int tw_map_port_to_engine(char*, char*);
+
 
 
 #endif

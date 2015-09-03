@@ -27,10 +27,8 @@ int lcore_conf_init(void) {
 				num_numa_sockets = 2;						//--!Considering there are 2 CPU sockets: Socket 0 and 1
 			lcore_conf[lcore_id].num_queues = 0;
 			lcore_conf[lcore_id].num_port = 0;
-			if(PIPELINE==0)
-			{
-				map_queue_to_core(lcore_id,lcore_conf[lcore_id].mngd_queues[lcore_conf[lcore_id].num_queues].port_id);
-			}
+			map_queue_to_core(lcore_id,lcore_conf[lcore_id].mngd_queues[lcore_conf[lcore_id].num_queues].port_id);
+			
 								//--!TODO implement assign_queue_to_core
 		}
 	}

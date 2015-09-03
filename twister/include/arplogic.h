@@ -25,7 +25,10 @@ int arp_parser(struct rte_mbuf *, uint8_t);
 int send_arp_reply(struct rte_mbuf *, uint8_t);
 int process_arp_reply(struct ether_hdr *, uint8_t);
 struct arp_table * search_arp_table(uint32_t);
+struct ether_addr * tw_search_arp_table(char *);
 int add_arp_entry(uint32_t ip_to_add, struct ether_addr, uint8_t);
 int construct_arp_packet(uint32_t, uint8_t);
+int tw_send_arp_request(char *, char *);
 void print_arp_table(void);
+int tw_arp_parser(tw_buf_t *, char *);
 #endif

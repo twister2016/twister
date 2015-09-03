@@ -39,11 +39,6 @@ int eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint32_
         }
         else {
             	ether_addr_copy(&(arp_table_ptr->eth_mac), &(eth->d_addr));
-		if(PIPELINE==1)
-		{
-			add_packet_to_tx_pipeline(m, port_id);
-			return 0;
-		}
             	add_pkt_to_tx_queue(m, port_id);
         }
     	return 0;

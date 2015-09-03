@@ -41,18 +41,20 @@ struct mbuf_table {
 } __attribute__((__packed__));
 
 struct port_info {
-	struct ether_addr * eth_mac;
-	uint32_t start_ip_addr;		//One port can have IPs from same subnet, hence a single gateway and subnet mask
-	uint8_t num_ip_addrs;
-	uint32_t gateway_ip;
-	uint32_t subnet_mask;
-	uint16_t vlan_tag;
-	uint64_t flags;
-	uint8_t socket_id;
-	uint8_t num_rx_queues;
-	uint8_t num_tx_queues;
-	struct mbuf_table tx_pkt_array[TX_QUEUES_PER_PORT];
-	//struct port_stats;	//--! add stats info
+    struct ether_addr * eth_mac;
+    char port_name[10];
+    uint8_t port_id_external;
+    uint32_t start_ip_addr;		//One port can have IPs from same subnet, hence a single gateway and subnet mask
+    uint8_t num_ip_addrs;
+    uint32_t gateway_ip;
+    uint32_t subnet_mask;
+    uint16_t vlan_tag;
+    uint64_t flags;
+    uint8_t socket_id;
+    uint8_t num_rx_queues;
+    uint8_t num_tx_queues;
+    struct mbuf_table tx_pkt_array[TX_QUEUES_PER_PORT];
+    //struct port_stats;	//--! add stats info
 } __attribute__((__packed__));
 
 struct port_info port_info[MAX_ETH_PORTS];
@@ -72,6 +74,7 @@ static const struct rte_eth_conf port_conf = {
 };
 
 
+int eth_name_to_id(char*);/**< eth_name_to_id - This function returns the id of ethernet port. This id is used by twister to map hardware NIC. */
 int eth_port_init(void); /**< eth_port_init - This function initialize the port and assigned the IP Address provided in the configuration file. */
 int get_port_by_ip(uint32_t); /**< get_port_by_ip - This function takes the IP address as input and return the port number associated by that IP Address. */
 void check_all_ports_link(void);  /**< check_all_ports_link - This function check the status of all the ports specified in the configuration to be used and make sure that there link is up. */
