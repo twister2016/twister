@@ -29,12 +29,46 @@ struct app_params app = {
 };
 
 int init_eal_env(int argc, char **argv) {
-	int ret = rte_eal_init(argc, argv);
+
+    if ( argc == 1 ) {
+    const char *temp0, *temp1, *temp2, *temp3, *temp4, *temp5, *temp6, *temp7, *temp8;
+    temp0 = "-c";
+    temp1 = "0x01";
+    temp2 = "-n";
+    temp3 = "1";
+    temp4 = "-b";
+    temp5 = "00:03.0";
+    temp6 = "--";
+    temp7 = "-p";
+    temp8 = "0x1";
+    //argv = (char **)malloc(argc * sizeof(char *));
+    argv[1] = (char *)malloc(3 * sizeof(char));
+    argv[2] = (char *)malloc(5 * sizeof(char));
+    argv[3] = (char *)malloc(3 * sizeof(char));
+    argv[4] = (char *)malloc(2 * sizeof(char));
+    argv[5] = (char *)malloc(3 * sizeof(char));
+    argv[6] = (char *)malloc(8 * sizeof(char));
+    argv[7] = (char *)malloc(3 * sizeof(char));
+    argv[8] = (char *)malloc(3 * sizeof(char));
+    argv[9] = (char *)malloc(4 * sizeof(char));
+    strcpy (argv[1], temp0);
+    strcpy (argv[2], temp1);
+    strcpy (argv[3], temp2);
+    strcpy (argv[4], temp3);
+    strcpy (argv[5], temp4);
+    strcpy (argv[6], temp5);
+    strcpy (argv[7], temp6);
+    strcpy (argv[8], temp7);
+    strcpy (argv[9], temp8);
+    argc = 10;
+    }
+    
+    	int ret = rte_eal_init(argc, argv);
 	if (ret < 0)
 		rte_exit(EXIT_FAILURE, "Invalid EAL arguments\n");
 	argc -= ret;
 	argv += ret;
-	ret = parse_twister_args(argc, argv);	//--! TODO implement parse_twister_args()
+	ret = parse_twister_args(argc, argv);	//--! TODO implement parse_twister_args()     
 	if (ret < 0)
 		rte_exit(EXIT_FAILURE, "Invalid commandline arguments\n");
 	return 0;
