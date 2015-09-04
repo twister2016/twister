@@ -135,31 +135,32 @@ int tw_run(tw_loop_t * event_loop) {
     if (event_loop->secs_to_run == INFINITE_LOOP)
         infinite_loop = 1;
     int num_rx_pkts = 0, pkt_count = 0, i;
-    uint64_t curr_time_cycle = 0, prev_queued_pkts_cycle = 0, prev_stats_calc = 0, time_diff = 0;
+    uint64_t curr_time_cycle = 0, /*prev_queued_pkts_cycle = 0,*/ prev_stats_calc = 0, time_diff = 0;
     uint64_t loop_start_time = tw_get_current_timer_cycles();
     struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()];
-    printf("num queues %d\n", qconf->num_port);
     struct mbuf_table m[qconf->num_port];
     struct rte_mbuf * pkt;
     tw_buf_t temp_buffer;
 
     tw_rx_t * temp_rx_handle;
     tw_tx_t * temp_tx_handle;
-    tw_timer_t * temp_timer_handle;
+    //tw_timer_t * temp_timer_handle;
 
     void (*tw_rx_cb) (tw_rx_t *, tw_buf_t *);
     void (*tw_tx_cb) (tw_tx_t *);
-    void (*tw_timer_cb) (tw_timer_t *);
+    //void (*tw_timer_cb) (tw_timer_t *);
 
     do {
         if (event_loop->stop_flag)
             return 0;
         curr_time_cycle = tw_get_current_timer_cycles();
+        /*
         time_diff = get_time_diff(curr_time_cycle, prev_queued_pkts_cycle, one_msec);
         if (unlikely(time_diff > queue_update_limit)) {
             update_queued_pkts(curr_time_cycle);
             prev_queued_pkts_cycle = curr_time_cycle;
         }
+        */
 
         time_diff = get_time_diff(curr_time_cycle, prev_stats_calc, one_msec);
         if (unlikely(time_diff > stats_calc_limit)) {
@@ -195,7 +196,7 @@ int tw_run(tw_loop_t * event_loop) {
                 temp_tx_handle->last_run_time = curr_time_cycle;
                 temp_tx_handle = temp_tx_handle->next;
             }
-
+            /*
             temp_timer_handle = event_loop->timer_handle_queue;
             while (temp_timer_handle != NULL) {
                 time_diff = get_time_diff(curr_time_cycle, temp_timer_handle->last_run_time, one_msec);
@@ -206,6 +207,7 @@ int tw_run(tw_loop_t * event_loop) {
                 }
                 temp_timer_handle = temp_timer_handle->next;
             }
+            */
         }
 
         if (!infinite_loop) {

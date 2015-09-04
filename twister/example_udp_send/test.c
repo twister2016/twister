@@ -116,7 +116,7 @@ int user_app_main(__attribute__((unused)) void * app_params) {
     struct tw_sockaddr_in * client_addr;
 
     rx_handle = tw_rx_init(tw_loop);
-    
+
     status = tw_rx_start(rx_handle, parse_payload);
     if (status) {
         printf("Error in UDP receive start\n");
