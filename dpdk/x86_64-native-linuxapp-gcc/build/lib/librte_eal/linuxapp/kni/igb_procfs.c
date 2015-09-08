@@ -1,1 +1,0 @@
-/root/dEVLIBUV/twister/dpdk/lib/librte_eal/linuxapp/kni/ethtool/igb/igb_procfs.c

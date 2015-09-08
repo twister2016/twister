@@ -30,7 +30,6 @@
 #   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 SRC_ROOT:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-RTE_SDK = $(SRC_ROOT)/../dpdk
 ifeq ($(RTE_SDK),)
 $(error "Please define RTE_SDK environment variable")
 endif

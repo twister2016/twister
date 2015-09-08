@@ -30,9 +30,9 @@
 #   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 IDIR =../include
-IDIR2 = ../../dpdk/x86_64-native-linuxapp-gcc/include
+IDIR2 = $(RTE_SDK)/x86_64-native-linuxapp-gcc/include
 
-LDIR =../../dpdk/x86_64-native-linuxapp-gcc/lib
+LDIR =$(RTE_SDK)/dpdk/x86_64-native-linuxapp-gcc/lib
 TWISTERLIB =../build/libtwister.a
 
 #CC=gcc
