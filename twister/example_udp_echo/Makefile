@@ -32,7 +32,7 @@
 include twister.mk
 
 CC=gcc
-OBJ=UDP_ECHO
+OBJ=UDP_ECHO.exe
 
 
 hellomake: test.c
