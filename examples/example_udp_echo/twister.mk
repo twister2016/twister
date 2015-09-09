@@ -1,9 +1,9 @@
 
-IDIR =../include
+IDIR =../../twister/include
 IDIR2 = $(RTE_SDK)/x86_64-native-linuxapp-gcc/include
 
 LDIR =$(RTE_SDK)/x86_64-native-linuxapp-gcc/lib
-TWISTERLIB =../build/libtwister.a
+TWISTERLIB =../../twister/build/libtwister.a
 
 
 
