@@ -1,9 +1,9 @@
-
-IDIR =$(TWISTER_SDK)/twister/include
+TWISTER_SDK:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+IDIR =$(TWISTER_SDK)/../twister/include
 IDIR2 = $(RTE_SDK)/x86_64-native-linuxapp-gcc/include
 
 LDIR =$(RTE_SDK)/x86_64-native-linuxapp-gcc/lib
-TWISTERLIB =$(TWISTER_SDK)/twister/build/libtwister.a
+TWISTERLIB =$(TWISTER_SDK)/../twister/build/libtwister.a
 
 
 
