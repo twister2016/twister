@@ -49,7 +49,7 @@ inline void tw_add_timestamp (struct timestamp_option *timestamp)  {
 void parse_timestamp (struct timestamp_option *timestamp, uint64_t curr_timer_cycles) {
 	if(timestamp->type  == TIMESTAMP_TYPE) {
 		last_received_timestamp = timestamp->timestamp;
-		calc_average_rtt(get_time_diff(curr_timer_cycles, timestamp->echo_timestamp, one_usec));
+		tw_calc_average_rtt(tw_get_time_diff(curr_timer_cycles, timestamp->echo_timestamp, one_usec));
 	}
 }
 
