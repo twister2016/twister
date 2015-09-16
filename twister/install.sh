@@ -2,7 +2,7 @@
 make clean
 make
 sudo mkdir -p /home/twister
-sudo chmod 777 /home/twister
+sudo chmod 777 -R /home/twister
 cp ./build/libtwister.a /home/twister/.
 cp /usr/dpdk/x86_64-native-linuxapp-gcc/lib/* /home/twister/
 echo 'install all twister headers'
