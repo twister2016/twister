@@ -35,14 +35,14 @@ include twister.mk
 
 
 CC=gcc
-OBJ=UDP_ECHO
+OUTPUT_PATH=UDP_ECHO
 
 
 hellomake: test.c
-	@$(CC) test.c $(TWFLAGS) -o $(OBJ)
+	$(CC) test.c $(TWFLAGS) -o $(OUTPUT_PATH)
 
 .PHONY: clean
 
 clean:
-	@rm -f $(OBJ)
+	rm -f $(OUTPUT_PATH)
 
