@@ -41,8 +41,9 @@ struct tw_sockaddr_in {   //TODO standardise
 
 extern int maxfd;
 extern struct socket_info udp_sockets[MAX_SOCK_FD];
-extern int udp_socket(uint32_t,uint32_t);
+
+extern int tw_udp_socket(uint32_t,uint32_t);
 extern int tw_udp_send(int, tw_buf_t *, uint16_t, uint16_t, struct tw_sockaddr_in *);
-extern int udp_recv(int, struct tw_sockaddr_in *, tw_buf_t *);
-extern void add_packet_to_udp_queue(int, struct rte_mbuf *, uint32_t, uint16_t);
+extern int tw_udp_recv(int, struct tw_sockaddr_in *, tw_buf_t *);
+extern void tw_add_packet_to_udp_queue(int, struct rte_mbuf *, uint32_t, uint16_t);
 #endif

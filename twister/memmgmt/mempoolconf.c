@@ -5,7 +5,7 @@
 
 uint8_t num_numa_sockets = 1; //TODO generalize it
 
-int create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_conf_init" before using this function
+int tw_create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_conf_init" before using this function
 	uint8_t numa_socket = 0;
 	char  rx_mempool_name[15];
 	char  tx_mempool_name[15];
@@ -24,7 +24,7 @@ int create_rx_tx_mempools(void) {		//--!TODO Have to call "lcore_conf_init" befo
 }
 
 tw_buf_t * tw_new_buffer(uint16_t buffer_size) {
-	struct rte_mbuf * pkt = app_get_buffer();
+	struct rte_mbuf * pkt = tw_app_get_buffer();
 	if(buffer_size)
 		rte_pktmbuf_append(pkt, buffer_size);
 	tw_buf_t * tw_buff = rte_malloc("tw_buf_t *", sizeof(tw_buf_t), RTE_CACHE_LINE_SIZE);
@@ -38,9 +38,9 @@ void tw_memcpy (void * dst, const void * src, size_t n) {
 	return;
 }
 
-struct rte_mbuf * app_get_buffer(void)
+struct rte_mbuf * tw_app_get_buffer(void)
 {
-	return rte_pktmbuf_alloc(tx_mempool[0]);
+	return rte_pktmbuf_alloc(tx_mempool[0]); //TODO remove hardcoded value '0' and use NUMA socket id
 }
 
 inline void tw_free(void * ptr) {

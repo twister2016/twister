@@ -3,7 +3,7 @@
 
 #include <rte_ether.h>
 
-int vlan_parser(struct rte_mbuf *, uint8_t, uint8_t, void *);
+int tw_vlan_parser(struct rte_mbuf *, uint8_t, uint8_t, void *);
 
 
 #endif

@@ -3,11 +3,11 @@
 
 #include <common.h>
 
-uint8_t convert_str_to_iparr(const char *value, uint8_t *ipVar) {
+uint8_t tw_convert_str_to_iparr(const char *value, uint8_t *ipVar) {
     int ip[5];
     ip[0] = -1;
-    ip[4] = strLen(value);
-    findChar(value, &ip[1], '.', 3);
+    ip[4] = tw_str_len(value);
+    tw_find_char(value, &ip[1], '.', 3);
 
     if (ip == NULL)
         return 0;
@@ -31,13 +31,13 @@ uint8_t convert_str_to_iparr(const char *value, uint8_t *ipVar) {
             } else if ((((ip[n + 1]) - (ip[n] + 1)) > 3) || (((ip[n + 1]) - (ip[n] + 1)) < 1))
                 return 0;
 
-            ipVar[n] = convert_str_to_int(temp, 3);
+            ipVar[n] = tw_convert_str_to_int(temp, 3);
         }
         return 1;
     }
 }
 
-uint32_t convert_str_to_hex(char * str, uint8_t length) {
+uint32_t tw_convert_str_to_hex(char * str, uint8_t length) {
     uint32_t result = 0;
     uint8_t elements[length];
     int n;
@@ -54,7 +54,7 @@ uint32_t convert_str_to_hex(char * str, uint8_t length) {
     return result;
 }
 
-void ipDecToArr(uint32_t ip, uint8_t *arr) {
+void tw_ip_dec_to_arr(uint32_t ip, uint8_t *arr) {
     uint32_t temp = ip;
     arr[0] = (uint8_t) (temp >> 24);
     arr[1] = (uint8_t) (temp >> 16);
@@ -62,18 +62,18 @@ void ipDecToArr(uint32_t ip, uint8_t *arr) {
     arr[3] = (uint8_t) (temp);
 }
 
-uint32_t ip_arr_To_dec(uint8_t *ip) {
+uint32_t tw_ip_arr_to_dec(uint8_t *ip) {
     return ( (uint32_t) ((ip[0] << 24) + (ip[1] << 16) + (ip[2] << 8) + (ip[3])));
 }
 
-uint32_t convert_ip_str_to_dec(const char * ip_str) {
+uint32_t tw_convert_ip_str_to_dec(const char * ip_str) {
     uint8_t ip_arr[4];
-    if (convert_str_to_iparr(ip_str, ip_arr))
-        return ip_arr_To_dec(ip_arr);
+    if (tw_convert_str_to_iparr(ip_str, ip_arr))
+        return tw_ip_arr_to_dec(ip_arr);
     return 0; //--? rte_exit or not?
 }
 
-uint8_t strLen(const char *str) {
+uint8_t tw_str_len(const char *str) {
     int size = -1;
 
     while (str[size + 1] != '\0')
@@ -82,7 +82,7 @@ uint8_t strLen(const char *str) {
     return size + 1;
 }
 
-void sliceArray(const char *srcStr, char *dstStr, uint8_t start, uint8_t dstLength) {
+void tw_slice_array(const char *srcStr, char *dstStr, uint8_t start, uint8_t dstLength) {
     uint8_t count = 0;
 
     for (count = 0; count < dstLength; count++) {
@@ -92,11 +92,11 @@ void sliceArray(const char *srcStr, char *dstStr, uint8_t start, uint8_t dstLeng
     dstStr[dstLength] = '\0';
 }
 
-uint8_t findChar(const char *str, int *quoteLoc, char c, uint8_t instances) {
+uint8_t tw_find_char(const char *str, int *quoteLoc, char c, uint8_t instances) {
     uint8_t qCount = 0;
     uint8_t i = 0;
 
-    for (i = 0; i < strLen(str); i++) {
+    for (i = 0; i < tw_str_len(str); i++) {
         if (str[i] == c && qCount < instances)// as there are only 4 quotes present in a line
         {
             quoteLoc[qCount] = i;
@@ -111,7 +111,7 @@ uint8_t findChar(const char *str, int *quoteLoc, char c, uint8_t instances) {
     return qCount;
 }
 
-uint64_t convert_str_to_int(const char *str, uint8_t n) {
+uint64_t tw_convert_str_to_int(const char *str, uint8_t n) {
     uint8_t count = 0;
     uint64_t num = 0;
 
@@ -135,7 +135,7 @@ inline uint16_t tw_cpu_to_be_16(uint16_t value) {
     return rte_cpu_to_be_16(value);
 }
 
-uint8_t parseIntFromString(char* str) {
+uint8_t tw_parse_int_from_string(char* str) {
     
     char *p = str;
     uint8_t val=0; 

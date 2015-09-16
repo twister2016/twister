@@ -1,7 +1,7 @@
 #include <rx.h>
 #include <event_loop.h>
 
-int rx_for_each_queue(struct mbuf_table * m) {
+int tw_rx_for_each_queue(struct mbuf_table * m) {
     
 	unsigned lcore_id,nb_pkt_rx=0;
 	struct lcore_conf *qconf;
@@ -11,7 +11,7 @@ int rx_for_each_queue(struct mbuf_table * m) {
         int portiter =0;
         for (portiter =0;portiter< qconf->num_port;portiter++ ){
             
-            nb_pkt_rx += get_pkt_from_rx_queue(&m[portiter],qconf->managed_port[portiter],0);
+            nb_pkt_rx += tw_get_pkt_from_rx_queue(&m[portiter],qconf->managed_port[portiter],0);
 		    m[portiter].portid=qconf->managed_port[portiter];
 		    m[portiter].len=nb_pkt_rx;
 		    total_pkts_rx +=nb_pkt_rx;    
@@ -20,7 +20,7 @@ int rx_for_each_queue(struct mbuf_table * m) {
 	return total_pkts_rx;
 }
 
-int get_pkt_from_rx_queue(struct mbuf_table * m, uint8_t port,uint8_t queue_id) {
+int tw_get_pkt_from_rx_queue(struct mbuf_table * m, uint8_t port,uint8_t queue_id) {
               
 	//printf("get_pkt_from_rx_queue %d max pkt burst\n", MAX_RX_PKT_BURST);
 	unsigned nb_pkt_rx = 0;

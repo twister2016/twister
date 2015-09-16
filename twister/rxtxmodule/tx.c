@@ -4,7 +4,7 @@
 #define drain_tsc (rte_get_tsc_hz() + US_PER_S - 1) / US_PER_S * BURST_TX_DRAIN_US
 
 static int
-twister_send_burst(struct lcore_conf *qconf, unsigned n, uint8_t port) {
+tw_send_burst(struct lcore_conf *qconf, unsigned n, uint8_t port) {
     struct rte_mbuf **m_table;
     unsigned ret;
     unsigned queueid = 0;
@@ -22,7 +22,7 @@ twister_send_burst(struct lcore_conf *qconf, unsigned n, uint8_t port) {
     return 0;
 }
 
-int twister_timely_burst(void) {
+int tw_timely_burst(void) {
 
     unsigned portid, cur_tsc, diff_tsc, lcore_id;
     struct lcore_conf *qconf;
@@ -39,7 +39,7 @@ int twister_timely_burst(void) {
         for (portid = 0; portid < RTE_MAX_ETHPORTS; portid++) {
             if (qconf->tx_mbufs[portid].len == 0)
                 continue;
-            twister_send_burst(&lcore_conf[lcore_id],
+            tw_send_burst(&lcore_conf[lcore_id],
                     qconf->tx_mbufs[portid].len,
                     (uint8_t) portid);
             qconf->tx_mbufs[portid].len = 0;
@@ -49,7 +49,7 @@ int twister_timely_burst(void) {
     return 0;
 }
 
-int add_pkt_to_tx_queue(struct rte_mbuf * m, uint8_t port) {
+int tw_add_pkt_to_tx_queue(struct rte_mbuf * m, uint8_t port) {
     //printf("\n\nTX PKT\n");
     //rte_pktmbuf_dump(stdout, m, 100);
     unsigned lcore_id, len;
@@ -63,7 +63,7 @@ int add_pkt_to_tx_queue(struct rte_mbuf * m, uint8_t port) {
     len++;
     /* enough pkts to be sent */
     if (unlikely(len == MAX_TX_PKT_BURST)) {
-        twister_send_burst(qconf, MAX_TX_PKT_BURST, port);
+        tw_send_burst(qconf, MAX_TX_PKT_BURST, port);
         len = 0;
     }
 

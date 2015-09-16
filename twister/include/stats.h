@@ -60,13 +60,13 @@ struct stats_option global_stats_option[MAX_LCORES];
 
 extern uint64_t prev_pkts_rx, prev_pkts_tx;
 
-void clear_scr(void);
-int init_stats (uint8_t, uint32_t );
-void print_global_stats(void);
-void calc_average_rtt(uint64_t);
-int open_stats_socket(uint32_t, uint16_t);
-int send_stats_pkt(void);
-int calc_global_stats(void);
+void tw_clear_scr(void);
+int tw_init_stats (uint8_t, uint32_t );
+void tw_print_global_stats(void);
+void tw_calc_average_rtt(uint64_t);
+int tw_open_stats_socket(uint32_t, uint16_t);
+int tw_send_stats_pkt(void);
+int tw_calc_global_stats(void);
 
 float   average_rtt; 
 uint64_t data_pkt_recvd;

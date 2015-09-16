@@ -84,7 +84,4 @@ typedef struct gtpu {
 	uint16_t	buffer;
 } __attribute__ ((__packed__)) gtpu_t;
 
-
-extern int gtpuparsepacket(struct rte_mbuf *pkt);
-
 #endif

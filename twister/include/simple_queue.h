@@ -56,7 +56,7 @@ extern struct rte_mbuf_q udp_sock_queue[MAX_SOCK_FD];
 //extern uint16_t sq_pop(int q_id, struct sq_pkt_q* q_list, void** data, struct sock_conn_t * conn);
 //extern int sq_pop(int q_id, struct sq_pkt_q* q_list, void* data, uint16_t size,struct sock_conn_t *conn);
 
-int udp_queue_push(struct rte_mbuf *, uint16_t, struct tw_sockaddr_in);
-int udp_queue_pop(uint16_t, struct tw_sockaddr_in *, tw_buf_t *);
+int tw_udp_queue_push(struct rte_mbuf *, uint16_t, struct tw_sockaddr_in);
+int tw_udp_queue_pop(uint16_t, struct tw_sockaddr_in *, tw_buf_t *);
 
 #endif  /*simple-queue.h*/

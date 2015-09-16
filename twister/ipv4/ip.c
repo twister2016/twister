@@ -14,7 +14,7 @@
 
 #define LOCAL_HOST_IP 2130706433     //127.0.0.1
 
-int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id, uint8_t prev_hdr_size, uint8_t processing_flag, void * cb_func) {
+int tw_ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id, uint8_t prev_hdr_size, uint8_t processing_flag, void * cb_func) {
 	struct ipv4_hdr *ipHdr;
 	uint8_t * temp_ptr = rte_pktmbuf_mtod(pkt, uint8_t *) + (uint8_t) prev_hdr_size; //--???
 	ipHdr = (struct ipv4_hdr *) temp_ptr;
@@ -35,7 +35,7 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id, uint8_t prev_hdr_si
 				//rte_pktmbuf_adj(pkt, sizeof(struct ipv4_hdr));
 				prev_hdr_size += sizeof(struct ipv4_hdr);
 				if(processing_flag == LOOP_PROCESS) {
-					udp_packet_parser(pkt,src_ip,dst_ip, prev_hdr_size, processing_flag, NULL);
+					tw_udp_packet_parser(pkt,src_ip,dst_ip, prev_hdr_size, processing_flag, NULL);
 				}
 				else
 				{
@@ -61,7 +61,7 @@ int ip4_packet_parser(struct rte_mbuf *pkt, uint8_t port_id, uint8_t prev_hdr_si
 
 
 
-void ip4_packet_create(struct rte_mbuf *pkt,uint8_t next_proto_id,uint32_t src_ip,uint32_t dst_ip,uint16_t length) {
+void tw_ip4_packet_create(struct rte_mbuf *pkt,uint8_t next_proto_id,uint32_t src_ip,uint32_t dst_ip,uint16_t length) {
 
 	rte_pktmbuf_prepend(pkt, sizeof(struct ipv4_hdr));
 	struct ipv4_hdr *ip_hdr  = rte_pktmbuf_mtod(pkt, struct ipv4_hdr *);
@@ -73,12 +73,12 @@ void ip4_packet_create(struct rte_mbuf *pkt,uint8_t next_proto_id,uint32_t src_i
 	ip_hdr->time_to_live = 63;
 	ip_hdr->hdr_checksum = 0;
 	ip_hdr->hdr_checksum =rte_ipv4_cksum(ip_hdr);
-	int port_id = get_port_by_ip(src_ip);
+	int port_id = tw_get_port_by_ip(src_ip);
 	if(port_id < 0) {
 		rte_pktmbuf_free(pkt);
 		return;
 	}
-	eth_pkt_ctor(pkt, port_id, ETHER_TYPE_IPv4, dst_ip );
+	tw_eth_pkt_ctor(pkt, port_id, ETHER_TYPE_IPv4, dst_ip );
 }
 
 #endif

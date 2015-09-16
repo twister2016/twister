@@ -8,7 +8,7 @@ uint64_t queue_update_limit = 10; //update queued pkts every queue_update_limit 
 uint32_t total_queued_pkts = 0;
 struct queued_pkt * root_queued_pkt = NULL;
 
-int add_pkt_to_queue(struct rte_mbuf * pkt, uint32_t arp_ip_of_pkt, uint16_t port_id) {
+int tw_add_pkt_to_queue(struct rte_mbuf * pkt, uint32_t arp_ip_of_pkt, uint16_t port_id) {
 	if(total_queued_pkts >= MAX_QUEUED_PKTS) {
 		rte_pktmbuf_free(pkt);
 		return -1;
@@ -41,27 +41,27 @@ int add_pkt_to_queue(struct rte_mbuf * pkt, uint32_t arp_ip_of_pkt, uint16_t por
  * This function will update the queued packets. If timestamp has expired, the packet will be deleted.
  * If ARP reply for queued packet has arrived and added in ARP table, the packet will be sent.
  */
-int update_queued_pkts(uint64_t curr_timer_cycle) { 
+int tw_update_queued_pkts(uint64_t curr_timer_cycle) { 
 	uint64_t time_diff;
 	struct queued_pkt * curr_queued_pkt = root_queued_pkt;
 	struct queued_pkt * prev_queued_pkt = curr_queued_pkt;
 	while(curr_queued_pkt) {
-		time_diff = get_time_diff(curr_timer_cycle, curr_queued_pkt->timercycle, one_sec);
+		time_diff = tw_get_time_diff(curr_timer_cycle, curr_queued_pkt->timercycle, one_sec);
 		if(likely(time_diff < queued_pkt_time_limit)) {
-			struct arp_table * arp_entry = search_arp_table(curr_queued_pkt->arp_ip);
+			struct arp_table * arp_entry = tw_search_arp_table(curr_queued_pkt->arp_ip);
 			if(unlikely(arp_entry != NULL))
-				send_queued_pkt(&prev_queued_pkt, &curr_queued_pkt, arp_entry->eth_mac);
+				tw_send_queued_pkt(&prev_queued_pkt, &curr_queued_pkt, arp_entry->eth_mac);
 			else
 				curr_queued_pkt = curr_queued_pkt->next;
 			continue;
 		}
 		rte_pktmbuf_free(curr_queued_pkt->pkt);			//Else delete the queued packet as time limit has passed
-		delete_queued_pkt(&prev_queued_pkt, &curr_queued_pkt);
+		tw_delete_queued_pkt(&prev_queued_pkt, &curr_queued_pkt);
 	}
 	return 0;
 }
 
-int delete_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt ** curr_queued_pkt) {
+int tw_delete_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt ** curr_queued_pkt) {
 	struct queued_pkt * temp_queued_pkt = (*curr_queued_pkt)->next;
 	if(*curr_queued_pkt == root_queued_pkt) {
 		root_queued_pkt = (*curr_queued_pkt)->next;
@@ -76,18 +76,18 @@ int delete_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt **
 	return 0;
 }
 
-int send_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt ** curr_queued_pkt, struct ether_addr eth_mac) {
+int tw_send_queued_pkt(struct queued_pkt ** prev_queued_pkt, struct queued_pkt ** curr_queued_pkt, struct ether_addr eth_mac) {
 	struct rte_mbuf * pkt = (*curr_queued_pkt)->pkt; 
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
 	ether_addr_copy(&eth_mac, &(eth->d_addr));
 	uint8_t port_id = (*curr_queued_pkt)->port_id;	
-	delete_queued_pkt(prev_queued_pkt, curr_queued_pkt);
-	add_pkt_to_tx_queue(pkt, port_id);
+	tw_delete_queued_pkt(prev_queued_pkt, curr_queued_pkt);
+	tw_add_pkt_to_tx_queue(pkt, port_id);
 	total_queued_pkts--;
 	return 0;
 }
 
-void print_queued_pkts(void) {
+void tw_print_queued_pkts(void) {
 	printf("printing queued pkts\n");
 	struct queued_pkt * temp_queued_pkt = root_queued_pkt;
 	while(temp_queued_pkt) {

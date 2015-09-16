@@ -11,32 +11,29 @@ uint8_t total_eth_ports = 0;
 uint8_t available_eth_ports = 0;
 uint16_t app_port_mask = 0;
 
-int eth_name_to_id(char* portName){
+int tw_eth_name_to_id(char* portName){
 	int i;
 	int prt_id=-1;
 	for(i=0;i<MAX_ETH_PORTS;i++){
-	    //printf("portinfo[%d].port_name=%s\n", i,port_info[i].port_name );
 	    if ( port_info[i].port_name!=NULL ) {
 	        if(strcmp(port_info[i].port_name, portName) == 0)
 	        {
 	        prt_id=i;
-	        //printf ("strcmp is zero now =%d with port_info(%s) with argument=%s\n",prt_id, port_info[i].port_name, portName);
 	        }
 			    
 	    }
 	    else{
-	    //printf("NULL VALUE FROM JSON.eth_name_to_id....................\n");
+	    //printf("NULL VALUE FROM JSON.eth_name_to_id\n");
 	    //printf("%s\n", portName);
 	    //printf("%d\n", i);
 	    
 	    }
 		
 	}
-	//printf ("ending successfully eth_name_to_id with porti=%d\n",prt_id);
 	return prt_id;
 }
 
-int get_port_by_ip(uint32_t ip_addr)
+int tw_get_port_by_ip(uint32_t ip_addr)
 {
 	if(ip_addr == 0) {
 		//printf("IP addr is 0\n");
@@ -55,7 +52,7 @@ int get_port_by_ip(uint32_t ip_addr)
 	
 }
 
-int eth_port_init(void) {
+int tw_eth_port_init(void) {
 	uint8_t port_id, counter;
 	int ret, socket_id;
 	total_eth_ports = rte_eth_dev_count();
@@ -66,28 +63,12 @@ int eth_port_init(void) {
 		total_eth_ports = MAX_ETH_PORTS;
 	available_eth_ports = total_eth_ports;
 
-	//*****************PATCH*************************
-	
-	//uint8_t port_info_counter=0;
-	//char eth_string[10];
-	
-	
 	for (port_id = 0; port_id < total_eth_ports; port_id++) {
 		/* skip ports that are not enabled */
 		if ((app_port_mask & (1 << port_id)) == 0) {
 			available_eth_ports--;
 			continue;
 		}
-		//sprintf(eth_string, "tw%d", port_info_counter);
-		//port_info[port_id].port_id_external = port_info_counter;
-		//port_info[port_id].port_name= eth_string;
-		//port_info_counter++;
-		//TODO Setting RX TX QUEUES #1
-		//port_info[port_id].num_rx_queues =1;
-		//port_info[port_id].num_tx_queues = 1;
-		
-		//*****************PATCH*************************
-		
 		
 		printf("port_id %d, num_rx_queues %d, num_tx_queues %d\n", port_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues);
 		ret = rte_eth_dev_configure(port_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues, &port_conf);
@@ -132,7 +113,7 @@ int eth_port_init(void) {
 	return 0;
 }
 
-void check_all_ports_link(void) {
+void tw_check_all_ports_link(void) {
 	uint32_t all_ports_up, port_id;
 
 	all_ports_up = 1;

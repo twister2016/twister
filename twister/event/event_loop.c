@@ -123,7 +123,7 @@ struct tw_sockaddr_in * tw_ip4_addr(char * ip_str, uint16_t l4_port) {
     struct tw_sockaddr_in * addr = rte_malloc("struct tw_sockaddr_in *", sizeof (struct tw_sockaddr_in), RTE_CACHE_LINE_SIZE);
     uint32_t ip_addr = 0;
     if (ip_str != NULL)
-        ip_addr = convert_ip_str_to_dec(ip_str);
+        ip_addr = tw_convert_ip_str_to_dec(ip_str);
     addr->sock_ip = ip_addr;
     addr->sock_port = l4_port;
     return addr;
@@ -162,18 +162,18 @@ int tw_run(tw_loop_t * event_loop) {
         }
         */
 
-        time_diff = get_time_diff(curr_time_cycle, prev_stats_calc, one_msec);
+        time_diff = tw_get_time_diff(curr_time_cycle, prev_stats_calc, one_msec);
         if (unlikely(time_diff > stats_calc_limit)) {
-            calc_global_stats();
-            print_global_stats();
+            tw_calc_global_stats();
+            tw_print_global_stats();
             prev_stats_calc = curr_time_cycle;
         }
 
-        twister_timely_burst();
+        tw_timely_burst();
 
         temp_rx_handle = event_loop->rx_handle_queue;
         if (temp_rx_handle != NULL)
-            num_rx_pkts = rx_for_each_queue(m);
+            num_rx_pkts = tw_rx_for_each_queue(m);
         if (num_rx_pkts > 0) {
             for (i = 0; i < qconf->num_port; i++) {
                 for (pkt_count = 0; pkt_count < m[i].len; pkt_count++) {
@@ -211,7 +211,7 @@ int tw_run(tw_loop_t * event_loop) {
         }
 
         if (!infinite_loop) {
-            if (get_time_diff(curr_time_cycle, loop_start_time, one_sec) >= event_loop->secs_to_run)
+            if (tw_get_time_diff(curr_time_cycle, loop_start_time, one_sec) >= event_loop->secs_to_run)
                 continue_loop = 0;
         }
 

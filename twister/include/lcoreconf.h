@@ -31,9 +31,9 @@ struct lcore_conf {
 
 struct lcore_conf lcore_conf[MAX_LCORES];
 
-int lcore_conf_init(void);
-int engine_name_to_lcore_id(char*);
-int lcore_pipeline_init(void);
+int tw_lcore_conf_init(void);
+int tw_engine_name_to_lcore_id(char*);
+int tw_lcore_pipeline_init(void);
 int tw_map_port_to_engine(char*, char*);
 
 

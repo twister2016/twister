@@ -5,7 +5,7 @@
 #include <initfuncs.h>
 
 /* Read a file, parse, render back, etc. */
-char * registerfile (const char *filename) {
+char * tw_registerfile (const char *filename) {
 	FILE *f;long len;char *data;
 	
 	f=fopen(filename,"rb");
@@ -21,19 +21,19 @@ char * registerfile (const char *filename) {
 	return data;
 }
 
-cJSON * parse_json_file(const char * file_name) {
-	char * rawjson = registerfile(file_name); 
+cJSON * tw_parse_json_file(const char * file_name) {
+	char * rawjson = tw_registerfile(file_name); 
 	cJSON * json_config_file;
 
 	json_config_file=cJSON_Parse(rawjson);
 	return json_config_file;
 }
 
-int get_port_conf_json_vals(const char * file_name) {
+int tw_get_port_conf_json_vals(const char * file_name) {
 
 
 	uint8_t i, j;
-	cJSON * json_file = parse_json_file(file_name);
+	cJSON * json_file = tw_parse_json_file(file_name);
 	if (!json_file) {
 		printf("Error before: [%s]\n",cJSON_GetErrorPtr());
 		return -1;
@@ -74,10 +74,10 @@ int get_port_conf_json_vals(const char * file_name) {
 		        port_info[port_id].num_tx_queues = 1;
     		    for (j = 0 ; j < cJSON_GetArraySize(ip_addrs) ; j++) {			//For each start_ip_addr and range
                 	cJSON * subdictip = cJSON_GetArrayItem(ip_addrs, j);
-    		    	port_info[port_id].start_ip_addr = convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "start_ip_addr")->valuestring);
-        	    	port_info[port_id].num_ip_addrs = parseIntFromString( cJSON_GetObjectItem(subdictip, "num_ip_addrs")->valuestring );
-    		    	port_info[port_id].gateway_ip = convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "gateway_ip")->valuestring);
-    		        port_info[port_id].subnet_mask = convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "subnet_mask")->valuestring);	
+    		    	port_info[port_id].start_ip_addr = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "start_ip_addr")->valuestring);
+        	    	port_info[port_id].num_ip_addrs = tw_parse_int_from_string( cJSON_GetObjectItem(subdictip, "num_ip_addrs")->valuestring );
+    		    	port_info[port_id].gateway_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "gateway_ip")->valuestring);
+    		        port_info[port_id].subnet_mask = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "subnet_mask")->valuestring);	
     		    }
     		}
     		else{printf("NULL VALUE FROM JSON....get_port_conf_json_vals.................\n");}
@@ -87,9 +87,5 @@ int get_port_conf_json_vals(const char * file_name) {
     }
 	return 0;
 }
-
-
-
-
 
 #endif

@@ -7,14 +7,14 @@
 //struct sq_pkt_q udp_socket_q[SQ_NUM_QUEUES];
 struct rte_mbuf_q udp_sock_queue[MAX_SOCK_FD];
 
-int udp_queue_push(struct rte_mbuf * pkt, uint16_t sock_fd, struct tw_sockaddr_in addr) {
+int tw_udp_queue_push(struct rte_mbuf * pkt, uint16_t sock_fd, struct tw_sockaddr_in addr) {
 	udp_sock_queue[sock_fd].pkt_queue[udp_sock_queue[sock_fd].n_pkts].pkt = pkt;
 	udp_sock_queue[sock_fd].pkt_queue[udp_sock_queue[sock_fd].n_pkts].dst_addr = addr; 
 	udp_sock_queue[sock_fd].n_pkts++;
 	return 0;
 }
 
-int udp_queue_pop(uint16_t sock_fd, struct tw_sockaddr_in * addr, tw_buf_t * temp_buffer) {
+int tw_udp_queue_pop(uint16_t sock_fd, struct tw_sockaddr_in * addr, tw_buf_t * temp_buffer) {
 	udp_sock_queue[sock_fd].n_pkts--;
 	temp_buffer->pkt = udp_sock_queue[sock_fd].pkt_queue[udp_sock_queue[sock_fd].n_pkts].pkt;
 	temp_buffer->data = rte_pktmbuf_mtod(temp_buffer->pkt, void *);

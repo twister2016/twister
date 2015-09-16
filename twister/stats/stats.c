@@ -12,7 +12,7 @@ uint64_t prev_pkts_rx = 0, prev_pkts_tx = 0;
 uint64_t global_pps_limit[MAX_LCORES];
 uint64_t global_pps_delay[MAX_LCORES];
 
-void clear_scr(void)
+void tw_clear_scr(void)
 {
         const char clr[] = { 27, '[', '2', 'J', '\0' };
         const char topLeft[] = { 27, '[', '1', ';', '1', 'H','\0' };
@@ -21,14 +21,14 @@ void clear_scr(void)
         printf("%s%s", clr, topLeft);
 }
 
-int open_stats_socket(uint32_t server_ip, uint16_t server_port) {
+int tw_open_stats_socket(uint32_t server_ip, uint16_t server_port) {
 	stats_server_ip = server_ip;
 	l4_stats_port = server_port;
-	stats_fd = udp_socket(port_info[stats_port].start_ip_addr, l4_stats_port);
+	stats_fd = tw_udp_socket(port_info[stats_port].start_ip_addr, l4_stats_port);
 	return stats_fd;
 }
 
-int send_stats_pkt(void) {
+int tw_send_stats_pkt(void) {
 	int proc_engine_id = rte_lcore_id();
 	if(stats_server_ip) {  //if stats_server_ip is not zero
 		global_stats_option[proc_engine_id].timestamp = tw_get_current_timer_cycles();
@@ -42,7 +42,7 @@ int send_stats_pkt(void) {
 	return 0;
 }
 
-int calc_global_stats(void) {
+int tw_calc_global_stats(void) {
 	int proc_engine_id = rte_lcore_id();
 	global_stats_option[proc_engine_id].secs_passed++;
 	global_stats_option[proc_engine_id].rtt = average_rtt;
@@ -65,14 +65,14 @@ int calc_global_stats(void) {
 	return 0;
 }
 
-void print_global_stats(void) {
+void tw_print_global_stats(void) {
 	int proc_engine_id = rte_lcore_id();
-	clear_scr();
+	tw_clear_scr();
 	printf("****Global Stats****\n");
 	printf("Secs Passed %lu\nRX PPS %lu\nTX PPS %lu\nPkts RX %lu\nPkts TX %lu\nRTT %lu\n", global_stats_option[proc_engine_id].secs_passed, global_stats_option[proc_engine_id].rx_pps, global_stats_option[proc_engine_id].tx_pps, global_stats_option[proc_engine_id].pkts_rx, global_stats_option[proc_engine_id].pkts_tx, global_stats_option[proc_engine_id].rtt);
 }
 
-void calc_average_rtt(uint64_t time_clk)  //TODO multi core verification
+void tw_calc_average_rtt(uint64_t time_clk)  //TODO multi core verification
 {			
 	struct average_filter *average_entry = (struct average_filter *) rte_malloc("struct average_filter *", sizeof(struct average_filter), 64);
 	float curr_pkt_rtt = (float)time_clk/(float)average_filter_len;

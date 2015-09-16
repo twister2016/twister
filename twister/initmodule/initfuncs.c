@@ -28,7 +28,7 @@ struct app_params app = {
 	.burst_size_tx_write = 32,
 };
 
-int init_eal_env(int argc, char **argv) {
+int tw_init_eal_env(int argc, char **argv) {
 
     if ( argc == 1 ) {
     const char *temp0, *temp1, *temp2, *temp3, *temp4, *temp5, *temp6, *temp7, *temp8;
@@ -68,13 +68,13 @@ int init_eal_env(int argc, char **argv) {
 		rte_exit(EXIT_FAILURE, "Invalid EAL arguments\n");
 	argc -= ret;
 	argv += ret;
-	ret = parse_twister_args(argc, argv);	//--! TODO implement parse_twister_args()     
+	ret = tw_parse_twister_args(argc, argv);     
 	if (ret < 0)
 		rte_exit(EXIT_FAILURE, "Invalid commandline arguments\n");
 	return 0;
 }
 
-int parse_twister_args(int argc, char **argv) {
+int tw_parse_twister_args(int argc, char **argv) {
 	int opt, ret;
 	char **argvopt;
 	int option_index;
@@ -91,21 +91,21 @@ int parse_twister_args(int argc, char **argv) {
 		switch (opt) {
 		/* portmask */
 		case 'p':
-			app_port_mask = parse_portmask(optarg);
+			app_port_mask = tw_parse_portmask(optarg);
 			if (app_port_mask == 0) {
 				printf("invalid portmask\n");
-				display_usage(prgname);
+				tw_display_usage(prgname);
 				return -1;
 			}
 			break;
 
 		/* long options */
 		case 0:
-			display_usage(prgname);
+			tw_display_usage(prgname);
 			return -1;
 
 		default:
-			display_usage(prgname);
+			tw_display_usage(prgname);
 			return -1;
 		}
 	}
@@ -120,35 +120,30 @@ int parse_twister_args(int argc, char **argv) {
 
 
 int tw_init_global(int argc, char **argv) {
-	printf("tw_init_global1\n");
-	init_eal_env(argc, argv);
-	init_user_given_vals();
-	printf("tw_init_global1\n");
-	create_rx_tx_mempools();
-	printf("tw_init_global1\n");
-//	create_queued_pkts_mempools();
-	lcore_conf_init();
-	eth_port_init();	
-	init_timer_vals();
-	init_periodic_timers();
+	tw_init_eal_env(argc, argv);
+	tw_init_user_given_vals();
+	tw_create_rx_tx_mempools();
+//	tw_create_queued_pkts_mempools();
+	tw_lcore_conf_init();
+	tw_eth_port_init();	
+	tw_init_timer_vals();
+	tw_init_periodic_timers();
 	
 	return 0;
 }
-int init_user_given_vals(void) {
-	get_port_conf_json_vals("port_conf");
-	printf("init_user_given_vals1\n");
+int tw_init_user_given_vals(void) {
+	tw_get_port_conf_json_vals("port_conf");
 //	get_lcore_queue_conf_json_vals("lcore_queue_conf");
-	printf("init_user_given_vals1\n");
 	queued_pkt_time_limit = 10;			//--!TODO use file values parsed by jSON
 	return 0;				//--!JSON...port ips...num of rx/tx queues...flags...vlan tag
 }
 
-int display_usage(const char * prgname) {
+int tw_display_usage(const char * prgname) {
 	printf("%s bad argument\n", prgname);
 	return 0;
 }
 
-int parse_portmask(const char *portmask)
+int tw_parse_portmask(const char *portmask)
 {
 	char *end = NULL;
 	unsigned long pm;

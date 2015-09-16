@@ -70,9 +70,9 @@ static const struct rte_eth_conf port_conf = {
 };
 
 
-int eth_port_init(void);
-int get_port_by_ip(uint32_t);
-int eth_name_to_id(char*);
-void check_all_ports_link(void);
+int tw_eth_port_init(void);
+int tw_get_port_by_ip(uint32_t);
+int tw_eth_name_to_id(char*);
+void tw_check_all_ports_link(void);
 
 #endif

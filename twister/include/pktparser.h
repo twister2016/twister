@@ -3,6 +3,6 @@
 
 #include <eth.h>
 
-int parse_pkt(struct rte_mbuf *, uint8_t);
+int tw_parse_pkt(struct rte_mbuf *, uint8_t);
  
 #endif

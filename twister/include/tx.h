@@ -11,8 +11,8 @@
 #include <stats.h>
 
 
-int add_pkt_to_tx_queue (struct rte_mbuf *, uint8_t);
-int twister_timely_burst(void);
+int tw_add_pkt_to_tx_queue (struct rte_mbuf *, uint8_t);
+int tw_timely_burst(void);
 
 
 #endif

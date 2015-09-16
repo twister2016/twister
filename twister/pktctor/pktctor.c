@@ -11,14 +11,14 @@
 #include <queued_pkts.h>
 
 
-int pkt_ctor(struct rte_mbuf* m, void* ptr_l4, uint32_t eth_proto) {
-    	struct sock_conn_t *udp_conn = ( struct sock_conn_t * ) ptr_l4 ;
+int tw_pkt_ctor(struct rte_mbuf* m, void* ptr_l4, uint32_t eth_proto) {
+    	struct sock_conn_t * udp_conn = ( struct sock_conn_t * ) ptr_l4 ;
     	if (m == NULL) {
         	return -1;
     	}
     
     	if (eth_proto == UDP_PROTO_ID ) {
-        	udp_packet_create(m, udp_conn);
+        	tw_udp_packet_create(m, udp_conn);
     	}
 	return 0;
 }

@@ -25,27 +25,27 @@ struct ether_addr querycastmac = {
     .addr_bytes[0] = 0x00,
 };
 
-int arp_parser(struct rte_mbuf * pkt, uint8_t port_id) {
+int tw_parse_arp(struct rte_mbuf * pkt, uint8_t port_id) {
     struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
     struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth + 1);
     //remove the eth header, and see if its a request or reply and act accordingly
     if (rte_be_to_cpu_16(arp_pkt->arp_op) == ARP_OP_REQUEST) {
         if (rte_be_to_cpu_32(arp_pkt->arp_data.arp_tip) == port_info[port_id].start_ip_addr) { //&& (port_info[port_id].flags & REPLY_ARP)) {
-            if (search_arp_table(arp_pkt->arp_data.arp_sip) == NULL) { //Save ARP entry for local use also
-                add_arp_entry(arp_pkt->arp_data.arp_sip, arp_pkt->arp_data.arp_sha, port_id);
+            if (tw_search_arp_table(arp_pkt->arp_data.arp_sip) == NULL) { //Save ARP entry for local use also
+                tw_add_arp_entry(arp_pkt->arp_data.arp_sip, arp_pkt->arp_data.arp_sha, port_id);
             }
-            send_arp_reply(pkt, port_id);
+            tw_send_arp_reply(pkt, port_id);
             return 0;
         }
     } else if (rte_be_to_cpu_16(arp_pkt->arp_op) == ARP_OP_REPLY) {
-        process_arp_reply(eth, port_id);
+        tw_process_arp_reply(eth, port_id);
         return 0;
     }
     rte_pktmbuf_free(pkt);
     return 0;
 }
 
-int send_arp_reply(struct rte_mbuf * pkt, uint8_t port_id) {
+int tw_send_arp_reply(struct rte_mbuf * pkt, uint8_t port_id) {
     struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
     struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth + 1);
     arp_pkt->arp_op = rte_cpu_to_be_16(ARP_OP_REPLY);
@@ -55,16 +55,16 @@ int send_arp_reply(struct rte_mbuf * pkt, uint8_t port_id) {
     arp_pkt->arp_data.arp_sip = rte_cpu_to_be_32(port_info[port_id].start_ip_addr);
     ether_addr_copy(&(eth->s_addr), &(eth->d_addr));
     ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
-    add_pkt_to_tx_queue(pkt, port_id);
+    tw_add_pkt_to_tx_queue(pkt, port_id);
 
     return 0;
 }
 
-int process_arp_reply(struct ether_hdr * eth, uint8_t port_id) {
+int tw_process_arp_reply(struct ether_hdr * eth, uint8_t port_id) {
     struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth + 1);
-    if (search_arp_table(arp_pkt->arp_data.arp_sip) == NULL) {
+    if (tw_search_arp_table(arp_pkt->arp_data.arp_sip) == NULL) {
         //if ARP entry doesn't exist. One MAC can have multiple IPs associated
-        if (add_arp_entry(arp_pkt->arp_data.arp_sip, arp_pkt->arp_data.arp_sha, port_id)) {
+        if (tw_add_arp_entry(arp_pkt->arp_data.arp_sip, arp_pkt->arp_data.arp_sha, port_id)) {
             rte_pktmbuf_free((struct rte_mbuf *) eth);
             return -1;
         }
@@ -73,7 +73,7 @@ int process_arp_reply(struct ether_hdr * eth, uint8_t port_id) {
     return 0;
 }
 
-struct arp_table * search_arp_table(uint32_t ip_to_search) {
+struct arp_table * tw_search_arp_table(uint32_t ip_to_search) {
     ip_to_search = rte_be_to_cpu_32(ip_to_search);
     struct arp_table * arp_table_ptr = arp_table_root;
     while (arp_table_ptr != NULL) {
@@ -85,7 +85,7 @@ struct arp_table * search_arp_table(uint32_t ip_to_search) {
     return NULL;
 }
 
-int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port_id) {
+int tw_add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port_id) {
     struct arp_table * arp_table_ptr = arp_table_root;
     if (arp_table_ptr == NULL) {
         arp_table_ptr = rte_malloc("struct arp_table", sizeof (struct arp_table), RTE_CACHE_LINE_SIZE);
@@ -108,22 +108,22 @@ int add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t port
 }
 
 int tw_send_arp_request(char * ip_string, char * port_name) {
-    uint32_t ip_addr = convert_ip_str_to_dec(ip_string);
-    int port_id = eth_name_to_id(port_name);
-    construct_arp_packet(ip_addr, port_id);
+    uint32_t ip_addr = tw_convert_ip_str_to_dec(ip_string);
+    int port_id = tw_eth_name_to_id(port_name);
+    tw_construct_arp_packet(ip_addr, port_id);
     return 0;
 }
 
-struct ether_addr * tw_search_arp_table(char * ip_string) {
-    uint32_t ip_addr = convert_ip_str_to_dec(ip_string);
-    struct arp_table * arp_entry = search_arp_table(rte_cpu_to_be_32(ip_addr));
+struct ether_addr * tw_search_arp_entry(char * ip_string) {
+    uint32_t ip_addr = tw_convert_ip_str_to_dec(ip_string);
+    struct arp_table * arp_entry = tw_search_arp_table(rte_cpu_to_be_32(ip_addr));
     if(arp_entry == NULL) {
         return NULL;
     }
     return &(arp_entry->eth_mac);
 }
 
-int construct_arp_packet(uint32_t ip, uint8_t port_id) {
+int tw_construct_arp_packet(uint32_t ip, uint8_t port_id) {
 
     int socket_id = rte_eth_dev_socket_id(port_id);
     if (socket_id == -1)
@@ -146,11 +146,11 @@ int construct_arp_packet(uint32_t ip, uint8_t port_id) {
     eth->ether_type = rte_cpu_to_be_16(ETHER_TYPE_ARP);
     ether_addr_copy(port_info[port_id].eth_mac, &(eth->s_addr));
     ether_addr_copy(&(broadcastmac), &(eth->d_addr));
-    add_pkt_to_tx_queue(m, port_id);
+    tw_add_pkt_to_tx_queue(m, port_id);
     return 0;
 }
 
-void print_arp_table(void) {
+void tw_print_arp_table(void) {
     printf("\n\nARP table\n");
     struct arp_table * temp_arp_entry = arp_table_root;
     while (temp_arp_entry != NULL) {
@@ -169,7 +169,7 @@ void print_arp_table(void) {
 }
 
 int tw_arp_parser(tw_buf_t * buffer, char * port_name) {
-    return arp_parser(buffer->pkt, eth_name_to_id(port_name));
+    return tw_parse_arp(buffer->pkt, tw_eth_name_to_id(port_name));
 }
 
 

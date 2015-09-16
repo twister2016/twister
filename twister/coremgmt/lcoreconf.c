@@ -4,7 +4,7 @@
 
 void assign_ports_to_cores(void);
 
-int engine_name_to_lcore_id(char* engineName) {
+int tw_engine_name_to_lcore_id(char* engineName) {
     int i;
     int engn_id = -1;
     for (i = 0; i < MAX_LCORES; i++) {
@@ -20,7 +20,7 @@ int engine_name_to_lcore_id(char* engineName) {
 }
 
 
-int lcore_conf_init(void) {
+int tw_lcore_conf_init(void) {
     uint8_t lcore_id = 0;
     uint8_t lcore_info_counter = 0;
     char engine_string[10];
@@ -50,15 +50,15 @@ int lcore_conf_init(void) {
 
 int tw_map_port_to_engine(char portName[10], char coreName[10]) {
     
-    int port_id_resolved = eth_name_to_id(portName);
-    int engine_id_resolved = engine_name_to_lcore_id(coreName);
+    int port_id_resolved = tw_eth_name_to_id(portName);
+    int engine_id_resolved = tw_engine_name_to_lcore_id(coreName);
 //    printf("engine_id_resolved = %d  , port_id_resolved=%d\n", port_id_resolved,engine_id_resolved);
     if (port_id_resolved != -1 && engine_id_resolved != -1) { 
         lcore_conf[engine_id_resolved].managed_port[lcore_conf[engine_id_resolved].num_port] = port_id_resolved;
         lcore_conf[engine_id_resolved].num_port++;
 
     } else {
-        printf("there is problem in tw_map_port_to_engine000000000000000\n");
+        printf("there is problem in tw_map_port_to_engine\n");
         printf("port_id_resolved = %d portName=%s\n", port_id_resolved, portName);
         printf("engine_id_resolved = %d  engineName=%s\n", engine_id_resolved, coreName);
     }

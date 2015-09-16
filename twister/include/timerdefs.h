@@ -11,10 +11,9 @@
 extern uint64_t one_sec, one_msec , one_usec , one_nsec ;
 extern uint64_t prev_tsc, cur_tsc , timer_tsc , diff_tsc ;
 
-inline void sleep_msec(unsigned msec);
-inline void sleep_usec(unsigned sec);
-inline void sleep_nsec(unsigned nsec);
-
-void init_timer_vals(void);
+inline void tw_sleep_msec(unsigned msec);
+inline void tw_sleep_usec(unsigned sec);
+inline void tw_sleep_nsec(unsigned nsec);
+void tw_init_timer_vals(void);
 
 #endif

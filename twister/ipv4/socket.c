@@ -11,7 +11,7 @@
 
 int maxfd=0;
 struct socket_info udp_sockets[MAX_SOCK_FD];
-int udp_socket(uint32_t ip_addr,uint32_t port)
+int tw_udp_socket(uint32_t ip_addr,uint32_t port)
 {	
 	int i=0;
 	struct socket_info * sockptr = NULL;
@@ -48,7 +48,7 @@ int tw_udp_send(int sockfd, tw_buf_t * buffer, uint16_t buf_len, uint16_t total_
 	if(total_payload_len > buf_len)
 		rte_pktmbuf_append(buffer->pkt, total_payload_len - buf_len); //TODO Apply max limit on buf_len 
 
-	udp_packet_create(buffer->pkt,&dummy);
+	tw_udp_packet_create(buffer->pkt,&dummy);
 	//rte_free((void *) buffer);
 	return 0;
 }
@@ -80,15 +80,15 @@ int udp_send(int sockfd, void * buffer, uint16_t buf_len, uint16_t total_payload
 	return 0;
 }
 */
-void add_packet_to_udp_queue(int sock_fd, struct rte_mbuf *pkt, uint32_t dst_ip, uint16_t dst_port){
+void tw_add_packet_to_udp_queue(int sock_fd, struct rte_mbuf *pkt, uint32_t dst_ip, uint16_t dst_port){
 	struct tw_sockaddr_in dummy;
 	dummy.sock_ip = dst_ip;
 	dummy.sock_port = dst_port;
-	udp_queue_push(pkt, sock_fd, dummy);
+	tw_udp_queue_push(pkt, sock_fd, dummy);
 }
 
-int udp_recv(int sock_fd, struct tw_sockaddr_in * addr, tw_buf_t * buffer)
+int tw_udp_recv(int sock_fd, struct tw_sockaddr_in * addr, tw_buf_t * buffer)
 {
-	return (udp_queue_pop(sock_fd, addr, buffer));
+	return (tw_udp_queue_pop(sock_fd, addr, buffer));
 }
 
