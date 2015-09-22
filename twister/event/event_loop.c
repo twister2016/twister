@@ -119,16 +119,6 @@ int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t time
     return 0;
 }
 
-struct tw_sockaddr_in * tw_ip4_addr(char * ip_str, uint16_t l4_port) {
-    struct tw_sockaddr_in * addr = rte_malloc("struct tw_sockaddr_in *", sizeof (struct tw_sockaddr_in), RTE_CACHE_LINE_SIZE);
-    uint32_t ip_addr = 0;
-    if (ip_str != NULL)
-        ip_addr = tw_convert_ip_str_to_dec(ip_str);
-    addr->sock_ip = ip_addr;
-    addr->sock_port = l4_port;
-    return addr;
-}
-
 int tw_run(tw_loop_t * event_loop) {
 
     uint8_t infinite_loop = 0, continue_loop = 1;
