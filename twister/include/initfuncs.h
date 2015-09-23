@@ -4,6 +4,8 @@
 #include <getopt.h>
 #include <rte_config.h>
 #include <rte_eal.h>
+#include <rte_ip.h>
+#include <rte_udp.h>
 #include <lcoreconf.h>
 #include <mempoolconf.h>
 #include <periodic_timers.h>

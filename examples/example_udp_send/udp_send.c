@@ -2,8 +2,6 @@
 #include <stdint.h>
 #include <rx.h>
 #include <initfuncs.h>
-#include <ip.h>
-#include <udp.h>
 #include <event_loop.h>
 #include <timestamp.h>
 #include <processing_engines.h>
@@ -12,6 +10,8 @@ struct user_app_parameters {
     int arg_count;
     char ** arg_vals;
 };
+
+#define UDP_PROTO_ID	17
 
 struct user_params {
     uint32_t server_ip;
