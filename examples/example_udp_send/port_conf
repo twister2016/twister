@@ -1,7 +1,7 @@
 [
     {
 	"port_name" : "tw0",
-	"ip_addrs" :  [ { "start_ip_addr":"34.34.34.222", "num_ip_addrs":"01","gateway_ip": "34.34.34.1","subnet_mask" :  "255.255.255.0"}
+	"ip_addrs" :  [ { "start_ip_addr":"34.34.34.111", "num_ip_addrs":"01","gateway_ip": "34.34.34.1","subnet_mask" :  "255.255.255.0"}
                  ]
     }
 ]

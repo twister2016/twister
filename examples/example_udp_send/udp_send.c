@@ -64,7 +64,6 @@ int parse_user_params(char * file_name) {
 }
 
 void pkt_tx(tw_tx_t * handle) {
-
     int phy_port_id = tw_eth_name_to_id("tw0");
     if(phy_port_id < 0) 
         return;
@@ -155,6 +154,7 @@ int main(int argc, char **argv) {
     tw_init_global(argc, argv);
     user_args.arg_count = argc;
     user_args.arg_vals = argv;
+    parse_user_params("udp_traffic_data");
     tw_map_port_to_engine("tw0", "engine0");
     tw_launch_engine(user_app_main, (void *) &user_args, USE_ALL_ENGINES);
 
