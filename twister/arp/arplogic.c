@@ -1,6 +1,3 @@
-#ifndef _ARPLOGIC_C_
-#define _ARPLOGIC_C_
-
 #include <arplogic.h>
 #include <initfuncs.h>
 #include <runtime.h>
@@ -172,6 +169,4 @@ int tw_arp_parser(tw_buf_t * buffer, char * port_name) {
     return tw_parse_arp(buffer->pkt, tw_eth_name_to_id(port_name));
 }
 
-
-#endif
 

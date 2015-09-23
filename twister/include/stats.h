@@ -12,9 +12,7 @@
 #include <rte_ethdev.h>
 #include <portconf.h>
 #include <rte_cycles.h>
-#include <pktctor.h>
 #include <timerfuncs.h>
-#include <usocket.h>
 #include <common.h>
 
 #define stats_port 0 		//Use port stats_port to send stats packets
@@ -62,8 +60,6 @@ void tw_clear_scr(void);
 int tw_init_stats (uint8_t, uint32_t );
 void tw_print_global_stats(void);
 void tw_calc_average_rtt(uint64_t);
-int tw_open_stats_socket(uint32_t, uint16_t);
-int tw_send_stats_pkt(void);
 int tw_calc_global_stats(void);
 
 float   average_rtt; 

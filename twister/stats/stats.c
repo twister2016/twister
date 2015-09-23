@@ -21,27 +21,6 @@ void tw_clear_scr(void)
         printf("%s%s", clr, topLeft);
 }
 
-int tw_open_stats_socket(uint32_t server_ip, uint16_t server_port) {
-	stats_server_ip = server_ip;
-	l4_stats_port = server_port;
-	stats_fd = tw_udp_socket(port_info[stats_port].start_ip_addr, l4_stats_port);
-	return stats_fd;
-}
-
-int tw_send_stats_pkt(void) {
-	int proc_engine_id = rte_lcore_id();
-	if(stats_server_ip) {  //if stats_server_ip is not zero
-		global_stats_option[proc_engine_id].timestamp = tw_get_current_timer_cycles();
-		tw_buf_t * stats_to_send = tw_new_buffer(sizeof(struct stats_option));
-		struct tw_sockaddr_in stats_addr; 
-		stats_addr.sock_ip = stats_server_ip;
-		stats_addr.sock_port = l4_stats_port;
-		rte_memcpy(stats_to_send->data, (void *) &global_stats_option[proc_engine_id], sizeof(struct stats_option));
-		tw_udp_send(stats_fd, stats_to_send, sizeof(struct stats_option), sizeof(struct stats_option), &stats_addr);
-	}
-	return 0;
-}
-
 int tw_calc_global_stats(void) {
 	int proc_engine_id = rte_lcore_id();
 	global_stats_option[proc_engine_id].secs_passed++;

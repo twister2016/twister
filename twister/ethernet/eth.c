@@ -7,7 +7,6 @@
 #include <eth.h>
 #include <rte_ether.h>
 #include <arplogic.h>
-#include <ip.h>
 #include <queued_pkts.h>
 #include <vlan.h>
 #include <event_loop.h>
@@ -59,7 +58,7 @@ int tw_eth_pkt_ctor(struct rte_mbuf* m, uint8_t port_id, uint16_t eth_type, uint
     	return 0;
 }
 
-int tw_eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id, uint8_t processing_flag, void * cb_func) {
+int tw_eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 	//rte_pktmbuf_dump(stdout, pkt, 100);
 	struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
 	uint8_t accept_brdcast = is_broadcast_ether_addr(&(eth->d_addr)) & ACCEPT_BRDCAST;
@@ -69,17 +68,7 @@ int tw_eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id, uint8_t processing
 			tw_parse_arp(pkt, port_id);
 			break;
 		case ETHER_TYPE_VLAN:
-			tw_vlan_parser(pkt, port_id, processing_flag, cb_func);
-			break;
-		case ETHER_TYPE_IPv4:
-			//rte_pktmbuf_adj(pkt, sizeof(struct ether_hdr));
-			if(processing_flag == LOOP_PROCESS) {
-				tw_ip4_packet_parser(pkt, port_id, sizeof(struct ether_hdr), processing_flag, NULL);	//--!TODO implement ipv6
-			}
-			else{
-				void (* eth_cb_func) (struct rte_mbuf *, uint8_t) = cb_func;
-				eth_cb_func(pkt, port_id);
-			}
+			tw_vlan_parser(pkt, port_id);
 			break;
 		default:
 			rte_pktmbuf_free(pkt);

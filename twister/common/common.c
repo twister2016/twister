@@ -1,5 +1,3 @@
-#ifndef _COMMON_C_
-#define _COMMON_C_
 
 #include <common.h>
 
@@ -116,15 +114,15 @@ uint64_t tw_convert_str_to_int(const char *str, uint8_t n) {
     uint64_t num = 0;
 
     for (count = n; count > 0; count--)
-        num = num + ((str[count - 1] - 48) * power(10, (n - 1 - (count - 1))));
+        num = num + ((str[count - 1] - 48) * tw_power(10, (n - 1 - (count - 1))));
     return num;
 }
 
-int power(uint8_t base, uint8_t exp) {
+int tw_power(uint8_t base, uint8_t exp) {
     if (exp == 0)
         return 1;
     else
-        return ( base * power(base, exp - 1));
+        return ( base * tw_power(base, exp - 1));
 }
 
 inline uint16_t tw_be_to_cpu_16(uint16_t value) {
@@ -155,4 +153,3 @@ uint8_t tw_parse_int_from_string(char* str) {
 
 }
 
-#endif

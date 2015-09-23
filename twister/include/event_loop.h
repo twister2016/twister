@@ -103,7 +103,6 @@ int tw_rx_start(tw_rx_t *, void *);
 tw_tx_t * tw_tx_init(tw_loop_t *);
 int tw_tx_start(tw_tx_t *, void *);
 
-struct tw_sockaddr_in * tw_ip4_addr(char *, uint16_t);
 tw_timer_t * tw_timer_init(tw_loop_t *);
 int tw_timer_bind(tw_timer_t *, struct tw_sockaddr_in *, int, uint8_t);
 int tw_timer_start(tw_timer_t *, tw_timer_cb, uint64_t, uint64_t);
