@@ -6,7 +6,6 @@
 #include <timerfuncs.h>
 #include <arplogic.h>
 #include <initfuncs.h>
-#include <runtime.h>
 
 #define MAX_QUEUED_PKTS 1024
 

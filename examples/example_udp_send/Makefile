@@ -35,11 +35,11 @@ include twister.mk
 
 
 CC=gcc
-OUTPUT_PATH=UDP_ECHO
+OUTPUT_PATH=UDP_SEND
 
 
-hellomake: test.c
-	$(CC) test.c $(TWFLAGS) -o $(OUTPUT_PATH)
+hellomake: udp_send.c
+	$(CC) udp_send.c $(TWFLAGS) -o $(OUTPUT_PATH)
 
 .PHONY: clean
 

@@ -1,6 +1,5 @@
 #include <arplogic.h>
 #include <initfuncs.h>
-#include <runtime.h>
 
 struct arp_table * arp_table_root = NULL;
 uint32_t arp_table_size = 0;
