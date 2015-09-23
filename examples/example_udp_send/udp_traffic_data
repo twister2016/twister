@@ -1,0 +1,9 @@
+[
+    { "testRuntime" : "30",
+      "Payload" : "0064",
+      "ServerIP" : "34.34.34.11",
+      "ServerPort" : "7777",
+      "StatsServerIP" : "11.11.7.123",
+      "StatsServerPort" : "5555"
+    }
+]

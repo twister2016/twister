@@ -8,8 +8,6 @@
 #include <rte_malloc.h>
 #include <portconf.h>
 #include <lcoreconf.h>
-#include <ip.h>
-#include <udp.h>
 #include <eth.h>
 #include <rte_ethdev.h>
 #include <portconf.h>

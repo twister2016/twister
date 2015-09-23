@@ -52,6 +52,10 @@ int tw_get_port_by_ip(uint32_t ip_addr)
 	
 }
 
+uint32_t tw_get_ip_addr(char * port_name) {
+    return (port_info[tw_eth_name_to_id(port_name)].start_ip_addr);
+}
+
 int tw_eth_port_init(void) {
 	uint8_t port_id, counter;
 	int ret, socket_id;

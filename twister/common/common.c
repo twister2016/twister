@@ -135,6 +135,10 @@ inline uint16_t tw_cpu_to_be_16(uint16_t value) {
     return rte_cpu_to_be_16(value);
 }
 
+inline uint32_t tw_cpu_to_be_32(uint32_t value) {
+    return rte_cpu_to_be_32(value);
+}
+
 uint8_t tw_parse_int_from_string(char* str) {
     
     char *p = str;

@@ -23,6 +23,7 @@ uint64_t tw_convert_str_to_int(const char *str, uint8_t n);
 int power(uint8_t, uint8_t);
 inline uint16_t tw_be_to_cpu_16(uint16_t);
 inline uint16_t tw_cpu_to_be_16(uint16_t);
+inline uint32_t tw_cpu_to_be_32(uint32_t);
 uint8_t tw_parse_int_from_string(char*);
 
 #endif
