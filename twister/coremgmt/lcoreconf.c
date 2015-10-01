@@ -1,6 +1,9 @@
-
+#include <mempoolconf.h>
+#include <eth.h>
 #include <initfuncs.h>
 #include <lcoreconf.h>
+
+
 
 void assign_ports_to_cores(void);
 

@@ -120,8 +120,9 @@ struct ether_addr * tw_search_arp_entry(char * ip_string) {
 }
 
 int tw_construct_arp_packet(uint32_t ip, uint8_t port_id) {
-
+//    int port_id = tw_eth_name_to_id(port_name); 
     int socket_id = rte_eth_dev_socket_id(port_id);
+
     if (socket_id == -1)
         socket_id = 0;
     struct rte_mbuf * m = rte_pktmbuf_alloc(tx_mempool[socket_id]);

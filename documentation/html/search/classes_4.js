@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['mbuf_5ftable',['mbuf_table',['../structmbuf__table.html',1,'']]]
+  ['port_5finfo',['port_info',['../structport__info.html',1,'']]],
+  ['print_5fstats',['print_stats',['../structprint__stats.html',1,'']]],
+  ['printbuffer',['printbuffer',['../structprintbuffer.html',1,'']]]
 ];

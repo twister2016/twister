@@ -1,0 +1,5 @@
+<map id="tw_loop_s" name="tw_loop_s">
+<area shape="rect" id="node2" href="$structtw__timer__s.html" title="tw_timer_s" alt="" coords="5,5,92,32"/>
+<area shape="rect" id="node3" href="$structtw__tx__s.html" title="tw_tx_s" alt="" coords="169,5,237,32"/>
+<area shape="rect" id="node4" href="$structtw__rx__s.html" title="tw_rx_s" alt="" coords="315,5,383,32"/>
+</map>

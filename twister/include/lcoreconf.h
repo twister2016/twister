@@ -3,6 +3,7 @@
 
 #include <rte_per_lcore.h>
 #include <portconf.h>
+#include <tw_common.h>
 
 #define MAX_LCORES 16
 #define MAX_RX_QUEUES_PER_LCORE 8
@@ -34,7 +35,7 @@ struct lcore_conf lcore_conf[MAX_LCORES];
 int tw_lcore_conf_init(void);
 int tw_engine_name_to_lcore_id(char*);
 int tw_lcore_pipeline_init(void);
-int tw_map_port_to_engine(char*, char*);
+//int tw_map_port_to_engine(char*, char*);
 
 
 

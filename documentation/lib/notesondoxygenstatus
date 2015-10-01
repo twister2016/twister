@@ -1,0 +1,5 @@
+This doxygen doc is latest with all membuf and struct shown and function definition parameters,
+but it does not include the if conditions which we used to improve the udp_echo_ and also the event loop amendement which including strings for engines. change the timer handler logic too because we dont need now sockfd etc.
+
+There are only three folders here because we dont want all header to be shown at doxygen. There is a backup placed for all folders in one
+directory back. LOOK FOR THAT

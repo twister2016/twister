@@ -6,9 +6,10 @@
 #include <lcoreconf.h>
 #include <common.h>
 #include "cJSON.h"
+#include <tw_common.h>
 
 char * tw_registerfile (const char *);
-cJSON * tw_parse_json_file(const char *);
+//cJSON * tw_parse_json_file(const char *);
 int tw_get_port_conf_json_vals(const char *);
 int tw_get_lcore_queue_conf_json_vals(const char *);
 int tw_get_processing_conf_json_vals(const char *);

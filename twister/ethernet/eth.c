@@ -10,12 +10,27 @@
 #include <queued_pkts.h>
 #include <vlan.h>
 #include <event_loop.h>
+#include <tw_common.h>
+
+
+inline uint16_t tw_ipv4_cksum(struct ipv4_hdr *ipv4_hdr)
+{
+    return rte_ipv4_cksum(ipv4_hdr);
+
+}
+
+inline void tw_vlan_strip(tw_buf_t *buffer) {
+    rte_vlan_strip(buffer->pkt);
+}
 
 inline int tw_match_port_ether_addr(struct ether_addr *ea, char * port_name) {
     int port_id = tw_eth_name_to_id(port_name);
     return is_same_ether_addr(ea, port_info[port_id].eth_mac);
 }
+inline int tw_is_broadcast_ether_addr(const struct ether_addr *ea) {
+    return is_broadcast_ether_addr(ea);
 
+}
 inline void tw_copy_ether_addr(struct ether_addr * s_addr, struct ether_addr * d_addr) {
     ether_addr_copy(s_addr, d_addr);
     return;

@@ -1,11 +1,10 @@
 #include <unistd.h>
 #include <rte_lcore.h>
-#include <event_loop.h>
 #include <eth.h>
 #include <rx.h>
 #include <tx.h>
 #include <queued_pkts.h>
-
+#include <tw_api.h>
 int tw_loop_init(tw_loop_t * event_loop) { //TODO secs_to_run for  event loop
     event_loop->data = NULL;
     int core_id = rte_lcore_id();

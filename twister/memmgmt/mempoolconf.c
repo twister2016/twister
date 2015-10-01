@@ -2,6 +2,7 @@
 #define _MEMMGMT_C_
 
 #include <mempoolconf.h>
+#include <tw_api.h>
 
 uint8_t num_numa_sockets = 1; //TODO generalize it
 

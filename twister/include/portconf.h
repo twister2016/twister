@@ -4,6 +4,7 @@
 #include <rte_config.h>
 #include <rte_ethdev.h>
 #include "mempoolconf.h"
+#include <tw_common.h>
 
 #define MAX_ETH_PORTS 8
 #define RX_QUEUES_PER_PORT 1
@@ -69,11 +70,11 @@ static const struct rte_eth_conf port_conf = {
 	},
 };
 
-
+/*
 int tw_eth_port_init(void);
 int tw_get_port_by_ip(uint32_t);
 int tw_eth_name_to_id(char*);
 void tw_check_all_ports_link(void);
 uint32_t tw_get_ip_addr(char *);
-
+*/
 #endif

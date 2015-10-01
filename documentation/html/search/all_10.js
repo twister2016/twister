@@ -1,11 +1,22 @@
 var searchData=
 [
-  ['querycastmac',['querycastmac',['../arplogic_8c.html#a276cec4676ab3084dc036e246a06acce',1,'arplogic.c']]],
-  ['queue_5fid',['queue_id',['../structlcore__port__queue.html#a7c048c65cf7361ad984ca61d1d9f5b3b',1,'lcore_port_queue']]],
-  ['queue_5fupdate_5flimit',['queue_update_limit',['../queued__pkts_8c.html#ae9effb63db2b3285ba6c49c1bc7810ef',1,'queue_update_limit():&#160;queued_pkts.c'],['../queued__pkts_8h.html#ae9effb63db2b3285ba6c49c1bc7810ef',1,'queue_update_limit():&#160;queued_pkts.c']]],
-  ['queued_5fpkt',['queued_pkt',['../structqueued__pkt.html',1,'']]],
-  ['queued_5fpkt_5ftime_5flimit',['queued_pkt_time_limit',['../queued__pkts_8c.html#a6064ce9d8ab197f6c680d0c9c1dbe53f',1,'queued_pkt_time_limit():&#160;queued_pkts.c'],['../queued__pkts_8h.html#a6064ce9d8ab197f6c680d0c9c1dbe53f',1,'queued_pkt_time_limit():&#160;queued_pkts.c']]],
-  ['queued_5fpkts_2ec',['queued_pkts.c',['../queued__pkts_8c.html',1,'']]],
-  ['queued_5fpkts_2eh',['queued_pkts.h',['../queued__pkts_8h.html',1,'']]],
-  ['queued_5fpkts_5fmempool',['queued_pkts_mempool',['../mempoolconf_8h.html#a832ddad5c3961fd139e02c9d7e01d536',1,'mempoolconf.h']]]
+  ['search_5farp_5ftable',['search_arp_table',['../arplogic_8h.html#a441423811593ecee2e26bde8efc26baa',1,'arplogic.c']]],
+  ['send_5farp_5freply',['send_arp_reply',['../arplogic_8h.html#a9096dd853e82fd23be296127ae2d378e',1,'arplogic.c']]],
+  ['send_5fqueued_5fpkt',['send_queued_pkt',['../queued__pkts_8h.html#a2f935df1369328a9c38742b5457fcd5f',1,'queued_pkts.c']]],
+  ['send_5fstats_5fpkt',['send_stats_pkt',['../stats_8h.html#a1a2565b9619fc0427422df5bbe5ed876',1,'stats.c']]],
+  ['simple_5fqueue_2eh',['simple_queue.h',['../simple__queue_8h.html',1,'']]],
+  ['sleep_5fmsec',['sleep_msec',['../timerdefs_8h.html#ae2f5a8e604762b6439ab5c62950ab2e4',1,'timerfuncs.c']]],
+  ['sleep_5fnsec',['sleep_nsec',['../timerdefs_8h.html#a9523448202efc7b830953c9d7564bc53',1,'timerfuncs.c']]],
+  ['sleep_5fusec',['sleep_usec',['../timerdefs_8h.html#ac75e333680855e8b092ebc49fa1e5fc0',1,'timerfuncs.c']]],
+  ['slicearray',['sliceArray',['../common_8h.html#a02fab013e63d11d6653e4e76b90893ff',1,'common.c']]],
+  ['sock_5fconn_5ft',['sock_conn_t',['../structsock__conn__t.html',1,'']]],
+  ['socket_5finfo',['socket_info',['../structsocket__info.html',1,'']]],
+  ['sq_5finit',['sq_init',['../simple__queue_8h.html#ad86d97f1b212eb0c7820d0bb55f4a0ca',1,'simple_queue.c']]],
+  ['sq_5fpkt',['sq_pkt',['../structsq__pkt.html',1,'']]],
+  ['sq_5fpkt_5fq',['sq_pkt_q',['../structsq__pkt__q.html',1,'']]],
+  ['sq_5fpop',['sq_pop',['../simple__queue_8h.html#a44b3636a5a8da7e7b573bc1dfaa50aae',1,'simple_queue.c']]],
+  ['sq_5fpush',['sq_push',['../simple__queue_8h.html#a78eed44eb5c129d0af32a4b8eeee7825',1,'simple_queue.c']]],
+  ['stats_2eh',['stats.h',['../stats_8h.html',1,'']]],
+  ['stats_5foption',['stats_option',['../structstats__option.html',1,'']]],
+  ['strlen',['strLen',['../common_8h.html#a50cbfe36e1049558e668a30e5adfd797',1,'common.c']]]
 ];

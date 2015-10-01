@@ -66,9 +66,9 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 }
 
 int main(int argc, char **argv) {
-    tw_init_global(argc, argv);
     user_params.arg_count = argc;
     user_params.arg_vals = argv;
+    tw_init_global(user_params);
     tw_map_port_to_engine("tw0", "engine0");
     tw_launch_engine(user_app_main, (void *) &user_params, USE_ALL_ENGINES);
 

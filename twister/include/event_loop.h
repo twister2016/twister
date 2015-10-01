@@ -2,10 +2,15 @@
 #define _EVENT_LOOP_H_
 
 #include <rte_lcore.h>
-
+#include <rte_ether.h>
+#include <mempoolconf.h>
+#include <rte_ip.h>
+#include "cJSON.h"
+//#include <tw_api.h>
 #define MAX_LCORES 16
 #define INFINITE_LOOP 0
 #define LOOP_PROCESS 1
+
 
 enum {
     TW_UDP_HANDLE = 0x01,
@@ -94,17 +99,17 @@ typedef void * tw_timer_cb;
 int tw_loop_init(tw_loop_t *);
 //int tw_loop_close(tw_loop_t *);
 int tw_stop(tw_loop_t *);
-int tw_run(tw_loop_t *);
-tw_loop_t * tw_default_loop(uint16_t);
+////int tw_run(tw_loop_t *);
+//tw_loop_t * tw_default_loop(uint16_t);
 
-tw_rx_t * tw_rx_init(tw_loop_t *);
-int tw_rx_start(tw_rx_t *, void *);
+////tw_rx_t * tw_rx_init(tw_loop_t *);
+////int tw_rx_start(tw_rx_t *, void *);
 
-tw_tx_t * tw_tx_init(tw_loop_t *);
-int tw_tx_start(tw_tx_t *, void *);
+//tw_tx_t * tw_tx_init(tw_loop_t *);
+//int tw_tx_start(tw_tx_t *, void *);
 
-tw_timer_t * tw_timer_init(tw_loop_t *);
-int tw_timer_bind(tw_timer_t *, struct tw_sockaddr_in *, int, uint8_t);
-int tw_timer_start(tw_timer_t *, tw_timer_cb, uint64_t, uint64_t);
+//tw_timer_t * tw_timer_init(tw_loop_t *);
+//int tw_timer_bind(tw_timer_t *, struct tw_sockaddr_in *, int, uint8_t);
+//int tw_timer_start(tw_timer_t *, tw_timer_cb, uint64_t, uint64_t);
 
 #endif

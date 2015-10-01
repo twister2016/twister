@@ -1,0 +1,14 @@
+<map id="libtwister_rxtxmodule/tx.h" name="libtwister_rxtxmodule/tx.h">
+<area shape="rect" id="node7" href="$lcoreconf_8h.html" title="lcoreconf.h" alt="" coords="328,80,415,107"/>
+<area shape="rect" id="node15" href="$timerdefs_8h.html" title="timerdefs.h" alt="" coords="1173,229,1260,256"/>
+<area shape="rect" id="node17" href="$stats_8h.html" title="stats.h" alt="" coords="801,80,864,107"/>
+<area shape="rect" id="node9" href="$portconf_8h.html" title="portconf.h" alt="" coords="390,155,470,181"/>
+<area shape="rect" id="node10" href="$mempoolconf_8h.html" title="mempoolconf.h" alt="" coords="460,229,571,256"/>
+<area shape="rect" id="node20" href="$ip_8h.html" title="ip.h" alt="" coords="1438,155,1481,181"/>
+<area shape="rect" id="node21" href="$udp_8h.html" title="udp.h" alt="" coords="697,229,752,256"/>
+<area shape="rect" id="node22" href="$eth_8h.html" title="eth.h" alt="" coords="851,155,902,181"/>
+<area shape="rect" id="node25" href="$pktctor_8h.html" title="pktctor.h" alt="" coords="1505,155,1579,181"/>
+<area shape="rect" id="node26" href="$timerfuncs_8h_source.html" title="timerfuncs.h" alt="" coords="1167,155,1261,181"/>
+<area shape="rect" id="node27" href="$usocket_8h.html" title="usocket.h" alt="" coords="748,155,827,181"/>
+<area shape="rect" id="node28" href="$common_8h.html" title="common.h" alt="" coords="926,155,1009,181"/>
+</map>

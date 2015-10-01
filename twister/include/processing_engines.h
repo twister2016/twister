@@ -3,7 +3,8 @@
 
 #include <rte_launch.h>
 #include <rte_lcore.h>
-
+#include <rte_ip.h>
+#include <tw_api.h>
 enum {
 	USE_ALL_ENGINES = 255,
 	ENGINE0 = 0,    //TODO use string in this case
@@ -13,7 +14,7 @@ enum {
 	RESERVE_FIRST_ENGINE = 254
 };
 
-void tw_launch_engine(void *, void *, int);
+//void tw_launch_engine(void *, void *, int);
 unsigned tw_current_engine(void);
 
 #endif
