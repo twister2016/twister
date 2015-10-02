@@ -1,11 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <rx.h>
-#include <initfuncs.h>
-#include <eth.h>
-#include <event_loop.h>
-#include <timestamp.h>
-#include <processing_engines.h>
+#include <tw_api.h>
+#include <tw_common.h>
 
 struct user_app_parameters {
     int arg_count;
@@ -14,7 +10,6 @@ struct user_app_parameters {
 
 struct user_app_parameters user_params;
 struct timestamp_option * pkt_timestamp;
-
 int main(int, char **);
 int user_app_main(void *);
 void reply_payload(tw_rx_t *, tw_buf_t *);

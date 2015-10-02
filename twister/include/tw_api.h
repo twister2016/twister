@@ -15,7 +15,7 @@ extern tw_rx_t * tw_rx_init(tw_loop_t *);
 extern tw_tx_t * tw_tx_init(tw_loop_t *);
 extern int tw_rx_start(tw_rx_t * rx_handle, void * recv_cb); 
 extern int tw_run(tw_loop_t *); 
-extern int tw_send_pkt(tw_buf_t * buffer, char * port_name); 
+int tw_send_pkt(tw_buf_t * buffer, char * port_name); 
 extern int tw_arp_parser(tw_buf_t * buffer, char * port_name) ;
 extern inline void tw_vlan_strip(tw_buf_t *); 
 extern struct arp_table * tw_search_arp_table(uint32_t ip_to_search); 

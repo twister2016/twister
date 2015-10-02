@@ -83,7 +83,8 @@ int tw_eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 			tw_parse_arp(pkt, port_id);
 			break;
 		case ETHER_TYPE_VLAN:
-			tw_vlan_parser(pkt, port_id);
+			rte_vlan_strip(pkt);
+			tw_parse_arp(pkt, port_id);
 			break;
 		default:
 			rte_pktmbuf_free(pkt);
