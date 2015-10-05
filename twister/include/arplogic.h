@@ -11,12 +11,6 @@
 #define ARP_ENTRY_TIMEOUT 15000
 #define NUM_ARP_RETRIES 3
 
-struct arp_table {
-	uint32_t ip_addr;
-	struct ether_addr eth_mac;
-	uint8_t port_id;
-	struct arp_table * next;
-} __attribute__((__packed__));
 
 extern struct ether_addr broadcastmac; 
 extern struct arp_table * arp_table_root;

@@ -6,6 +6,12 @@
  *
  * Main twister API functions
  */
+struct arp_table {
+	uint32_t ip_addr;
+	struct ether_addr eth_mac;
+	uint8_t port_id;
+	struct arp_table * next;
+} __attribute__((__packed__));
 
 extern int tw_init_global(int argc, char** argv); 
 extern void tw_launch_engine(void * func, void * arg, int launch_type); 

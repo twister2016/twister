@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <rx.h>
-#include <initfuncs.h>
-#include <event_loop.h>
-#include <timestamp.h>
-#include <processing_engines.h>
+#include <tw_common.h>
+#include <tw_api.h>
+#include <stats.h>
+
 
 struct user_app_parameters {
     int arg_count;
@@ -76,7 +75,8 @@ void pkt_tx(tw_tx_t * handle) {
             tw_sleep_msec(10);
         }
         else
-            dst_eth_addr = &(temp_arp_entry->eth_mac);
+            dst_eth_addr = &temp_arp_entry->eth_mac;
+		
     }
     else {
         tw_buf_t * tx_buf = tw_new_buffer(user_params.payload_size);
@@ -120,13 +120,13 @@ void send_stats(tw_timer_t * timer_handle) {
     }
     else {
         tw_buf_t * stats_buf = tw_new_buffer(sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) \
-                                        + sizeof(struct udp_hdr) + sizeof(struct stats_option));
+                                        + sizeof(struct udp_hdr) + sizeof(struct stats_option*));
         struct ether_hdr * eth = stats_buf->data;
         struct ipv4_hdr * ip  = eth + 1;
         struct udp_hdr * udp = ip + 1;
         struct stats_option * stats_to_send = udp + 1;
         
-        tw_memcpy(stats_to_send, (void const *) &global_stats_option[0], sizeof(struct stats_option)); //TODO remove '0'
+        tw_memcpy(stats_to_send, (void const *) &global_stats_option[0], sizeof(stats_to_send)); //TODO remove '0'
 
         udp->src_port = tw_cpu_to_be_16(7777);
         udp->dst_port = tw_cpu_to_be_16(user_params.stats_server_port);
