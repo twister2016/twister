@@ -14,5 +14,5 @@ mkdir -p /home/twister/exec-env/.
 cp /usr/dpdk/x86_64-native-linuxapp-gcc/include/generic/*.h /home/twister/generic/
 cp /usr/dpdk/x86_64-native-linuxapp-gcc/include/exec-env/*.h /home/twister/exec-env/
 echo "transfering twister.mk"
-cp ./mk/twister.mk /usr/include
+sudo cp ./mk/twister.mk /usr/include
 echo "DONE........."
