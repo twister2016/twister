@@ -6,7 +6,6 @@
 #include <timerfuncs.h>
 #include <arplogic.h>
 #include <initfuncs.h>
-#include <runtime.h>
 
 #define MAX_QUEUED_PKTS 1024
 
@@ -23,10 +22,10 @@ struct queued_pkt {
 
 extern struct queued_pkt * root_queued_pkt;
 
-int add_pkt_to_queue(struct rte_mbuf *, uint32_t, uint16_t);
-int update_queued_pkts(uint64_t);
-int delete_queued_pkt(struct queued_pkt **, struct queued_pkt **);
-int send_queued_pkt(struct queued_pkt **, struct queued_pkt **, struct ether_addr);
-void print_queued_pkts(void);
+int tw_add_pkt_to_queue(struct rte_mbuf *, uint32_t, uint16_t);
+int tw_update_queued_pkts(uint64_t);
+int tw_delete_queued_pkt(struct queued_pkt **, struct queued_pkt **);
+int tw_send_queued_pkt(struct queued_pkt **, struct queued_pkt **, struct ether_addr);
+void tw_print_queued_pkts(void);
 
 #endif

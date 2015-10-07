@@ -1,17 +1,20 @@
 #ifndef _INITFUNCS_H_
 #define _INITFUNCS_H_
-
+#include <rte_ip.h>
+#include <event_loop.h>
 #include <getopt.h>
 #include <rte_config.h>
 #include <rte_eal.h>
+#include <rte_ip.h>
+#include <rte_udp.h>
 #include <lcoreconf.h>
 #include <mempoolconf.h>
 #include <periodic_timers.h>
 #include <queued_pkts.h>
 #include <jsonparser.h>
 #include <portconf.h>
+#include <tw_api.h>
 
-int PIPELINE; 
 
 struct app_params {
 	/* CPU cores */
@@ -55,11 +58,11 @@ struct app_params {
 
 extern struct app_params app;
 
-extern int init_eal_env(int, char **);
-extern int parse_twister_args(int argc, char **argv);
-extern int init_global(int argc, char **);
-extern int init_user_given_vals(void);
-int display_usage(const char *);
-int parse_portmask(const char *);
+extern int tw_init_eal_env(int, char **);
+extern int tw_parse_twister_args(int argc, char **argv);
+//extern int tw_init_global(int argc, char **);
+extern int tw_init_user_given_vals(void);
+int tw_display_usage(const char *);
+int tw_parse_portmask(const char *);
 
 #endif

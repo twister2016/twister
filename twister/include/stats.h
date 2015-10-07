@@ -7,15 +7,12 @@
 #include <rte_udp.h>
 #include <rte_malloc.h>
 #include <portconf.h>
-#include <ip.h>
-#include <udp.h>
+#include <lcoreconf.h>
 #include <eth.h>
 #include <rte_ethdev.h>
 #include <portconf.h>
 #include <rte_cycles.h>
-#include <pktctor.h>
 #include <timerfuncs.h>
-#include <usocket.h>
 #include <common.h>
 
 #define stats_port 0 		//Use port stats_port to send stats packets
@@ -29,8 +26,8 @@ extern int stats_fd;
 extern uint32_t stats_server_ip;
 extern uint16_t l4_stats_port;
 
-extern uint64_t global_pps_limit;
-extern uint64_t global_pps_delay;
+extern uint64_t global_pps_limit[MAX_LCORES];
+extern uint64_t global_pps_delay[MAX_LCORES];
 
 struct average_filter
 {	float   timestamp;
@@ -55,17 +52,15 @@ struct stats_option {
 	uint32_t tag_heat_ip;
 } __attribute__ ((__packed__));
 
-struct stats_option global_stats_option;
+struct stats_option global_stats_option[MAX_LCORES];
 
 extern uint64_t prev_pkts_rx, prev_pkts_tx;
 
-void clear_scr(void);
-int init_stats (uint8_t, uint32_t );
-void print_global_stats(void);
-void calc_average_rtt(uint64_t);
-int open_stats_socket(uint32_t, uint16_t);
-int send_stats_pkt(void);
-int calc_global_stats(void);
+void tw_clear_scr(void);
+int tw_init_stats (uint8_t, uint32_t );
+void tw_print_global_stats(void);
+void tw_calc_average_rtt(uint64_t);
+int tw_calc_global_stats(void);
 
 float   average_rtt; 
 uint64_t data_pkt_recvd;

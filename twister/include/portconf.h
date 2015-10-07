@@ -4,8 +4,9 @@
 #include <rte_config.h>
 #include <rte_ethdev.h>
 #include "mempoolconf.h"
+#include <tw_common.h>
 
-#define MAX_ETH_PORTS 3
+#define MAX_ETH_PORTS 8
 #define RX_QUEUES_PER_PORT 1
 #define TX_QUEUES_PER_PORT 1	//--! SRIOV NICs only support 1 rx and 1 tx queue per port
 
@@ -31,24 +32,26 @@ enum {
 } __attribute__((__packed__));
 
 struct mbuf_table {
-	int len;
-	struct rte_mbuf *m_table[MAX_PKT_BURST];
-	uint8_t portid;
+    int len;
+    struct rte_mbuf *m_table[MAX_TX_PKT_BURST];
+    uint8_t portid;
 } __attribute__((__packed__));
 
 struct port_info {
-	struct ether_addr * eth_mac;
-	uint32_t start_ip_addr;		//One port can have IPs from same subnet, hence a single gateway and subnet mask
-	uint8_t num_ip_addrs;
-	uint32_t gateway_ip;
-	uint32_t subnet_mask;
-	uint16_t vlan_tag;
-	uint64_t flags;
-	uint8_t socket_id;
-	uint8_t num_rx_queues;
-	uint8_t num_tx_queues;
-	struct mbuf_table tx_pkt_array[TX_QUEUES_PER_PORT];
-	//struct port_stats;	//--! add stats info
+    struct ether_addr * eth_mac;
+    char port_name[10];
+    uint8_t port_id_external;
+    uint32_t start_ip_addr;		//One port can have IPs from same subnet, hence a single gateway and subnet mask
+    uint8_t num_ip_addrs;
+    uint32_t gateway_ip;
+    uint32_t subnet_mask;
+    uint16_t vlan_tag;
+    uint64_t flags;
+    uint8_t socket_id;
+    uint8_t num_rx_queues;
+    uint8_t num_tx_queues;
+    struct mbuf_table tx_pkt_array[TX_QUEUES_PER_PORT];
+    //struct port_stats;	//--! add stats info
 } __attribute__((__packed__));
 
 struct port_info port_info[MAX_ETH_PORTS];
@@ -67,9 +70,11 @@ static const struct rte_eth_conf port_conf = {
 	},
 };
 
-
-int eth_port_init(void);
-int get_port_by_ip(uint32_t);
-void check_all_ports_link(void);
-
+/*
+int tw_eth_port_init(void);
+int tw_get_port_by_ip(uint32_t);
+int tw_eth_name_to_id(char*);
+void tw_check_all_ports_link(void);
+uint32_t tw_get_ip_addr(char *);
+*/
 #endif

@@ -28,19 +28,53 @@ struct app_params app = {
 	.burst_size_tx_write = 32,
 };
 
-int init_eal_env(int argc, char **argv) {
-	int ret = rte_eal_init(argc, argv);
+int tw_init_eal_env(int argc, char **argv) {
+
+    if ( argc == 1 ) {
+    const char *temp0, *temp1, *temp2, *temp3, *temp4, *temp5, *temp6, *temp7, *temp8;
+    temp0 = "-c";
+    temp1 = "0x01";
+    temp2 = "-n";
+    temp3 = "1";
+    temp4 = "-b";
+    temp5 = "00:03.0";
+    temp6 = "--";
+    temp7 = "-p";
+    temp8 = "0x1";
+    //argv = (char **)malloc(argc * sizeof(char *));
+    argv[1] = (char *)malloc(3 * sizeof(char));
+    argv[2] = (char *)malloc(5 * sizeof(char));
+    argv[3] = (char *)malloc(3 * sizeof(char));
+    argv[4] = (char *)malloc(2 * sizeof(char));
+    argv[5] = (char *)malloc(3 * sizeof(char));
+    argv[6] = (char *)malloc(8 * sizeof(char));
+    argv[7] = (char *)malloc(3 * sizeof(char));
+    argv[8] = (char *)malloc(3 * sizeof(char));
+    argv[9] = (char *)malloc(4 * sizeof(char));
+    strcpy (argv[1], temp0);
+    strcpy (argv[2], temp1);
+    strcpy (argv[3], temp2);
+    strcpy (argv[4], temp3);
+    strcpy (argv[5], temp4);
+    strcpy (argv[6], temp5);
+    strcpy (argv[7], temp6);
+    strcpy (argv[8], temp7);
+    strcpy (argv[9], temp8);
+    argc = 10;
+    }
+    
+    	int ret = rte_eal_init(argc, argv);
 	if (ret < 0)
 		rte_exit(EXIT_FAILURE, "Invalid EAL arguments\n");
 	argc -= ret;
 	argv += ret;
-	ret = parse_twister_args(argc, argv);	//--! TODO implement parse_twister_args()
+	ret = tw_parse_twister_args(argc, argv);     
 	if (ret < 0)
 		rte_exit(EXIT_FAILURE, "Invalid commandline arguments\n");
 	return 0;
 }
 
-int parse_twister_args(int argc, char **argv) {
+int tw_parse_twister_args(int argc, char **argv) {
 	int opt, ret;
 	char **argvopt;
 	int option_index;
@@ -49,33 +83,6 @@ int parse_twister_args(int argc, char **argv) {
 		{NULL, 0, 0, 0}
 	};
 
-	/*if(PIPELINE==1)
-	{
-	uint32_t lcores[3], n_lcores, lcore_id;
-	n_lcores = 0;
-	for (lcore_id = 0; lcore_id < RTE_MAX_LCORE; lcore_id++) {
-		if (rte_lcore_is_enabled(lcore_id) == 0)
-			continue;
-
-		if (n_lcores >= 3) {
-			RTE_LOG(ERR, USER1, "Number of cores must be 3\n");
-			return -1;
-		}
-
-		lcores[n_lcores] = lcore_id;
-		n_lcores++;
-	}
-
-	if (n_lcores != 3) {
-		RTE_LOG(ERR, USER1, "Number of cores must be 3\n");
-		return -1;
-	}
-
-	app.core_rx = lcores[0];
-	app.core_worker = lcores[1];
-	app.core_tx = lcores[2];
-    }
-	*/
 	argvopt = argv;
 
 	while ((opt = getopt_long(argc, argvopt, "p:",
@@ -84,21 +91,21 @@ int parse_twister_args(int argc, char **argv) {
 		switch (opt) {
 		/* portmask */
 		case 'p':
-			app_port_mask = parse_portmask(optarg);
+			app_port_mask = tw_parse_portmask(optarg);
 			if (app_port_mask == 0) {
 				printf("invalid portmask\n");
-				display_usage(prgname);
+				tw_display_usage(prgname);
 				return -1;
 			}
 			break;
 
 		/* long options */
 		case 0:
-			display_usage(prgname);
+			tw_display_usage(prgname);
 			return -1;
 
 		default:
-			display_usage(prgname);
+			tw_display_usage(prgname);
 			return -1;
 		}
 	}
@@ -111,78 +118,32 @@ int parse_twister_args(int argc, char **argv) {
 	return ret;
 }
 
-static void
-app_init_rings(void)
-{
-	uint32_t i;
 
-	for (i = 0; i < app.n_ports; i++) {
-		char name[32];
-
-		snprintf(name, sizeof(name), "app_ring_rx_%u", i);
-
-		app.rings_rx[i] = rte_ring_create(
-			name,
-			app.ring_rx_size,
-			rte_socket_id(),
-			RING_F_SP_ENQ | RING_F_SC_DEQ);
-
-		if (app.rings_rx[i] == NULL)
-			rte_panic("Cannot create RX ring %u\n", i);
-	}
-
-	for (i = 0; i < app.n_ports; i++) {
-		char name[32];
-
-		snprintf(name, sizeof(name), "app_ring_tx_%u", i);
-
-		app.rings_tx[i] = rte_ring_create(
-			name,
-			app.ring_tx_size,
-			rte_socket_id(),
-			RING_F_SP_ENQ | RING_F_SC_DEQ);
-
-		if (app.rings_tx[i] == NULL)
-			rte_panic("Cannot create TX ring %u\n", i);
-	}
-
-}
-
-int init_global(int argc, char **argv) {
-	init_user_given_vals();
-    init_eal_env(argc, argv);
-	create_rx_tx_mempools();
-	create_queued_pkts_mempools();
-	if(PIPELINE==0)
-	{
-		lcore_conf_init();
-	}
-	if(PIPELINE==1)
-	{
-		lcore_pipeline_init();
-		app_init_rings();
-	}
-	eth_port_init();
-	init_timer_vals();
-	init_periodic_timers();
-	
+int tw_init_global(int argc, char **argv) {
+	tw_init_eal_env(argc, argv);
+	tw_init_user_given_vals();
+	tw_create_rx_tx_mempools();
+//	tw_create_queued_pkts_mempools();
+	tw_lcore_conf_init();
+	tw_eth_port_init();	
+	tw_init_timer_vals();
+	tw_init_periodic_timers();
 	
 	return 0;
 }
-int init_user_given_vals(void) {
-	get_port_conf_json_vals("port_conf");
-	get_lcore_queue_conf_json_vals("lcore_queue_conf");
-	get_processing_conf_json_vals("processing_conf");
+int tw_init_user_given_vals(void) {
+	tw_get_port_conf_json_vals("port_conf");
+//	get_lcore_queue_conf_json_vals("lcore_queue_conf");
 	queued_pkt_time_limit = 10;			//--!TODO use file values parsed by jSON
 	return 0;				//--!JSON...port ips...num of rx/tx queues...flags...vlan tag
 }
 
-int display_usage(const char * prgname) {
+int tw_display_usage(const char * prgname) {
 	printf("%s bad argument\n", prgname);
 	return 0;
 }
 
-int parse_portmask(const char *portmask)
+int tw_parse_portmask(const char *portmask)
 {
 	char *end = NULL;
 	unsigned long pm;

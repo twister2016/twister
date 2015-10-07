@@ -11,8 +11,29 @@ uint8_t total_eth_ports = 0;
 uint8_t available_eth_ports = 0;
 uint16_t app_port_mask = 0;
 
+int tw_eth_name_to_id(char* portName){
+	int i;
+	int prt_id=-1;
+	for(i=0;i<MAX_ETH_PORTS;i++){
+	    if ( port_info[i].port_name!=NULL ) {
+	        if(strcmp(port_info[i].port_name, portName) == 0)
+	        {
+	        prt_id=i;
+	        }
+			    
+	    }
+	    else{
+	    //printf("NULL VALUE FROM JSON.eth_name_to_id\n");
+	    //printf("%s\n", portName);
+	    //printf("%d\n", i);
+	    
+	    }
+		
+	}
+	return prt_id;
+}
 
-int get_port_by_ip(uint32_t ip_addr)
+int tw_get_port_by_ip(uint32_t ip_addr)
 {
 	if(ip_addr == 0) {
 		//printf("IP addr is 0\n");
@@ -31,7 +52,11 @@ int get_port_by_ip(uint32_t ip_addr)
 	
 }
 
-int eth_port_init(void) {
+uint32_t tw_get_ip_addr(char * port_name) {
+    return (port_info[tw_eth_name_to_id(port_name)].start_ip_addr);
+}
+
+int tw_eth_port_init(void) {
 	uint8_t port_id, counter;
 	int ret, socket_id;
 	total_eth_ports = rte_eth_dev_count();
@@ -48,8 +73,10 @@ int eth_port_init(void) {
 			available_eth_ports--;
 			continue;
 		}
-
+		
+		printf("port_id %d, num_rx_queues %d, num_tx_queues %d\n", port_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues);
 		ret = rte_eth_dev_configure(port_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues, &port_conf);
+		//ret = rte_eth_dev_configure(port_id, 1, 1, &port_conf);
 		if (ret < 0)
 			rte_exit(EXIT_FAILURE, "Cannot configure device: err=%d, port=%u\n",
 				  ret, (unsigned) port_id);
@@ -90,7 +117,7 @@ int eth_port_init(void) {
 	return 0;
 }
 
-void check_all_ports_link(void) {
+void tw_check_all_ports_link(void) {
 	uint32_t all_ports_up, port_id;
 
 	all_ports_up = 1;
@@ -112,5 +139,14 @@ void check_all_ports_link(void) {
 		rte_panic("Some NIC ports are DOWN\n");
 	return;
 }
+/*
+void print_port_info(void) {
+	int i = 0;
+	for(i = 0; i < MAX_ETH_PORTS; i++) {
+		printf("port name %s, extern id %d, start ip %d, num ip addrs %d, socket_id %d, num_rx_queues %d num_tx_queues %dn", port_info[i].port_name, port_info[i].port_id_external, );
+	}	
+	return;
+}
+*/
 
 #endif
