@@ -32,14 +32,15 @@
 include twister.mk
 
 CC=gcc
-OUTPUT_PATH=ETH_ECHO
+APP=ETH_ECHO
+SRCS=test.c
 
 
 hellomake: test.c
-	$(CC) test.c $(TWFLAGS) -o $(OUTPUT_PATH)
+	$(CC) $(SRCS) $(TWFLAGS) -o $(APP)
 
 .PHONY: clean
 
 clean:
-	rm -f $(OUTPUT_PATH)
+	rm -f $(APP)
 

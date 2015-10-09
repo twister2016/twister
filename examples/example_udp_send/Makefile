@@ -1,5 +1,3 @@
-
-
 #   BSD LICENSE
 #
 #   Copyright(c) 2010-2014 Intel Corporation. All rights reserved.
@@ -33,16 +31,16 @@
 
 include twister.mk
 
-
 CC=gcc
-OUTPUT_PATH=UDP_SEND
+APP=UDP_SEND
+SRCS=test.c
 
 
-hellomake: udp_send.c
-	$(CC) udp_send.c $(TWFLAGS) -o $(OUTPUT_PATH)
+hellomake: test.c
+	$(CC) $(SRCS) $(TWFLAGS) -o $(APP)
 
 .PHONY: clean
 
 clean:
-	rm -f $(OUTPUT_PATH)
+	rm -f $(APP)
 
