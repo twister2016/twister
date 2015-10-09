@@ -1,9 +1,0 @@
-<map id="libtwister_ipv4/ip.h" name="libtwister_ipv4/ip.h">
-<area shape="rect" id="node2" href="$stats_8h.html" title="libtwister_stats/stats.h" alt="" coords="208,80,363,107"/>
-<area shape="rect" id="node3" href="$rx_8h.html" title="libtwister_rxtxmodule/rx.h" alt="" coords="5,155,176,181"/>
-<area shape="rect" id="node4" href="$tx_8h.html" title="libtwister_rxtxmodule/tx.h" alt="" coords="200,155,371,181"/>
-<area shape="rect" id="node8" href="$periodic__timers_8h.html" title="libtwister_timermodules\l/periodic_timers.h" alt="" coords="373,229,531,271"/>
-<area shape="rect" id="node5" href="$arplogic_8h.html" title="libtwister_arp/arplogic.h" alt="" coords="190,237,349,263"/>
-<area shape="rect" id="node6" href="$queued__pkts_8h.html" title="libtwister_rxtxmodule\l/queued_pkts.h" alt="" coords="233,319,378,360"/>
-<area shape="rect" id="node7" href="$initfuncs_8h.html" title="libtwister_initmodule\l/initfuncs.h" alt="" coords="235,408,375,449"/>
-</map>

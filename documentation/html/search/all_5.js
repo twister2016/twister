@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['parse_5fjson_5ffile',['parse_json_file',['../jsonparser_8h.html#a8d417ed3d5653c30870d479cb58a3830',1,'jsonparser.c']]],
-  ['printbuffer',['printbuffer',['../structprintbuffer.html',1,'']]]
+  ['registerfile',['registerfile',['../jsonparser_8h.html#a440fb3daab9e14543de7e138e03ef923',1,'jsonparser.h']]]
 ];
