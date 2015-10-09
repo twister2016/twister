@@ -1,6 +1,0 @@
-[
-    { "testRuntime"   : "30",
-      "StatsServerIP" : "11.11.7.123",
-      "StatsServerPort" : "5555"
-    }
-]

@@ -3,13 +3,7 @@
 #include <tw_api.h>
 #include <tw_common.h>
 
-struct user_app_parameters {
-    int arg_count;
-    char ** arg_vals;
-};
 
-struct user_app_parameters user_params;
-struct timestamp_option * pkt_timestamp;
 int main(int, char **);
 int user_app_main(void *);
 void reply_payload(tw_rx_t *, tw_buf_t *);
@@ -34,10 +28,8 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 
 int main(int argc, char **argv) {
     tw_init_global(argc, argv);
-    user_params.arg_count = argc;
-    user_params.arg_vals = argv;
     tw_map_port_to_engine("tw0", "engine0");
-    tw_launch_engine(user_app_main, (void *) &user_params, USE_ALL_ENGINES);
+    user_app_main(NULL);
 
     return 0;
 }
