@@ -5,10 +5,6 @@
 #include <stats.h>
 
 
-struct user_app_parameters {
-    int arg_count;
-    char ** arg_vals;
-};
 
 #define UDP_PROTO_ID	17
 
@@ -24,7 +20,6 @@ struct user_params {
 };
 
 struct user_params user_params;
-struct user_app_parameters user_args;
 struct timestamp_option * pkt_timestamp;
 
 int main(int, char **);
@@ -51,13 +46,9 @@ int parse_user_params(char * file_name) {
 		user_params.server_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "ServerIP")->valuestring);
 		user_params.server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ServerPort")->valuestring, 4);
 		user_params.payload_size = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "Payload")->valuestring, 4);
-		//user_params.pps_limit = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring, 7);
 		user_params.test_runtime = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring, 3);
 		user_params.stats_server_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "StatsServerIP")->valuestring);
 		user_params.stats_server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
-		//user_params.tag_heat_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "vm_ip")->valuestring);
-		//global_stats_option.tag_heat_ip = user_params.tag_heat_ip;
-		//global_pps_limit = user_params.pps_limit;
 	}
 	return 0;
 }
@@ -86,7 +77,6 @@ void pkt_tx(tw_tx_t * handle) {
         udp->src_port = tw_cpu_to_be_16(7777);
         udp->dst_port = tw_cpu_to_be_16(user_params.stats_server_port);
         udp->dgram_len = tw_cpu_to_be_16(tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
-        //udp_hdr_d->dgram_cksum = udp_hdr_d->src_port + udp_hdr_d->dst_port + pkt->pkt_len;
         udp->dgram_cksum = 0;
 
         ip->total_length = tw_cpu_to_be_16(tx_buf->size - sizeof(struct ether_hdr));
@@ -96,7 +86,7 @@ void pkt_tx(tw_tx_t * handle) {
         ip->version_ihl = 0x45;
         ip->time_to_live = 63;
         ip->hdr_checksum = 0;
-        ip->hdr_checksum =rte_ipv4_cksum(ip);
+        ip->hdr_checksum =tw_ipv4_cksum(ip);
 
         tw_copy_ether_addr(dst_eth_addr, &(eth->d_addr));
         tw_copy_ether_addr(tw_get_ether_addr("tw0"), &(eth->s_addr));
@@ -131,7 +121,6 @@ void send_stats(tw_timer_t * timer_handle) {
         udp->src_port = tw_cpu_to_be_16(7777);
         udp->dst_port = tw_cpu_to_be_16(user_params.stats_server_port);
         udp->dgram_len = tw_cpu_to_be_16(stats_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
-        //udp_hdr_d->dgram_cksum = udp_hdr_d->src_port + udp_hdr_d->dst_port + pkt->pkt_len;
         udp->dgram_cksum = 0;
 
         ip->total_length = tw_cpu_to_be_16(stats_buf->size - sizeof(struct ether_hdr));
@@ -141,7 +130,7 @@ void send_stats(tw_timer_t * timer_handle) {
         ip->version_ihl = 0x45;
         ip->time_to_live = 63;
         ip->hdr_checksum = 0;
-        ip->hdr_checksum =rte_ipv4_cksum(ip); //TODO write a wrapper func for rte_ipv4_cksum
+        ip->hdr_checksum =tw_ipv4_cksum(ip);
 
         tw_copy_ether_addr(stats_eth_addr, &(eth->d_addr));
         tw_copy_ether_addr(tw_get_ether_addr("tw0"), &(eth->s_addr));
@@ -152,11 +141,9 @@ void send_stats(tw_timer_t * timer_handle) {
 
 int main(int argc, char **argv) {
     tw_init_global(argc, argv);
-    user_args.arg_count = argc;
-    user_args.arg_vals = argv;
     parse_user_params("udp_traffic_data");
     tw_map_port_to_engine("tw0", "engine0");
-    tw_launch_engine(user_app_main, (void *) &user_args, USE_ALL_ENGINES);
+    user_app_main(NULL);
 
     return 0;
 }
