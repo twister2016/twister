@@ -21,24 +21,24 @@
 
 struct rte_timer stats_timer;
 
-extern uint64_t stats_time_period;
-extern int stats_fd;
-extern uint32_t stats_server_ip;
-extern uint16_t l4_stats_port;
+uint64_t stats_time_period;
+int stats_fd;
+uint32_t stats_server_ip;
+uint16_t l4_stats_port;
 
-extern uint64_t global_pps_limit[MAX_LCORES];
-extern uint64_t global_pps_delay[MAX_LCORES];
+uint64_t global_pps_limit;
+uint64_t global_pps_delay;
 
 struct average_filter
 {	float   timestamp;
 	struct average_filter* next;
 } __attribute__ ((__packed__));
 
-extern struct average_filter *root_rtt_average ;
-extern struct average_filter *end_rtt_average ;
-extern const uint8_t average_filter_len ;
+struct average_filter *root_rtt_average ;
+struct average_filter *end_rtt_average ;
+const uint8_t average_filter_len ;
 
-extern uint8_t average_list_size;
+uint8_t average_list_size;
 
 struct stats_option {
 	uint64_t secs_passed;
@@ -52,7 +52,7 @@ struct stats_option {
 	uint32_t tag_heat_ip;
 } __attribute__ ((__packed__));
 
-struct stats_option global_stats_option[MAX_LCORES];
+struct stats_option global_stats_option;
 
 extern uint64_t prev_pkts_rx, prev_pkts_tx;
 
@@ -67,6 +67,6 @@ uint64_t data_pkt_recvd;
 uint64_t data_pkt_sent;
 uint32_t seconds_passed;   
 
-extern uint32_t test_runtime ;
+uint32_t test_runtime ;
 
 #endif

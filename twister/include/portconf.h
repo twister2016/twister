@@ -16,12 +16,12 @@
 #define DEFAULT_TX_RING_DESC 512
 
 
-extern uint16_t nb_rxd;
-extern uint16_t nb_txd;
+uint16_t nb_rxd;
+uint16_t nb_txd;
 
-extern uint8_t total_eth_ports;
-extern uint8_t available_eth_ports;
-extern uint16_t app_port_mask;
+uint8_t total_eth_ports;
+uint8_t available_eth_ports;
+uint16_t app_port_mask;
 
 enum {
 	REPLY_ARP	= 0x00000001,

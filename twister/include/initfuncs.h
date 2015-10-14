@@ -56,12 +56,12 @@ struct app_params {
 	uint32_t pipeline_type;
 } __rte_cache_aligned;
 
-extern struct app_params app;
+struct app_params app;
 
-extern int tw_init_eal_env(int, char **);
-extern int tw_parse_twister_args(int argc, char **argv);
+int tw_init_eal_env(int, char **);
+int tw_parse_twister_args(int argc, char **argv);
 //extern int tw_init_global(int argc, char **);
-extern int tw_init_user_given_vals(void);
+int tw_init_user_given_vals(void);
 int tw_display_usage(const char *);
 int tw_parse_portmask(const char *);
 

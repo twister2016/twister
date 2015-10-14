@@ -9,8 +9,8 @@
 
 #define MAX_QUEUED_PKTS 1024
 
-extern uint64_t queued_pkt_time_limit;		//--!TODO get the value from user
-extern uint64_t queue_update_limit;
+uint64_t queued_pkt_time_limit;		//--!TODO get the value from user
+uint64_t queue_update_limit;
 
 struct queued_pkt {
 	struct rte_mbuf * pkt;
@@ -20,7 +20,7 @@ struct queued_pkt {
 	struct queued_pkt * next;
 } __attribute__((__packed__));
 
-extern struct queued_pkt * root_queued_pkt;
+struct queued_pkt * root_queued_pkt;
 
 int tw_add_pkt_to_queue(struct rte_mbuf *, uint32_t, uint16_t);
 int tw_update_queued_pkts(uint64_t);

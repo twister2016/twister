@@ -10,20 +10,23 @@ void reply_payload(tw_rx_t *, tw_buf_t *);
 
 void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
     struct ether_hdr * eth = buffer->data;
-    if (tw_match_port_ether_addr(&(eth->d_addr), "tw0") || is_broadcast_ether_addr(&(eth->d_addr))) {
-        switch (tw_be_to_cpu_16(eth->ether_type)) {
-            case ETHER_TYPE_ARP:
-                tw_arp_parser(buffer, "tw0");
-                break;
-            default:
-                tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
-                tw_copy_ether_addr(tw_get_ether_addr("tw0"), &(eth->s_addr));
-                tw_send_pkt(buffer, "tw0");
-                break;
-        }
-    } else
-        tw_free_pkt(buffer);
-    return;
+//    if (tw_match_port_ether_addr(&(eth->d_addr), "tw0") || is_broadcast_ether_addr(&(eth->d_addr))) {
+//        switch (tw_be_to_cpu_16(eth->ether_type)) {
+//            case ETHER_TYPE_ARP:
+//                tw_arp_parser(buffer, "tw0");
+//                break;
+//            default:
+//                tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
+//                tw_copy_ether_addr(tw_get_ether_addr("tw0"), &(eth->s_addr));
+//                tw_send_pkt(buffer, "tw0");
+//                break;
+//        }
+//    } else
+        tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
+	tw_copy_ether_addr(tw_get_ether_addr("tw0"), &(eth->s_addr));
+	tw_send_pkt(buffer, "tw0");
+//        tw_free_pkt(buffer);
+//    return;
 }
 
 int main(int argc, char **argv) {

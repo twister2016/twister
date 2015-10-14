@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <rte_lcore.h>
+#include <stats.h>
 #include <eth.h>
 #include <rx.h>
 #include <tx.h>
@@ -7,11 +8,11 @@
 #include <tw_api.h>
 int tw_loop_init(tw_loop_t * event_loop) { //TODO secs_to_run for  event loop
     event_loop->data = NULL;
-    int core_id = rte_lcore_id();
-    if (global_pps_limit[core_id])
-        global_pps_delay[core_id] = 10000000000 / global_pps_limit[core_id];
+//    int core_id = rte_lcore_id();
+    if (global_pps_limit)
+        global_pps_delay = 10000000000 / global_pps_limit;
     else
-        global_pps_delay[core_id] = 0;
+        global_pps_delay = 0;
     return 0;
 }
 
