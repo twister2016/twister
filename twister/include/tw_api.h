@@ -22,7 +22,7 @@ tw_tx_t * tw_tx_init(tw_loop_t *);
 int tw_rx_start(tw_rx_t * rx_handle, void * recv_cb); 
 int tw_run(tw_loop_t *); 
 inline int tw_send_pkt(tw_buf_t * buffer, char * port_name); 
-int tw_arp_parser(tw_buf_t * buffer, char * port_name) ;
+inline int tw_arp_parser(tw_buf_t * buffer, char * port_name) ;
 inline void tw_vlan_strip(tw_buf_t *); 
 struct arp_table * tw_search_arp_table(uint32_t ip_to_search); 
 int tw_construct_arp_packet(uint32_t ip, uint8_t port_id); 

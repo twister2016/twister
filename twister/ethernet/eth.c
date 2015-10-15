@@ -36,12 +36,12 @@ inline void tw_copy_ether_addr(struct ether_addr * s_addr, struct ether_addr * d
     return;
 }
 
-int tw_send_pkt(tw_buf_t * buffer, char * port_name) {
+inline int tw_send_pkt(tw_buf_t * buffer, char * port_name) {
     int ret = tw_add_pkt_to_tx_queue(buffer->pkt, tw_eth_name_to_id(port_name));
     return ret;
 }
 
-struct ether_addr * tw_get_ether_addr(char * port_name) {
+inline struct ether_addr * tw_get_ether_addr(char * port_name) {
     return (port_info[tw_eth_name_to_id(port_name)].eth_mac);
 }
 

@@ -165,7 +165,7 @@ void tw_print_arp_table(void) {
     return;
 }
 
-int tw_arp_parser(tw_buf_t * buffer, char * port_name) {
+inline int tw_arp_parser(tw_buf_t * buffer, char * port_name) {
     return tw_parse_arp(buffer->pkt, tw_eth_name_to_id(port_name));
 }
 

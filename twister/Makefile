@@ -49,6 +49,6 @@ ALL_HEADERS = -I$(SRC_ROOT)/include -I$(DPDK_HEADERS)
 CFLAGS += $(WERROR_FLAGS)
 CFLAGS += $(ALL_HEADERS)
 CFLAGS += -O3
-CFLAGS += -g
+#CFLAGS += -g
 LIB = libtwister.a
 include $(RTE_SDK)/mk/rte.extlib.mk

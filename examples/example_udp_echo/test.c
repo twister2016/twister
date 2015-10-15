@@ -3,40 +3,44 @@
 #include <tw_common.h>
 #include <tw_api.h>
 
-struct timestamp_option * pkt_timestamp;
+//struct timestamp_option * pkt_timestamp;
 
 int main(int, char **);
 int user_app_main(void *);
 void reply_payload(tw_rx_t *, tw_buf_t *);
 
+uint8_t dst_port,src_port,dst_ip,src_ip;
+struct ether_hdr * eth;
+struct ipv4_hdr * ipHdr_d;
+struct udp_hdr * udp_hdr_d;
+uint16_t eth_type;
+
 void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
-    struct ether_hdr * eth = buffer->data;
-    struct ipv4_hdr * ipHdr_d;
-    struct udp_hdr * udp_hdr_d;
-    uint16_t eth_type = tw_be_to_cpu_16(eth->ether_type);
-    if (eth_type == ETHER_TYPE_VLAN)
-        rte_vlan_strip(buffer->pkt);
+    eth = buffer->data;
+    eth_type = tw_be_to_cpu_16(eth->ether_type);
+//    if (eth_type == ETHER_TYPE_VLAN)
+//        rte_vlan_strip(buffer->pkt);
             
-    if (tw_match_port_ether_addr(&(eth->d_addr), "tw0") || is_broadcast_ether_addr(&(eth->d_addr))) {
+//    if (tw_match_port_ether_addr(&(eth->d_addr), "tw0") || is_broadcast_ether_addr(&(eth->d_addr))) {
         switch (eth_type) {
             case ETHER_TYPE_ARP:
                 tw_arp_parser(buffer, "tw0");
                 break;
             case ETHER_TYPE_IPv4:
-                
-                udp_hdr_d = buffer->data+sizeof(struct ether_hdr*)+ sizeof(struct ipv4_hdr*);
-                uint8_t dst_port = (udp_hdr_d->dst_port);
-                uint8_t src_port = (udp_hdr_d->src_port);
-                udp_hdr_d->dst_port = (src_port);
-                udp_hdr_d->src_port = (dst_port);
-                udp_hdr_d->dgram_cksum = 0;
            
                 ipHdr_d = buffer->data+sizeof(struct ether_hdr*);
-                uint32_t dst_ip  = (ipHdr_d->dst_addr);
-                uint32_t src_ip = (ipHdr_d->src_addr);
+                dst_ip  = (ipHdr_d->dst_addr);
+                src_ip = (ipHdr_d->src_addr);
                 ipHdr_d->dst_addr = (src_ip);
                 ipHdr_d->src_addr = (dst_ip);
                 ipHdr_d->hdr_checksum = rte_ipv4_cksum(ipHdr_d);
+
+                udp_hdr_d = ipHdr_d + sizeof(struct ipv4_hdr*);
+                dst_port = (udp_hdr_d->dst_port);
+                src_port = (udp_hdr_d->src_port);
+                udp_hdr_d->dst_port = (src_port);
+                udp_hdr_d->src_port = (dst_port);
+                udp_hdr_d->dgram_cksum = 0;
 
                 tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
                 tw_copy_ether_addr(tw_get_ether_addr("tw0"), &(eth->s_addr));
@@ -44,9 +48,9 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                 break;
                 
         }
-    } else
-        tw_free_pkt(buffer);
-    return;
+   // }// else
+     //   tw_free_pkt(buffer);
+   // return;
 }
 
 int main(int argc, char **argv) {
