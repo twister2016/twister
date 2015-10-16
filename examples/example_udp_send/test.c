@@ -116,7 +116,7 @@ void send_stats(tw_timer_t * timer_handle) {
         struct udp_hdr * udp = ip + 1;
         struct stats_option * stats_to_send = udp + 1;
         
-        tw_memcpy(stats_to_send, (void const *) &global_stats_option[0], sizeof(stats_to_send)); //TODO remove '0'
+        tw_memcpy(stats_to_send, (void const *) &global_stats_option, sizeof(stats_to_send)); //TODO remove '0'
 
         udp->src_port = tw_cpu_to_be_16(7777);
         udp->dst_port = tw_cpu_to_be_16(user_params.stats_server_port);
