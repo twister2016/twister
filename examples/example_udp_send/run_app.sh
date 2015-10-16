@@ -5,6 +5,6 @@ then
 else
     echo "Process not running, starting..."
     sleep 1
-    screen -dm ./UDP_SEND
+    screen -d -m ./UDP_SEND
 
 fi
