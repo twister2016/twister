@@ -38,7 +38,7 @@ inline void tw_copy_ether_addr(struct ether_addr * s_addr, struct ether_addr * d
 
 inline int tw_send_pkt(tw_buf_t * buffer, char * port_name) {
     int ret = tw_add_pkt_to_tx_queue(buffer->pkt, tw_eth_name_to_id(port_name));
-	rte_free(buffer);
+	//rte_free(buffer);
     return ret;
 }
 
