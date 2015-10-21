@@ -27,7 +27,7 @@ The user specified parameters for the physical device are provided in the “port_
 === Port Management 
 The port management is assigning specific parameters which include IP address, subnet mask, gateway IP to the port. All this is done in the initialization module. The user just hast to provide a file to the module, which is *port_conf*. The configuration file should be in JSON format and a sample is provided below:
 
-“port_conf” file is array of JSON fields. Each array [port_name: <>, ip_addrs:<>] corresponds to one port:
+*port_conf* file is array of JSON fields. Each array '[port_name: <>, ip_addrs:<>]' corresponds to one port:
 
 * port_name: This is an identifier that lists the port name. The port name is assigned by Twister Virtual Machine (TVM)OS. TVM assigns the port name as *tw<X>* according to the PCI ID in a numerical order. So if a TVM has two ports, the port name for first one will be tw0 and for the second one will be tw1.
 * ip_addrs: This field lists the IP address range to be assigned for the port. It contains two sub fields:
