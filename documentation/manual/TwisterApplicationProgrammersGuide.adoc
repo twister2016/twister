@@ -72,7 +72,7 @@ registered2.tw_<handlename>_init: Reserve memory for handle pointer and regist
 
 == ARP Table
 The Twister API has built-in ARP functionality which user can utilize in their application using simple calls. The API will maintain the table locally. If application is sending a packet whose MAC is not known, the API will store the packet in the queue and generate an ARP query for the IP and automatically update the queued packets once the ARP respond is received.
-The API can also respond to the ARP query for the IP addresses of the interfaces which the API is handling. The application programmer just has to add the “tw_arp_parser” in the application flow. Rest will be the job of the API. To list all the ARP functions and their usage, kindly use the Twister API Reference documentation provided on Github. It can be accessed the “twister/documentation/html/index.html” file.
+The API can also respond to the ARP query for the IP addresses of the interfaces which the API is handling. The application programmer just has to add the *tw_arp_parser* in the application flow. Rest will be the job of the API. To list all the ARP functions and their usage, kindly use the Twister API Reference documentation provided on Github. It can be accessed the *twister/documentation/html/index.html* file.
 
 
 
@@ -90,8 +90,10 @@ The sample applications can be built using the following commands:
 --------------------------------------
 === Customizing the Application Makefile
 The default Makefile provided with the UDP Echo sample application is a good starting point. It includes:
+
 * twister.mk at the beginning
 The user must define following variables:
+
 * APP: Contains the name of the application.
 * SRCS: List of source files (*.c).
 The rest of the Makefile can be customized as a normal Makefile.
@@ -102,9 +104,10 @@ The rest of the Makefile can be customized as a normal Makefile.
 The general flow of Twister API applications is as follows:
 
 There are three sample applications developed for Twister API release 0.1. They include the following:
-1. UDP Send Application: This application is a tester client application which generates UDP traffic by sending timestamp to an echo server. It also receives any timestamps echoed back and calculates RTT.
-2. UDP Echo Application: This application receives the UDP traffic and echo back to the sender.
-3. Ethernet Echo Application: This application is a simple Layer 2 forward application which simply echo every packet it received by changing the MAC.
+
+a. UDP Send Application: This application is a tester client application which generates UDP traffic by sending timestamp to an echo server. It also receives any timestamps echoed back and calculates RTT.
+b. UDP Echo Application: This application receives the UDP traffic and echo back to the sender.
+c. Ethernet Echo Application: This application is a simple Layer 2 forward application which simply echo every packet it received by changing the MAC.
 The UDP Echo server application is discussed below:
 
 
