@@ -1,6 +1,7 @@
 = TWISTER APPLICATION PROGRAMMERS GUIDE
 :docinfo:
 [preface]
+
 == Introduction
 This document gives an overview of the modules build in Twister API and how an application is built on it. The detailed definitions and individual function calls can be found in the doc folder of Twister API. 
 At start, the document explains the core modules of twister API, these include initialization module, event loop, ARP table management and JSON parsing. Details of build system are also included.
@@ -11,6 +12,7 @@ The best way to start is to go through the Sample Applications Details Section i
 
 == Initialization Module
 The initialization module of API handles the initialization of twister abstraction layer. Abstraction layer consists of the following parts:
+
 * System Memory Reservation: The abstraction layer facilitates the reservation of different memory zones, for example, physical memory areas for device interactions.
 * Allocate PCI resources and set up the physical device and the link
 * Initialize statistics counters
@@ -18,8 +20,7 @@ The initialization module of API handles the initialization of twister abstracti
 * Port and Queue setup for both RX and TX
 * Access the RX and TX descriptors directly without any interrupts
 * Assign user specified parameters to the physical device.
-In the Twister API, all the above initialization steps are formed by single API call which is:
-tw_init_global(argc, argv)
+In the Twister API, all the above initialization steps are formed by single API call which is: "tw_init_global(argc, argv)"
 The user specified parameters for the physical device are provided in the “port_conf” file. This file must be present in the application directory. The parameters are further explained in the below section:
 
 === Port Management 
