@@ -66,6 +66,15 @@ b. With each instance of a handle, one callback function is registered. This is 
 
 === Comparison of twister API calls and Libuv calls are given below:
 
+[width="15%"]
+|=======
+|Sr. | Twister | Libuv
+|1 |tw_default_loop: Reserve memory for an event loop with which handles can be registered. The loop’s total time to run is also provided |uv_default_loop: Reserve memory for an event loop with which handles can be registered
+|2 |6 |C
+|3 |4 |B
+|4 |6 |C
+|=======
+
 Sr. TwisterLibuv1.tw_default_loop: Reserve memory for an event loop with which handles can be registered. The loop’s total time to run is also provideduv_default_loop: Reserve memory for an
 event loop with which handles can be
 registered2.tw_<handlename>_init: Reserve memory for handle pointer and register it with an event loop instanceuv_<handlename>_init: Reserve memory for handle pointer and register it with an event loop instance3.tw_<handlename>_start: Register a callback function for the handleuv_<handlename_start>: Register a callback function for the handle4.tw_run: Start the event loopuv_run: Start the event loop
