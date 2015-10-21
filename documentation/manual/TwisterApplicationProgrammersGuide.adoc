@@ -37,7 +37,7 @@ b. num_ip_addrs: This number specify the range of IP addresses for this port.
 c. gateway_ip: It will list the gateway for this particular port.
 d. subnet_mask: The mask to determine the subnet of this port. 
 
-*For an application using multiple ports e.g. 2, the format of port_conf would be i.e. 
+* For an application using multiple ports e.g. 2, the format of port_conf would be i.e. 
 [
        [
        “port_name”:“tw0”
@@ -55,11 +55,14 @@ Twister API provides an event loop which is based on *libuv* model with general 
 
 
 The Twister API implementation of event loop has the following features:
-1. Event callback registration: Users can register three types of handles in the loop. 
+
+a. Event callback registration: Users can register three types of handles in the loop. 
+
 * RX handle: These handles are used for receiving packets. Currently only one RX handle is supported. This callback is called when any type of packet is received.
 * TX handle: Multiple TX handles can be registered. Each handle’s callback will be called once per event loop iteration.
 * Timer handle: This handle’s callback will be called after a fixed timeout.
-2. With each instance of a handle, one callback function is registered. This is called when the event has occurred.
+
+b. With each instance of a handle, one callback function is registered. This is called when the event has occurred.
 
 === Comparison of twister API calls and Libuv calls are given below:
 
