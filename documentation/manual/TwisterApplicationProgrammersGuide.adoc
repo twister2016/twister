@@ -20,7 +20,8 @@ The initialization module of API handles the initialization of twister abstracti
 * Port and Queue setup for both RX and TX
 * Access the RX and TX descriptors directly without any interrupts
 * Assign user specified parameters to the physical device.
-In the Twister API, all the above initialization steps are formed by single API call which is: "tw_init_global(argc, argv)"
+In the Twister API, all the above initialization steps are formed by single API call which is: *tw_init_global(argc, argv)*
+
 The user specified parameters for the physical device are provided in the “port_conf” file. This file must be present in the application directory. The parameters are further explained in the below section:
 
 === Port Management 
