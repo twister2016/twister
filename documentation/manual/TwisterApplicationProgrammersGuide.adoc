@@ -92,6 +92,7 @@ The sample applications can be built using the following commands:
 The default Makefile provided with the UDP Echo sample application is a good starting point. It includes:
 
 * twister.mk at the beginning
+
 The user must define following variables:
 
 * APP: Contains the name of the application.
@@ -127,13 +128,20 @@ The best way to start writing a new application is to copy an existing Twister A
 
 == Appendices
 
-HW/SW Information Relating to Twister API
+=== HW/SW Information Relating to Twister API
+
 Intel DPDK Version: 2.0.0
-Linux Kernel Version: 3.11.0-12-generic	
+
+Linux Kernel Version: 3.11.0-12-generic
+	
 Linux Version: Ubuntu 12.04
+
 Twister VM Architecture: x86_64
+
 CPU Model: Intel Xeon E312xx (Sandy Bridge)
+
 GCC Version: 4.8.1
+
 Intel® NICs Used for testing purposes: Virtual Functions of Intel x520 and x540 Dual Port 10G NICs
 
 
