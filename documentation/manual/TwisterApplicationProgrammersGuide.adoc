@@ -1,4 +1,4 @@
-=TWISTER APPLICATION PROGRAMMERS GUIDE
+= TWISTER APPLICATION PROGRAMMERS GUIDE
 :docinfo:
 [preface]
 == Introduction
@@ -9,7 +9,7 @@ The best way to start is to go through the Sample Applications Details Section i
 
 
 
-Initialization Module
+== Initialization Module
 The initialization module of API handles the initialization of twister abstraction layer. Abstraction layer consists of the following parts:
 * System Memory Reservation: The abstraction layer facilitates the reservation of different memory zones, for example, physical memory areas for device interactions.
 * Allocate PCI resources and set up the physical device and the link
@@ -22,11 +22,11 @@ In the Twister API, all the above initialization steps are formed by single API 
 tw_init_global(argc, argv)
 The user specified parameters for the physical device are provided in the “port_conf” file. This file must be present in the application directory. The parameters are further explained in the below section:
 
-Port Management 
+=== Port Management 
 The port management is assigning specific parameters which include IP address, subnet mask, gateway IP to the port. All this is done in the initialization module. The user just hast to provide a file to the module, which is “port_conf”. The configuration file should be in JSON format and a sample is provided below:
 
 “port_conf” file is array of JSON fields. Each array [port_name: <>, ip_addrs:<>] corresponds to one port:
-* port_name: This is an identifier that lists the port name. The port name is assigned by Twister Virtual Machine (TVM)OS. TVM assigns the port name as “tw<X>” according to the PCI ID in a numerical order. So if a TVM has two ports, the port name for first one will be tw0 and for the second one will be tw1.
+* port_name: This is an identifier that lists the port name. The port name is assigned by Twister Virtual Machine (TVM)OS. TVM assigns the port name as *tw<X>* according to the PCI ID in a numerical order. So if a TVM has two ports, the port name for first one will be tw0 and for the second one will be tw1.
 * ip_addrs: This field lists the IP address range to be assigned for the port. It contains two sub fields:
 a. start_ip_addr: IP address in string format, assigned to the port.
 b. num_ip_addrs: This number specify the range of IP addresses for this port.
@@ -45,8 +45,8 @@ d. subnet_mask: The mask to determine the subnet of this port.
 ]  
 
 
-==Event loop
-Twister API provides an event loop which is based on “libuv” model with general flow shown below:
+== Event loop
+Twister API provides an event loop which is based on *libuv* model with general flow shown below:
 
 
 The Twister API implementation of event loop has the following features:
@@ -56,7 +56,7 @@ The Twister API implementation of event loop has the following features:
 * Timer handle: This handle’s callback will be called after a fixed timeout.
 2. With each instance of a handle, one callback function is registered. This is called when the event has occurred.
 
-===Comparison of twister API calls and Libuv calls are given below:
+=== Comparison of twister API calls and Libuv calls are given below:
 
 Sr. TwisterLibuv1.tw_default_loop: Reserve memory for an event loop with which handles can be registered. The loop’s total time to run is also provideduv_default_loop: Reserve memory for an
 event loop with which handles can be
@@ -69,16 +69,18 @@ The API can also respond to the ARP query for the IP addresses of the interfaces
 
 
 
-==Building the Applications
+== Building the Applications
 Cloning the Repository
 
 Clone the desired branch from dell twister repository (https://github.com/delltwister/twister). Navigate to the directory of desired example. 
 
-===Compiling a Sample Application
+=== Compiling a Sample Application
 The sample applications can be built using the following commands:
-       % make clean
-       %make
-===Customizing the Application Makefile
+--------------------------------------
+	make clean
+	make
+--------------------------------------
+=== Customizing the Application Makefile
 The default Makefile provided with the UDP Echo sample application is a good starting point. It includes:
 * twister.mk at the beginning
 The user must define following variables:
@@ -88,7 +90,7 @@ The rest of the Makefile can be customized as a normal Makefile.
 
 
 
-==Sample Applications Details
+== Sample Applications Details
 The general flow of Twister API applications is as follows:
 
 There are three sample applications developed for Twister API release 0.1. They include the following:
@@ -99,49 +101,6 @@ The UDP Echo server application is discussed below:
 
 
 
-===UDP Echo Server
-The UDP Echo server step by step explanation is below: 
-• tw_init_global() Initialize the global environment for twister application by configuring ports and engines available on machine.
-
-• tw_map_port_to_engine(): binds the a NIC port to a specific engine. So all the incoming/outgoing traffic on that port (tw<x>) will be managed by the engine (engine<x>). The description of port and engines is describe below.
-o A port-name (that could be tw0, tw1, depending upon the number of available ports on the machine)
-o An engine-name (“engine0”, “engine1”, depends on the number of available engines on the machine)
-
-• In user_app_main(), the main logic of UDP ECHO application resides. Since this application only echoes back the incoming packets, we have to create a callback function which fires every time a packet arrives.
-• tw_rx_t * server; is a pointer to callback struct that configures the rx_callback.   struct tw_rx_s { 
- 	    uint8_t handle_type; 
-               uint64_t last_run_time; 
-    int sock_fd; 
-    struct tw_sockaddr_in * addr; 
-    uint8_t flags; 
-    void * recv_cb; 
-    struct tw_rx_s * next; 
-};
-o handle_type tells which callback does that corresponds. Since it is a receive callback function. So we set its value to RX_CALLBACK. Currently we support only three types of callback functions, RX_CALLBACK, TX_CALLBACK, TIMER_CALLBACK.
-o last_run_time tells when was the last time this event was fired. Each time a packet arrives, timestamp to this variables would be updated. For the first-time we set it to 0.
-o recv_cb is a pointer to functions that will be executed each time receive event will occur. Our callback function is replay_payload so we set this pointer to function reply_payload. Every-time we receive a packet, the “reply_payload” function is called. In this function, the user can implement any RX logic. In our case, we echo the timestamp in the payload and send the UDP packet back to client.
-• tw_default_loop(INFINITE_LOOP); creates an infinite eventloop handler and its address is returned as pointer. tw_default_loop() takes argument in seconds and run the event loop for that time. A value of 0 will make it run infinitely. The “INFINITE_LOOP” parameter has a value 0. This event-loop handler is described below:
-struct tw_loop_s { 
-    void* data; 
-               uint8_t active_handles*-; 
-    struct tw_rx_s * rx_handle_queue; 
-    struct tw_tx_s * tx_handle_queue; 
-    struct tw_timer_s * timer_handle_queue;
-    unsigned int stop_flag;
-    uint16_t secs_to_run; 
-};
-o data: user_data this could be used for any data/functions user want to use for this event-loop. 
-o active_handles: number of active handles currently this event-loop is managing. This could be multiple Rx, Tx, and timer handles. Twister main event-loop uses this. User don’t need to deal with it.
-o rx_handle_queue: a link-list for all the Rx handlers.
-o tx_handle_queue: a link-list for all the Rx handlers.
-o imer_handle_queue: a link-list for all the timer handlers.
-o stop_flag:  flag is raised when event-loop timer expires.
-o secs_to_run: number of seconds for which this event-loop would be run.
-• tw_rx_init(tw_loop); would add an Rx handler to event-loop(tw_loop) and return the pointer to new handler added to rx_handle_queue of event-loop.tw_run(tw_loop);
-• tw_rx_start(server, reply_payload); would assign the receive call back function to receive handler. So everytime receive event occurs i.e., a packet is received, the call back function assigned to the handler would be executed. It takes two arguments:
-o server:  a pointer to receive handler of type tw_rx_s.
-o reply_payload:  A receive callback function.
-• tw_run(tw_loop); takes a configured event-loop handler and execute it for whatever time the user has configured it.
 
 
 
@@ -149,14 +108,13 @@ o reply_payload:  A receive callback function.
 
 
 
-
-==Writing a New Application
+== Writing a New Application
 The best way to start writing a new application is to copy an existing Twister API application and modify it. To list the functions and their usage, kindly use the Twister API Reference documentation provided on GitHub. It can be accessed from “twister/documentation/html/index.html” file. 
 
 
 
 
-==Appendices
+== Appendices
 
 HW/SW Information Relating to Twister API
 Intel DPDK Version: 2.0.0
