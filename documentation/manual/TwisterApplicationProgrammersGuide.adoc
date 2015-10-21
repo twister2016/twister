@@ -36,6 +36,7 @@ a. start_ip_addr: IP address in string format, assigned to the port.
 b. num_ip_addrs: This number specify the range of IP addresses for this port.
 c. gateway_ip: It will list the gateway for this particular port.
 d. subnet_mask: The mask to determine the subnet of this port. 
+
 *For an application using multiple ports e.g. 2, the format of port_conf would be i.e. 
 [
        [
