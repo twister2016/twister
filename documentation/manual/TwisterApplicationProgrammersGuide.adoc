@@ -78,7 +78,8 @@ The API can also respond to the ARP query for the IP addresses of the interfaces
 
 
 == Building the Applications
-Cloning the Repository
+
+=== Cloning the Repository
 
 Clone the desired branch from dell twister repository (https://github.com/delltwister/twister). Navigate to the directory of desired example. 
 
@@ -111,20 +112,8 @@ b. UDP Echo Application: This application receives the UDP traffic and echo back
 c. Ethernet Echo Application: This application is a simple Layer 2 forward application which simply echo every packet it received by changing the MAC.
 The UDP Echo server application is discussed below:
 
-
-
-
-
-
-
-
-
-
 == Writing a New Application
-The best way to start writing a new application is to copy an existing Twister API application and modify it. To list the functions and their usage, kindly use the Twister API Reference documentation provided on GitHub. It can be accessed from “twister/documentation/html/index.html” file. 
-
-
-
+The best way to start writing a new application is to copy an existing Twister API application and modify it. To list the functions and their usage, kindly use the Twister API Reference documentation provided on GitHub. It can be accessed from *twister/documentation/html/index.html* file. 
 
 == Appendices
 
