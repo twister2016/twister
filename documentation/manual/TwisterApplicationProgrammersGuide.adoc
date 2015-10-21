@@ -22,7 +22,7 @@ The initialization module of API handles the initialization of twister abstracti
 * Assign user specified parameters to the physical device.
 In the Twister API, all the above initialization steps are formed by single API call which is: *tw_init_global(argc, argv)*
 
-The user specified parameters for the physical device are provided in the ìport_confî file. This file must be present in the application directory. The parameters are further explained in the below section:
+The user specified parameters for the physical device are provided in the ‚Äúport_conf‚Äù file. This file must be present in the application directory. The parameters are further explained in the below section:
 
 === Port Management 
 The port management is assigning specific parameters which include IP address, subnet mask, gateway IP to the port. All this is done in the initialization module. The user just hast to provide a file to the module, which is *port_conf*. The configuration file should be in JSON format and a sample is provided below:
@@ -40,12 +40,12 @@ d. subnet_mask: The mask to determine the subnet of this port.
 * For an application using multiple ports e.g. 2, the format of port_conf would be i.e. 
 [
        [
-       ìport_nameî:ìtw0î
-	ìip_addrsî:[]
+       ‚Äúport_name‚Äù:‚Äútw0‚Äù
+	‚Äúip_addrs‚Äù:[]
        ],
        [
-       ìport_nameî:îtw1î
-	ìip_addrsî:[]
+       ‚Äúport_name‚Äù:‚Äùtw1‚Äù
+	‚Äúip_addrs‚Äù:[]
        ]
 ]  
 
@@ -59,8 +59,8 @@ The Twister API implementation of event loop has the following features:
 a. Event callback registration: Users can register three types of handles in the loop. 
 
 * RX handle: These handles are used for receiving packets. Currently only one RX handle is supported. This callback is called when any type of packet is received.
-* TX handle: Multiple TX handles can be registered. Each handleís callback will be called once per event loop iteration.
-* Timer handle: This handleís callback will be called after a fixed timeout.
+* TX handle: Multiple TX handles can be registered. Each handle‚Äôs callback will be called once per event loop iteration.
+* Timer handle: This handle‚Äôs callback will be called after a fixed timeout.
 
 b. With each instance of a handle, one callback function is registered. This is called when the event has occurred.
 
@@ -69,7 +69,7 @@ b. With each instance of a handle, one callback function is registered. This is 
 [width="15%"]
 |===============================================================================================================================
 |*Sr.* | *Twister* | *Libuv*
-|1.  | *tw_default_loop:* Reserve memory for an event loop with which handles can be registered. The loopís total time to run is also provided | *uv_default_loop:* Reserve memory for an event loop with which handles can be registered
+|1.  | *tw_default_loop:* Reserve memory for an event loop with which handles can be registered. The loop‚Äôs total time to run is also provided | *uv_default_loop:* Reserve memory for an event loop with which handles can be registered
 |2.  | *tw_<handlename>_init:* Reserve memory for handle pointer and register it with an event loop instance | *uv_<handlename>_init:* Reserve memory for handle pointer and register it with an event loop instance
 |3.  | *tw_<handlename>_start:* Register a callback function for the handle| *uv_<handlename_start>:* Register a callback function for the handle
 |4.  | *tw_run:* Start the event loop | *uv_run:* Start the event loop
@@ -124,7 +124,7 @@ The best way to start writing a new application is to copy an existing Twister A
 
 === HW/SW Information Relating to Twister API
 
-Intel DPDK Version: 2.0.0
+Intel¬Æ DPDK Version: 2.0.0
 
 Linux Kernel Version: 3.11.0-12-generic
 	
@@ -136,7 +136,7 @@ CPU Model: Intel Xeon E312xx (Sandy Bridge)
 
 GCC Version: 4.8.1
 
-IntelÆ NICs Used for testing purposes: Virtual Functions of Intel x520 and x540 Dual Port 10G NICs
+Intel¬Æ NICs Used for testing purposes: Virtual Functions of Intel x520 and x540 Dual Port 10G NICs
 
 
  
