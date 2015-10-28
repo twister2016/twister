@@ -139,12 +139,12 @@ int user_app_main(__attribute__((unused)) void * app_params) {
 
     tx_handle = tw_tx_init(tw_loop);
     if (tx_handle == NULL) {
-        printf("Error in RX init\n");
+        printf("Error in TX init\n");
         exit(1);
     }
     status = tw_tx_start(tx_handle, pkt_tx);
     if (status) {
-        printf("Error in receive start\n");
+        printf("Error in transmit start\n");
         exit(1);
     }
     
