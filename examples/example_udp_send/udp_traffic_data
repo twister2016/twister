@@ -1,9 +1,9 @@
 [
     { "testRuntime" : "30",
       "Payload" : "0064",
-      "ServerIP" : "11.12.13.115",
+      "ServerIP" : "1.2.40.3",
       "ServerPort" : "7777",
-      "StatsServerIP" : "11.12.13.10",
+      "StatsServerIP" : "1.243.243.243",
       "StatsServerPort" : "4002"
     }
 ]
