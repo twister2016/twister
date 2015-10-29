@@ -28,7 +28,9 @@ tw_buf_t * tw_new_buffer(uint16_t buffer_size) {
 	struct rte_mbuf * pkt = tw_app_get_buffer();
 	if(buffer_size)
 		rte_pktmbuf_append(pkt, buffer_size);
+	
 	tw_buf_t * tw_buff = rte_malloc("tw_buf_t *", sizeof(tw_buf_t), RTE_CACHE_LINE_SIZE);
+	tw_buff->size=buffer_size;
 	tw_buff->pkt = pkt;
 	tw_buff->data = rte_pktmbuf_mtod(pkt, void *);
 	return tw_buff;
