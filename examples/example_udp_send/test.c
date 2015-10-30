@@ -64,6 +64,11 @@ int parse_user_params(char * file_name) {
 		user_params.test_runtime = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring, 3);
 		user_params.stats_server_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "StatsServerIP")->valuestring);
 		user_params.stats_server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
+        user_params.tag_heat_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "vm_ip")->valuestring);
+        user_params.stats_server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
+	    global_stats_option.tag_heat_ip=user_params.tag_heat_ip ;
+
+	
 	}
 	return 0;
 }
@@ -133,14 +138,13 @@ void send_stats() {
     }
 
     else {
-        tw_buf_t * tx_buf = tw_new_buffer(user_params.payload_size);
+        tw_buf_t * tx_buf = tw_new_buffer(user_params.payload_size+60);
         eth = tx_buf->data;
        // eth = rte_pktmbuf_mtod(tx_buf->pkt, struct ether_hdr *); 
         ip  = (struct ipv4_hdr* )(eth + 1);
         udp = (struct udp_hdr* )(ip + 1);
         stats_to_send = (struct stats_option*)(udp + 1);
-        tw_memcpy(stats_to_send, (void const *) &global_stats_option, sizeof(stats_to_send));
-        
+        tw_memcpy(stats_to_send, (void const *) &global_stats_option, sizeof(global_stats_option));
     	udp->src_port = rte_cpu_to_be_16(7777);
     	udp->dst_port = rte_cpu_to_be_16(user_params.stats_server_port);
     	udp->dgram_len = rte_cpu_to_be_16(tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
