@@ -1,10 +1,13 @@
 #!/bin/bash
-if pidof -x "UDP_SEND" >/dev/null;
-then
-    echo "Process already running"
-else
-    echo "Process not running, starting..."
-    sleep 1
-    screen -d -m ./UDP_SEND
-
-fi
+while :
+do
+ if pidof -x "UDP_SEND" >/dev/null;
+ then
+   echo "Running"
+   break
+ else
+   echo "Not Running"
+   screen -d -m ./UDP_SEND
+   sleep 1
+ fi
+done
