@@ -69,7 +69,7 @@ tw_tx_t * tw_tx_init(tw_loop_t * loop) {
         temp_handle->next = rte_malloc("tw_tx_t *", sizeof (tw_tx_t), RTE_CACHE_LINE_SIZE);
         temp_handle = temp_handle->next;
     }
-
+	
     //tx_handle = (tw_tx_t *) temp_handle;
     temp_handle->handle_type = TW_TX_HANDLE;
     loop->active_handles++;
@@ -114,19 +114,20 @@ int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t time
     if (timer_handle == NULL)
         return -1;
     timer_handle->timer_cb = timer_cb;
-    timer_handle->timeout = timeout;
+    timer_handle->timeout = timeout * rte_get_tsc_hz();
     timer_handle->repeat = repeat;
     return 0;
 }
 
 int tw_run(tw_loop_t * event_loop) {
 
-    uint8_t infinite_loop = 0, continue_loop = 1;
-    if (event_loop->secs_to_run == INFINITE_LOOP)
-        infinite_loop = 1;
+	uint64_t stats_calc_lim = stats_calc_limit* rte_get_tsc_hz();
+    uint8_t/* infinite_loop = 0,*/ continue_loop = 1;
+    //if (event_loop->secs_to_run == INFINITE_LOOP)
+      //  infinite_loop = 1;
     int num_rx_pkts = 0, pkt_count = 0, i;
     uint64_t curr_time_cycle = 0, /*prev_queued_pkts_cycle = 0,*/ prev_stats_calc = 0, time_diff = 0;
-    uint64_t loop_start_time = tw_get_current_timer_cycles();
+    //uint64_t loop_start_time = tw_get_current_timer_cycles();
     struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()];
     struct mbuf_table m[qconf->num_port];
     struct rte_mbuf * pkt;
@@ -141,8 +142,8 @@ int tw_run(tw_loop_t * event_loop) {
     void (*tw_timer_cb) (tw_timer_t *);
 
     do {
-        if (event_loop->stop_flag)
-            return 0;
+       /* if (event_loop->stop_flag)
+            return 0;*/
         curr_time_cycle = tw_get_current_timer_cycles();
         /*
         time_diff = get_time_diff(curr_time_cycle, prev_queued_pkts_cycle, one_msec);
@@ -151,9 +152,10 @@ int tw_run(tw_loop_t * event_loop) {
             prev_queued_pkts_cycle = curr_time_cycle;
         }
         */
-
-        time_diff = tw_get_time_diff(curr_time_cycle, prev_stats_calc, one_msec);
-        if (unlikely(time_diff > stats_calc_limit)) {
+		
+        
+		time_diff = (curr_time_cycle - prev_stats_calc);
+        if (unlikely(time_diff > stats_calc_lim)) {
             tw_calc_global_stats();
             tw_print_global_stats();
             prev_stats_calc = curr_time_cycle;
@@ -189,8 +191,9 @@ int tw_run(tw_loop_t * event_loop) {
             
             temp_timer_handle = event_loop->timer_handle_queue;
             while (temp_timer_handle != NULL) {
-                time_diff = tw_get_time_diff(curr_time_cycle, temp_timer_handle->last_run_time, one_msec);
-                if (unlikely(time_diff > temp_timer_handle->timeout)) {
+                //time_diff = tw_get_time_diff(curr_time_cycle, temp_timer_handle->last_run_time, one_msec);
+               time_diff = (curr_time_cycle - temp_timer_handle->last_run_time);
+			   if (unlikely(time_diff > temp_timer_handle->timeout)) {
                     tw_timer_cb = temp_timer_handle->timer_cb;
                     tw_timer_cb(temp_timer_handle); 
                     temp_timer_handle->last_run_time = curr_time_cycle;
@@ -199,10 +202,10 @@ int tw_run(tw_loop_t * event_loop) {
             }
         }
 
-        if (!infinite_loop) {
+       /* if (!infinite_loop) {
             if (tw_get_time_diff(curr_time_cycle, loop_start_time, one_sec) >= event_loop->secs_to_run)
                 continue_loop = 0;
-        }
+        }*/
 
     } while (continue_loop);
 

@@ -17,7 +17,7 @@
 
 #define stats_port 0 		//Use port stats_port to send stats packets
 #define stats_update_limit 1000	// send stats pkt after stats_update_limit msec
-#define stats_calc_limit 1000	//calc stats parameters every 1000 millisecs
+#define stats_calc_limit 1	//calc stats parameters every 1000 millisecs
 
 struct rte_timer stats_timer;
 
