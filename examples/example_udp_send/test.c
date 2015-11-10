@@ -122,6 +122,7 @@ void send_stats() {
         eth = tx_buf_stats->data;
         ip  = (struct ipv4_hdr* )(eth + 1);
         udp = (struct udp_hdr* )(ip + 1);
+		global_stats_option.pkts_tx--;
         stats_to_send = (struct stats_option*)(udp + 1);
         tw_memcpy(stats_to_send, (void const *) &global_stats_option, sizeof(global_stats_option));
     	udp->src_port = rte_cpu_to_be_16(7777);
