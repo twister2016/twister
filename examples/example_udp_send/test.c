@@ -44,6 +44,7 @@ void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
 	eth = rte_pktmbuf_mtod(buffer->pkt, struct ether_hdr *);
 	if(rte_be_to_cpu_16(eth->ether_type) == ETHER_TYPE_ARP) {
 //	    printf("()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()\n");
+		global_stats_option.pkts_rx--;
 		tw_arp_parser(buffer, "tw0"); 
     }
     tw_free_pkt(buffer);
@@ -80,6 +81,7 @@ void pkt_tx(tw_tx_t * handle) {
         struct arp_table * temp_arp_entry = tw_search_arp_table(rte_be_to_cpu_32(user_params.server_ip));
         if(temp_arp_entry == NULL) {
             tw_construct_arp_packet(user_params.server_ip, phy_port_id);
+			global_stats_option.pkts_tx--;
         
         }
         else
@@ -113,7 +115,11 @@ void send_stats() {
     if (unlikely(stats_eth_addr) == NULL) {
         struct arp_table * temp_arp_entry = tw_search_arp_table(rte_be_to_cpu_32(user_params.stats_server_ip));
         if(temp_arp_entry == NULL)
-            tw_construct_arp_packet(user_params.stats_server_ip, phy_port_id);
+		{
+			tw_construct_arp_packet(user_params.stats_server_ip, phy_port_id);
+			global_stats_option.pkts_tx--;
+		}
+
         else
             stats_eth_addr = &(temp_arp_entry->eth_mac);
     }
