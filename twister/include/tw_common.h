@@ -25,6 +25,8 @@ int tw_get_port_by_ip(uint32_t ip_addr);
 int tw_eth_name_to_id(char* portName);
 void tw_check_all_ports_link(void);
 uint32_t tw_get_ip_addr(char *port_name);
+inline uint64_t tw_get_tsc_hz(void);
+
 inline void tw_sleep_msec(unsigned);
 inline void tw_sleep_usec(unsigned);
 inline void tw_sleep_nsec(unsigned);

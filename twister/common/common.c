@@ -1,6 +1,6 @@
 
 #include <common.h>
-
+#include <rte_cycles.h>
 uint8_t tw_convert_str_to_iparr(const char *value, uint8_t *ipVar) {
     int ip[5];
     ip[0] = -1;
@@ -135,6 +135,10 @@ inline uint16_t tw_cpu_to_be_16(uint16_t value) {
 
 inline uint32_t tw_cpu_to_be_32(uint32_t value) {
     return rte_cpu_to_be_32(value);
+}
+
+inline uint64_t tw_get_tsc_hz(void) {
+	return rte_get_tsc_hz();
 }
 
 uint8_t tw_parse_int_from_string(char* str) {
