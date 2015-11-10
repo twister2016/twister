@@ -6,7 +6,8 @@
 #include <unistd.h>
 
 
-
+#define RateLimit 6500000
+#define PacketLimit 0
 #define UDP_PROTO_ID	17
 
 
@@ -39,7 +40,7 @@ int user_app_main(void *);
 void pkt_rx(tw_rx_t *, tw_buf_t *);
 void pkt_tx(tw_tx_t *);
 int parse_user_params(char *);
-
+int rate_limit;
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
 	eth = rte_pktmbuf_mtod(buffer->pkt, struct ether_hdr *);
 	if(rte_be_to_cpu_16(eth->ether_type) == ETHER_TYPE_ARP) {
@@ -64,19 +65,22 @@ int parse_user_params(char * file_name) {
 		user_params.server_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "ServerIP")->valuestring);
 		user_params.server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ServerPort")->valuestring, 4);
 		user_params.payload_size = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "Payload")->valuestring, 4);
-		user_params.test_runtime = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring, 3);
+		user_params.test_runtime = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring, 2);
 		user_params.stats_server_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "StatsServerIP")->valuestring);
 		user_params.stats_server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
         user_params.tag_heat_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "vm_ip")->valuestring);
         user_params.stats_server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
 	    global_stats_option.tag_heat_ip=user_params.tag_heat_ip ;
-
 	
 	}
+	
 	return 0;
 }
 
-void pkt_tx(tw_tx_t * handle) {
+void pkt_tx(tw_tx_t * handle) 
+{
+	if((global_stats_option.pkts_tx < PacketLimit || PacketLimit == 0) && (global_stats_option.secs_passed < user_params.test_runtime || user_params.test_runtime == 0))
+	{
     if (unlikely(dst_eth_addr) == NULL) {
         struct arp_table * temp_arp_entry = tw_search_arp_table(rte_be_to_cpu_32(user_params.server_ip));
         if(temp_arp_entry == NULL) {
@@ -110,6 +114,7 @@ void pkt_tx(tw_tx_t * handle) {
     tw_copy_ether_addr(port_info[phy_port_id].eth_mac, &(eth->s_addr));
 	tw_send_pkt(tx_buf, "tw0");	
     }
+	}
 }
 void send_stats() {
     if (unlikely(stats_eth_addr) == NULL) {
