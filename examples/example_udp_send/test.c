@@ -29,6 +29,8 @@ struct ether_addr * stats_eth_addr;
 struct ipv4_hdr * ip;
 struct udp_hdr * udp;
 int phy_port_id;
+uint32_t total_arps;
+
 uint16_t udp_64B;
 static struct ether_addr * dst_eth_addr;
 uint32_t ipv4_tw0;
@@ -85,7 +87,8 @@ void pkt_tx(tw_tx_t * handle)
         struct arp_table * temp_arp_entry = tw_search_arp_table(rte_be_to_cpu_32(user_params.server_ip));
         if(temp_arp_entry == NULL) {
             tw_construct_arp_packet(user_params.server_ip, phy_port_id);
-			global_stats_option.pkts_tx--;
+			total_arps++;
+			//global_stats_option.pkts_tx--;
         
         }
         else
@@ -122,7 +125,8 @@ void send_stats() {
         if(temp_arp_entry == NULL)
 		{
 			tw_construct_arp_packet(user_params.stats_server_ip, phy_port_id);
-			global_stats_option.pkts_tx--;
+			total_arps++;
+			//global_stats_option.pkts_tx--;
 		}
 
         else
@@ -131,6 +135,8 @@ void send_stats() {
 
     else {
         eth = tx_buf_stats->data;
+		global_stats_option.pkts_tx=global_stats_option.pkts_tx-total_arps;
+		total_arps=0;
         ip  = (struct ipv4_hdr* )(eth + 1);
         udp = (struct udp_hdr* )(ip + 1);
 		global_stats_option.pkts_tx--;
