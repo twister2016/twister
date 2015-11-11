@@ -6,7 +6,6 @@
 #include <unistd.h>
 
 
-#define RateLimit 6500000
 #define PacketLimit 0
 #define UDP_PROTO_ID	17
 
@@ -23,30 +22,32 @@ struct user_params {
 };
 struct user_params user_params;
 ////////////////////////
+
 struct stats_option * stats_to_send; 
 struct ether_hdr * eth;
 struct ether_addr * stats_eth_addr;
 struct ipv4_hdr * ip;
 struct udp_hdr * udp;
 int phy_port_id;
+//uint64_t curr_time_cycle,prev_stats_calc;
 uint32_t total_arps;
-
-uint16_t udp_64B;
+//uint64_t ppsdelay;
 static struct ether_addr * dst_eth_addr;
 uint32_t ipv4_tw0;
 tw_buf_t * tx_buf;
 tw_buf_t * tx_buf_stats;
+
 /////////////////////////
+
 int main(int, char **);
 int user_app_main(void *);
 void pkt_rx(tw_rx_t *, tw_buf_t *);
 void pkt_tx(tw_tx_t *);
 int parse_user_params(char *);
-int rate_limit;
+
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
 	eth = rte_pktmbuf_mtod(buffer->pkt, struct ether_hdr *);
 	if(rte_be_to_cpu_16(eth->ether_type) == ETHER_TYPE_ARP) {
-//	    printf("()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()\n");
 		global_stats_option.pkts_rx--;
 		tw_arp_parser(buffer, "tw0"); 
     }
@@ -72,31 +73,32 @@ int parse_user_params(char * file_name) {
 		user_params.stats_server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
         user_params.tag_heat_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "vm_ip")->valuestring);
         user_params.stats_server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
+		user_params.pps_limit = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring, 7);
 	    global_stats_option.tag_heat_ip=user_params.tag_heat_ip ;
 	
 	}
-	
 	return 0;
 }
 
 void pkt_tx(tw_tx_t * handle) 
 {
+	//curr_time_cycle = tw_get_current_timer_cycles();
+	//if((curr_time_cycle - prev_stats_calc) > ppsdelay)
+	//{
+	//	prev_stats_calc=curr_time_cycle;
 	if((global_stats_option.pkts_tx < PacketLimit || PacketLimit == 0) && (global_stats_option.secs_passed < user_params.test_runtime || user_params.test_runtime == 0))
 	{
     if (unlikely(dst_eth_addr) == NULL) {
         struct arp_table * temp_arp_entry = tw_search_arp_table(rte_be_to_cpu_32(user_params.server_ip));
         if(temp_arp_entry == NULL) {
             tw_construct_arp_packet(user_params.server_ip, phy_port_id);
-			total_arps++;
-			//global_stats_option.pkts_tx--;
-        
+			total_arps++;        
         }
         else
             dst_eth_addr = &temp_arp_entry->eth_mac;
 		
     }
     else {
-    //tw_buf_t * tx_buf = tw_new_buffer(user_params.payload_size);
     eth = tx_buf->data;
     ip  = (struct ipv4_hdr* )(eth + 1);
     udp = (struct udp_hdr* )(ip + 1);
@@ -118,6 +120,7 @@ void pkt_tx(tw_tx_t * handle)
 	tw_send_pkt(tx_buf, "tw0");	
     }
 	}
+	//}
 }
 void send_stats() {
     if (unlikely(stats_eth_addr) == NULL) {
@@ -126,7 +129,6 @@ void send_stats() {
 		{
 			tw_construct_arp_packet(user_params.stats_server_ip, phy_port_id);
 			total_arps++;
-			//global_stats_option.pkts_tx--;
 		}
 
         else
@@ -171,6 +173,7 @@ int main(int argc, char **argv) {
     phy_port_id = tw_eth_name_to_id("tw0");
 	tx_buf = tw_new_buffer(user_params.payload_size);
 	tx_buf_stats  = tw_new_buffer(128);
+	//ppsdelay = tw_get_tsc_hz()/user_params.pps_limit;
     user_app_main(NULL);
     return 0;
 }

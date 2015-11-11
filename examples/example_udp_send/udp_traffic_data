@@ -1,1 +1,3 @@
-[{"StatsServerPort": "4002", "vm_ip": "172.17.250.146", "testRuntime": "30", "Protocol": "UDP", "Payload": "0064", "StatsServerIP": "1.243.243.243", "ServerIPRange": "1", "ServerIP": "1.2.40.3","ServerPort" : "7777","vm_ip" : "172.17.250.146"}]
+
+
+[{"StatsServerPort": "4002", "vm_ip": "172.17.250.146", "testRuntime": "00", "ppsLimit": "6000000", "Protocol": "UDP", "Payload": "0064", "StatsServerIP": "1.243.243.243", "ServerIPRange": "1", "ServerIP": "1.2.40.3","ServerPort" : "7777","vm_ip" : "172.17.250.146"}]
