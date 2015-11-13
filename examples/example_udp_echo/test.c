@@ -14,6 +14,8 @@ struct ether_hdr * eth;
 struct ipv4_hdr * ipHdr_d;
 struct udp_hdr * udp_hdr_d;
 uint16_t eth_type;
+struct ether_addr * dst_eth;
+
 
 void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
     eth = buffer->data;
@@ -43,7 +45,7 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                 udp_hdr_d->dgram_cksum = 0;
 
                 tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
-                tw_copy_ether_addr(tw_get_ether_addr("tw0"), &(eth->s_addr));
+                tw_copy_ether_addr(dst_eth, &(eth->s_addr));
                 tw_send_pkt(buffer, "tw0");
                 break;
                 
@@ -56,8 +58,8 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 int main(int argc, char **argv) {
     tw_init_global(argc,argv);
     tw_map_port_to_engine("tw0", "engine0");
+	dst_eth=tw_get_ether_addr("tw0");
     user_app_main(NULL);
-
     return 0;
 }
 

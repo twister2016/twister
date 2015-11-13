@@ -44,7 +44,7 @@ tw_rx_t * tw_rx_init(tw_loop_t * loop) {
     //TODO populate tw_loop_t entries if needed
     //udp_handle = temp_udp_handle;
     temp_rx_handle->handle_type = TW_UDP_HANDLE;
-    loop->active_handles++;
+    //loop->active_handles++;
     //udp_handle = temp_udp_handle;
     //udp_handle->flags = 0;
     //return 0;
@@ -158,10 +158,11 @@ int tw_run(tw_loop_t * event_loop) {
         if (unlikely(time_diff > stats_calc_lim)) {
             tw_calc_global_stats();
             tw_print_global_stats();
+			 tw_timely_burst();
             prev_stats_calc = curr_time_cycle;
         }
 
-        tw_timely_burst();
+       
 
         temp_rx_handle = event_loop->rx_handle_queue;
         if (temp_rx_handle != NULL)
