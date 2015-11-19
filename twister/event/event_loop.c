@@ -153,12 +153,12 @@ int tw_run(tw_loop_t * event_loop) {
         }
         */
 		
-        
+        tw_timely_burst();
 		time_diff = (curr_time_cycle - prev_stats_calc);
         if (unlikely(time_diff > stats_calc_lim)) {
             tw_calc_global_stats();
             tw_print_global_stats();
-			 tw_timely_burst();
+			 
             prev_stats_calc = curr_time_cycle;
         }
 
