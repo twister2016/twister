@@ -137,6 +137,10 @@ inline uint32_t tw_cpu_to_be_32(uint32_t value) {
     return rte_cpu_to_be_32(value);
 }
 
+inline uint32_t tw_be_to_cpu_32(uint32_t value) {
+    return rte_be_to_cpu_32(value);
+}
+
 inline uint64_t tw_get_tsc_hz(void) {
 	return rte_get_tsc_hz();
 }
