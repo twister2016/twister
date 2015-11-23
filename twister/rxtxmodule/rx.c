@@ -8,12 +8,12 @@ int tw_rx_for_each_queue(struct mbuf_table * m) {
 	uint32_t total_pkts_rx = 0;
 	lcore_id = rte_lcore_id();
 	qconf = &lcore_conf[lcore_id];
-        int portiter =0;
-        for (portiter =0;portiter< qconf->num_port;portiter++ ){
+        int i =0;
+        for (i =0 ; i< qconf->num_port  ;i++ ){
             
-            nb_pkt_rx += tw_get_pkt_from_rx_queue(&m[portiter],qconf->managed_port[portiter],0);
-		    m[portiter].portid=qconf->managed_port[portiter];
-		    m[portiter].len=nb_pkt_rx;
+            nb_pkt_rx = tw_get_pkt_from_rx_queue(&m[i],qconf->managed_port[i],0);
+		    m[i].portid=qconf->managed_port[i];
+		    m[i].len=nb_pkt_rx;
 		    total_pkts_rx +=nb_pkt_rx;    
     
         }	
