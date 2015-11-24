@@ -32,6 +32,7 @@ inline void tw_sleep_msec(unsigned);
 inline void tw_sleep_usec(unsigned);
 inline void tw_sleep_nsec(unsigned);
 extern cJSON * tw_parse_json_file(const char *);
+extern int Printing_Enable;
 
 
 #endif

@@ -6,6 +6,9 @@
 #include <tx.h>
 #include <queued_pkts.h>
 #include <tw_api.h>
+
+
+int Printing_Enable = 1;
 int tw_loop_init(tw_loop_t * event_loop) { //TODO secs_to_run for  event loop
     event_loop->data = NULL;
 //    int core_id = rte_lcore_id();
@@ -154,11 +157,11 @@ int tw_run(tw_loop_t * event_loop) {
         */
 		
         tw_timely_burst();
-		time_diff = (curr_time_cycle - prev_stats_calc);
+	time_diff = (curr_time_cycle - prev_stats_calc);
         if (unlikely(time_diff > stats_calc_lim)) {
             tw_calc_global_stats();
+            if(Printing_Enable)
             tw_print_global_stats();
-			 
             prev_stats_calc = curr_time_cycle;
         }
 
