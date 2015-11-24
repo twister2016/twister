@@ -33,7 +33,7 @@ int tw_init_eal_env(int argc, char **argv) {
     if ( argc == 1 ) {
     const char *temp0, *temp1, *temp2, *temp3, *temp4, *temp5, *temp6, *temp7, *temp8;
     temp0 = "-c";
-    temp1 = "0x04";
+    temp1 = "0x0E";
     temp2 = "-n";
     temp3 = "4";
     temp4 = "-b";

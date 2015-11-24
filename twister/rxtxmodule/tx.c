@@ -36,7 +36,7 @@ int tw_timely_burst(void) {
      */
     diff_tsc = cur_tsc - prev_tsc;
     if (unlikely(diff_tsc > drain_tsc)) {
-        for (portid = 0; portid < RTE_MAX_ETHPORTS; portid++) {
+        for (portid = 0; portid < qconf->num_port ; portid++) {
             if (qconf->tx_mbufs[portid].len == 0)
                 continue;
             tw_send_burst(&lcore_conf[lcore_id],

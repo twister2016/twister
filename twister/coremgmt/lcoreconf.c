@@ -55,7 +55,8 @@ int tw_map_port_to_engine(char portName[10], char coreName[10]) {
     
     int port_id_resolved = tw_eth_name_to_id(portName);
     int engine_id_resolved = tw_engine_name_to_lcore_id(coreName);
-//    printf("engine_id_resolved = %d  , port_id_resolved=%d\n", port_id_resolved,engine_id_resolved);
+    //printf("engine_id_resolved = %d  , port_id_resolved=%d , rte_lcore_id %d \n",engine_id_resolved,port_id_resolved,rte_lcore_id());
+   
     if (port_id_resolved != -1 && engine_id_resolved != -1) { 
         lcore_conf[engine_id_resolved].managed_port[lcore_conf[engine_id_resolved].num_port] = port_id_resolved;
         lcore_conf[engine_id_resolved].num_port++;
@@ -65,7 +66,6 @@ int tw_map_port_to_engine(char portName[10], char coreName[10]) {
         printf("port_id_resolved = %d portName=%s\n", port_id_resolved, portName);
         printf("engine_id_resolved = %d  engineName=%s\n", engine_id_resolved, coreName);
     }
-    
     return 0;
 
 
