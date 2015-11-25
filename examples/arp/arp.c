@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include <tw_api.h>
 #include <arpa/inet.h>
-#include <arplogic.h>
-
 
 ///variables////
 uint32_t ip=0;
@@ -84,8 +82,6 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                 
                 struct arp_table * temp_arp_entry = tw_search_arp_table(rte_be_to_cpu_32(ip));
                 if (temp_arp_entry!=NULL && mac_received==0) {
-                    if (rte_be_to_cpu_16(arp_pkt->arp_op) == ARP_OP_REPLY)
-                        printf("its an arp reply\n");
                     dst_eth_addr = &temp_arp_entry->eth_mac;
                     
                     printf("MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n",
@@ -95,9 +91,8 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                                 dst_eth_addr->addr_bytes[3],
                                 dst_eth_addr->addr_bytes[4],
                                 dst_eth_addr->addr_bytes[5]);
-                    //fprintf(stderr, "\n>>");
                     arp_flag=-1;
-		            mac_received=1;
+		    mac_received=1;
                     break;
                 }
                 else
@@ -108,22 +103,10 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 }
 void check_arp(int* no){
     int phy_port_id = tw_eth_name_to_id("tw0");
-    int arp_count=0;
     if (arp_flag==1){
         tw_construct_arp_packet(ip, phy_port_id);
-     //   printf(" 1 packet sent to ip : %u count=%d\n",ip,arp_count);
         arp_flag=-1;
     }
-    /*while (arp_flag!= -1){
-        arp_count++;
-        tw_construct_arp_packet(ip, phy_port_id);
-        usleep(5000000);
-        printf(" 1 packet sent to ip : %u count=%d\n",ip,arp_count);
-        if ( arp_count>5 ){
-            arp_flag=-1;
-            break;
-        }
-    }*/
 }
 
 int main(int argc, char **argv) {
