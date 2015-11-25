@@ -32,7 +32,7 @@
 include twister.mk
 
 CC=gcc
-APP=PING
+APP=UDP_SEND
 SRCS=test.c
 
 
