@@ -37,7 +37,7 @@ SRCS=arp.c
 
 
 hellomake: $(SRCS)
-	$(CC) -g $(SRCS) $(TWFLAGS) -o $(APP)
+	$(CC) $(SRCS) $(TWFLAGS) -o $(APP)
 
 .PHONY: clean
 
