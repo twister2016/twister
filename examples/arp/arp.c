@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 
 ///variables////
-uint32_t ip=0;
+char* ip;
 int arp_flag=-1;
 int mac_received=0;
 
@@ -38,7 +38,7 @@ static int console_input(int* dont){
         fgets (line, 1024, stdin);
         line[strlen(line)-1] = 0;
         if (isValidIpAddress(line)){
-            ip=tw_convert_ip_str_to_dec(line);
+            ip=line;
             arp_flag=1;
             mac_received=0;
             uint8_t mac_heartbeat=0;
@@ -79,12 +79,17 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
         switch (tw_be_to_cpu_16(eth->ether_type)) {
             case ETHER_TYPE_ARP:
                 tw_arp_parser(buffer, "tw0");
-                
-                struct arp_table * temp_arp_entry = tw_search_arp_table(rte_be_to_cpu_32(ip));
-                if (temp_arp_entry!=NULL && mac_received==0) {
-                    dst_eth_addr = &temp_arp_entry->eth_mac;
-                    
+                struct ether_addr * mac_addr = tw_search_arp_entry(ip);
+                //printf("pointer= %p\n", temp_arp_entry);
+                if (mac_addr!=NULL && mac_received==0) {
+                    dst_eth_addr = &mac_addr;
                     printf("MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n",
+                                /*mac_addr->addr_bytes[0],
+                                mac_addr->addr_bytes[1],
+                                mac_addr->addr_bytes[2],
+                                mac_addr->addr_bytes[3],
+                                mac_addr->addr_bytes[4],
+                                mac_addr->addr_bytes[5]);*/
                                 dst_eth_addr->addr_bytes[0],
                                 dst_eth_addr->addr_bytes[1],
                                 dst_eth_addr->addr_bytes[2],
@@ -92,7 +97,7 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                                 dst_eth_addr->addr_bytes[4],
                                 dst_eth_addr->addr_bytes[5]);
                     arp_flag=-1;
-		    mac_received=1;
+              mac_received=1;
                     break;
                 }
                 else
@@ -102,9 +107,8 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 
 }
 void check_arp(int* no){
-    int phy_port_id = tw_eth_name_to_id("tw0");
     if (arp_flag==1){
-        tw_construct_arp_packet(ip, phy_port_id);
+        tw_send_arp_request(ip, "tw0"); 
         arp_flag=-1;
     }
 }
@@ -142,4 +146,3 @@ int user_app_main(__attribute__((unused)) void * app_params) {
     tw_run(tw_loop);
     return 0;
 }
-
