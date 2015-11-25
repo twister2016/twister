@@ -12,7 +12,9 @@ uint8_t tw_convert_str_to_iparr(const char *value, uint8_t *ipVar) {
     else {
         uint8_t n = 0;
         for (n = 0; n < 4; n++) {
-            char temp[3];
+            char temp[3]={'\0',
+                          '\0',
+                          '\0'};
 
             if (((ip[n + 1]) - (ip[n] + 1)) == 1) {
                 temp[0] = '0';
