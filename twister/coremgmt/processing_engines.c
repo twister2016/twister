@@ -3,9 +3,10 @@
 
 #include <tw_api.h>
 
-void tw_launch_engine(void * func, void * arg, int launch_type) {
-	
-	if(launch_type == USE_ALL_ENGINES)
+void tw_launch_engine(void * func, void * arg, char* engine_name) {
+	int engine_id = tw_engine_name_to_lcore_id(engine_name);
+        
+/*	if(launch_type == USE_ALL_ENGINES)
 		rte_eal_mp_remote_launch(func, arg, CALL_MASTER);
 	else if(launch_type == RESERVE_FIRST_ENGINE)
 		rte_eal_mp_remote_launch(func, arg, SKIP_MASTER);
@@ -16,7 +17,7 @@ void tw_launch_engine(void * func, void * arg, int launch_type) {
 		lcore_config[master].state = FINISHED;
 	}
 	else
-		rte_eal_remote_launch(func, arg, launch_type);
+*/		rte_eal_remote_launch(func, arg, engine_id);
 		
 	return;
 }

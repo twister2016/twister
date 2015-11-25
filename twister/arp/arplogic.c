@@ -1,6 +1,6 @@
 #include <arplogic.h>
 #include <initfuncs.h>
-
+#include <arpa/inet.h>
 struct arp_table * arp_table_root = NULL;
 uint32_t arp_table_size = 0;
 struct ether_addr broadcastmac = {
@@ -148,21 +148,26 @@ int tw_construct_arp_packet(uint32_t ip, uint8_t port_id) {
 }
 
 void tw_print_arp_table(void) {
-    printf("\n\nARP table\n");
+    printf("\nARP table\n");
+    printf("\n|----------IP--------|----------MAC-------------|");
+    struct in_addr ip_addr;
     struct arp_table * temp_arp_entry = arp_table_root;
     while (temp_arp_entry != NULL) {
-        printf("IP: %d\n", temp_arp_entry->ip_addr);
-        printf("MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n",
+        ip_addr.s_addr = temp_arp_entry->ip_addr;
+        printf("\n|    %s ", inet_ntoa(ip_addr));
+        printf("  |     %02X:%02X:%02X:%02X:%02X:%02X    |",
                 temp_arp_entry->eth_mac.addr_bytes[0],
                 temp_arp_entry->eth_mac.addr_bytes[1],
                 temp_arp_entry->eth_mac.addr_bytes[2],
                 temp_arp_entry->eth_mac.addr_bytes[3],
                 temp_arp_entry->eth_mac.addr_bytes[4],
                 temp_arp_entry->eth_mac.addr_bytes[5]);
-        printf("Port ID: %d\n", temp_arp_entry->port_id);
+        //printf("Port ID: %d\n", temp_arp_entry->port_id);
         temp_arp_entry = temp_arp_entry->next;
     }
+    printf("\n");
     return;
+
 }
 
 inline int tw_arp_parser(tw_buf_t * buffer, char * port_name) {

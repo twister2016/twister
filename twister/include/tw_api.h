@@ -1,6 +1,7 @@
 #ifndef _TWAPI_H_
 #define _TWAPI_H_
 #include <event_loop.h>
+#include <lcoreconf.h>
 /**
  * @file
  *
@@ -14,7 +15,7 @@ struct arp_table {
 } __attribute__((__packed__));
 
 int tw_init_global(int argc, char** argv); 
-void tw_launch_engine(void * func, void * arg, int launch_type); 
+void tw_launch_engine(void * func, void * arg, char* engine_name); 
 
 tw_loop_t * tw_default_loop(uint16_t time_to_run);
 tw_rx_t * tw_rx_init(tw_loop_t *);
