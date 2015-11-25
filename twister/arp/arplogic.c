@@ -153,7 +153,7 @@ void tw_print_arp_table(void) {
     struct in_addr ip_addr;
     struct arp_table * temp_arp_entry = arp_table_root;
     while (temp_arp_entry != NULL) {
-        ip_addr.s_addr = temp_arp_entry->ip_addr;
+        ip_addr.s_addr = tw_cpu_to_be_32(temp_arp_entry->ip_addr);
         printf("\n|    %s ", inet_ntoa(ip_addr));
         printf("  |     %02X:%02X:%02X:%02X:%02X:%02X    |",
                 temp_arp_entry->eth_mac.addr_bytes[0],
