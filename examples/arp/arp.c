@@ -33,7 +33,7 @@ static int console_input(int* dont){
     char line[1024];
     printf("\e[1;1H\e[2J");
     printf("\n ******** TWISTER ARP APPLICATION ***********\n");
-    printf("\n enter IP address i.e., <xx.xx.xx.xx> or <arptable> or <exit>")
+    printf("\n enter IP address i.e., <xx.xx.xx.xx> or <arptable> or <exit>");
     printf("\n>>");
     while(1){
         
@@ -42,7 +42,17 @@ static int console_input(int* dont){
         if (isValidIpAddress(line)){
             ip=tw_convert_ip_str_to_dec(line);
             arp_flag=1;
-            mac_received=0; 
+            mac_received=0;
+            uint8_t mac_heartbeat=0;
+            while(mac_received!=1){
+                mac_heartbeat++;
+                usleep(1000000);
+                if ( mac_heartbeat>4 ){
+                    printf("ARP not resolved\n");
+                    break;
+                }
+            }
+            printf("\n>>"); 
            
         }
         else if (strcmp(line, "exit") == 0) {
@@ -85,7 +95,7 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                                 dst_eth_addr->addr_bytes[3],
                                 dst_eth_addr->addr_bytes[4],
                                 dst_eth_addr->addr_bytes[5]);
-                    fprintf(stderr, "\n>>");
+                    //fprintf(stderr, "\n>>");
                     arp_flag=-1;
 		            mac_received=1;
                     break;
