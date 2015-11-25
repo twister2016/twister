@@ -80,16 +80,9 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
             case ETHER_TYPE_ARP:
                 tw_arp_parser(buffer, "tw0");
                 struct ether_addr * mac_addr = tw_search_arp_entry(ip);
-                //printf("pointer= %p\n", temp_arp_entry);
                 if (mac_addr!=NULL && mac_received==0) {
                     dst_eth_addr = &mac_addr;
                     printf("MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n",
-                                /*mac_addr->addr_bytes[0],
-                                mac_addr->addr_bytes[1],
-                                mac_addr->addr_bytes[2],
-                                mac_addr->addr_bytes[3],
-                                mac_addr->addr_bytes[4],
-                                mac_addr->addr_bytes[5]);*/
                                 dst_eth_addr->addr_bytes[0],
                                 dst_eth_addr->addr_bytes[1],
                                 dst_eth_addr->addr_bytes[2],
