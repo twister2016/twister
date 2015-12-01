@@ -113,12 +113,11 @@ int tw_timer_bind(tw_timer_t * timer_handle, struct tw_sockaddr_in * addr, int s
     return 0;
 }
 
-int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t timeout, uint64_t repeat) {
+int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t timeout) {
     if (timer_handle == NULL)
         return -1;
     timer_handle->timer_cb = timer_cb;
-    timer_handle->timeout = timeout * rte_get_tsc_hz();
-    timer_handle->repeat = repeat;
+    timer_handle->timeout = (timeout) *( rte_get_tsc_hz() / 1000 );
     return 0;
 }
 
@@ -148,13 +147,6 @@ int tw_run(tw_loop_t * event_loop) {
        /* if (event_loop->stop_flag)
             return 0;*/
         curr_time_cycle = tw_get_current_timer_cycles();
-        /*
-        time_diff = get_time_diff(curr_time_cycle, prev_queued_pkts_cycle, one_msec);
-        if (unlikely(time_diff > queue_update_limit)) {
-            update_queued_pkts(curr_time_cycle);
-            prev_queued_pkts_cycle = curr_time_cycle;
-        }
-        */
 		
         tw_timely_burst();
 	time_diff = (curr_time_cycle - prev_stats_calc);
@@ -180,7 +172,6 @@ int tw_run(tw_loop_t * event_loop) {
                     temp_buffer.port_name = port_info[i].port_name;
                     tw_rx_cb = temp_rx_handle->recv_cb;
                     tw_rx_cb(temp_rx_handle, &temp_buffer);
-                    //eth_pkt_parser(pkt, m[i].portid, LOOP_PROCESS, NULL);
                 }
             }
         }
@@ -195,9 +186,8 @@ int tw_run(tw_loop_t * event_loop) {
             
             temp_timer_handle = event_loop->timer_handle_queue;
             while (temp_timer_handle != NULL) {
-                //time_diff = tw_get_time_diff(curr_time_cycle, temp_timer_handle->last_run_time, one_msec);
-               time_diff = (curr_time_cycle - temp_timer_handle->last_run_time);
-			   if (unlikely(time_diff > temp_timer_handle->timeout)) {
+                time_diff = (curr_time_cycle - temp_timer_handle->last_run_time);
+                if (unlikely(time_diff > temp_timer_handle->timeout)) {
                     tw_timer_cb = temp_timer_handle->timer_cb;
                     tw_timer_cb(temp_timer_handle); 
                     temp_timer_handle->last_run_time = curr_time_cycle;
@@ -206,10 +196,7 @@ int tw_run(tw_loop_t * event_loop) {
             }
         }
 
-       /* if (!infinite_loop) {
-            if (tw_get_time_diff(curr_time_cycle, loop_start_time, one_sec) >= event_loop->secs_to_run)
-                continue_loop = 0;
-        }*/
+
 
     } while (continue_loop);
 

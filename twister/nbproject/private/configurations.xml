@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="arp">
+        <in>arplogic.c</in>
+      </df>
+      <df name="common">
+        <in>common.c</in>
+      </df>
+      <df name="coremgmt">
+        <in>lcoreconf.c</in>
+        <in>processing_engines.c</in>
+      </df>
+      <df name="ethernet">
+        <in>eth.c</in>
+        <in>vlan.c</in>
+      </df>
+      <df name="event">
+        <in>event_loop.c</in>
+      </df>
+      <df name="include">
+        <in>arplogic.h</in>
+        <in>cJSON.h</in>
+        <in>common.h</in>
+        <in>eth.h</in>
+        <in>event_loop.h</in>
+        <in>initfuncs.h</in>
+        <in>jsonparser.h</in>
+        <in>lcoreconf.h</in>
+        <in>mempoolconf.h</in>
+        <in>periodic_timers.h</in>
+        <in>portconf.h</in>
+        <in>processing_engines.h</in>
+        <in>queued_pkts.h</in>
+        <in>rx.h</in>
+        <in>stats.h</in>
+        <in>timerdefs.h</in>
+        <in>timerfuncs.h</in>
+        <in>tw_api.h</in>
+        <in>tw_common.h</in>
+        <in>tx.h</in>
+        <in>vlan.h</in>
+      </df>
+      <df name="initmodule">
+        <in>initfuncs.c</in>
+      </df>
+      <df name="jsonmodule">
+        <in>cJSON.c</in>
+        <in>cJSON.h</in>
+        <in>jsonparser.c</in>
+        <in>jsonparser.h</in>
+      </df>
+      <df name="memmgmt">
+        <in>mempoolconf.c</in>
+      </df>
+      <df name="mk">
+        <in>initfuncs.c</in>
+      </df>
+      <df name="portmgmt">
+        <in>portconf.c</in>
+      </df>
+      <df name="rxtxmodule">
+        <in>queued_pkts.c</in>
+        <in>rx.c</in>
+        <in>tx.c</in>
+      </df>
+      <df name="stats">
+        <in>stats.c</in>
+      </df>
+      <df name="timermodules">
+        <in>periodic_timers.c</in>
+        <in>timerdefs.c</in>
+        <in>timerfuncs.c</in>
+      </df>
+    </df>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>root@172.17.250.70:22</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir>/home/monster/Documents/netbeansprojects/twister/examples/example_udp_send</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

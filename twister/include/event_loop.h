@@ -98,7 +98,7 @@ struct tw_timer_s {
     struct tw_sockaddr_in * dst_addr;
     uint8_t flags;
     uint64_t timeout;
-    uint64_t repeat;
+    uint8_t repeat;
     void * timer_cb;
 };
 
@@ -123,6 +123,6 @@ int tw_stop(tw_loop_t *);
 
 //tw_timer_t * tw_timer_init(tw_loop_t *);
 //int tw_timer_bind(tw_timer_t *, struct tw_sockaddr_in *, int, uint8_t);
-//int tw_timer_start(tw_timer_t *, tw_timer_cb, uint64_t, uint64_t);
+//int tw_timer_start(tw_timer_t *, tw_timer_cb, uint64_t);
 
 #endif
