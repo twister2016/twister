@@ -106,12 +106,12 @@ tw_timer_t * tw_timer_init(tw_loop_t * loop) {
     return temp_handle;
 }
 
-int tw_timer_bind(tw_timer_t * timer_handle, struct tw_sockaddr_in * addr, int sock_fd, uint8_t flags) {
+/*int tw_timer_bind(tw_timer_t * timer_handle, struct tw_sockaddr_in * addr, int sock_fd, uint8_t flags) {
     timer_handle->flags = flags;
     timer_handle->sock_fd = sock_fd;
     timer_handle->dst_addr = addr;
     return 0;
-}
+}*/
 
 int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t timeout) {
     if (timer_handle == NULL)
