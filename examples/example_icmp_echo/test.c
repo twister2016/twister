@@ -213,7 +213,7 @@ int user_app_main(__attribute__((unused)) void * app_params) {
     }
 
     timer_handle = tw_timer_init(tw_loop);
-    tw_timer_start(timer_handle,pkt_tx , 1);
+    tw_timer_start(timer_handle,pkt_tx , 1000);
     tw_run(tw_loop);
     return 0;
 }
