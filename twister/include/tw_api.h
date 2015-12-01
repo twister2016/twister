@@ -34,4 +34,6 @@ int tw_tx_start(tw_tx_t *, void * tx_cb);
 tw_timer_t * tw_timer_init(tw_loop_t * loop); 
 int tw_timer_bind(tw_timer_t * timer_handle, struct tw_sockaddr_in * addr, int sock_fd, uint8_t flags);
 int tw_timer_start(tw_timer_t *, tw_timer_cb, uint64_t);
+int tw_send_arp_request(uint32_t , char *);
+void tw_print_arp_table(void);
 #endif

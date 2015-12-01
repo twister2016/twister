@@ -23,7 +23,8 @@ int tw_process_arp_reply(struct ether_hdr *, uint8_t);
 struct ether_addr * tw_search_arp_entry(char *);
 int tw_add_arp_entry(uint32_t ip_to_add, struct ether_addr, uint8_t);
 //int tw_construct_arp_packet(uint32_t, uint8_t);
-int tw_send_arp_request(char *, char *);
-void tw_print_arp_table(void);
+//int tw_send_arp_request(uint32_t ip_addr, char * port_name);
+//int tw_send_arp_request(char *, char *);
+//void tw_print_arp_table(void);
 //int tw_arp_parser(tw_buf_t *, char *);
 #endif
