@@ -211,8 +211,7 @@ int user_app_main(__attribute__((unused)) void * app_params) {
 	
     
     timer_handle = tw_timer_init(tw_loop);
-    tw_timer_bind(timer_handle, NULL, 0, 0);
-    tw_timer_start(timer_handle, send_stats, 1, 1);
+    tw_timer_start(timer_handle, send_stats, 1000);
 	
     tw_run(tw_loop);
     return 0;
