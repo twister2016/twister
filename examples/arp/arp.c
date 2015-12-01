@@ -101,7 +101,7 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 }
 void check_arp(int* no){
     if (arp_flag==1){
-        tw_send_arp_request(ip, "tw0"); 
+        tw_send_arp_request(tw_convert_ip_str_to_dec(ip), "tw0"); 
         arp_flag=-1;
     }
 }

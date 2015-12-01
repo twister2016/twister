@@ -194,7 +194,7 @@ tw_timer_t * tw_timer_init(tw_loop_t * loop);
 * @return
 *   TRUE(0) on success and False(-1) if timer timer_handle is NULL
 */
-int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t timeout, uint64_t repeat);
+int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t timeout);
 
 /** create and send the arp request packet for ip through ports ie. tw0, tw1..
 *
