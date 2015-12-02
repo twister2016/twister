@@ -35,7 +35,16 @@ int tw_init_global(int argc, char** argv);
 *   An engine name in string on which the func(args) would be executed i.e., "engine0", "engine1", "engine2", "engine3".
 */
 void tw_launch_engine(void * func, void * arg, char* engine_name);
-
+/** map port name tw0 to engine name engine0, engine1 etc. All the tx,rx processing of that port would be handled by the mapped engine
+*
+* @param portName
+*   tw0, tw1...etc
+* @param coreName
+*   engine0, engine1.... etc
+* @return
+*   TRUE(1), False(-1)
+ */
+int tw_map_port_to_engine(char portName[10], char coreName[10]);
 /** Initialize an eventloop for a specified number of time
 *
 * @param time_to_run (seconds)
@@ -134,6 +143,14 @@ inline void tw_vlan_strip(tw_buf_t * buffer);
 */  
 struct arp_table * tw_search_arp_table(uint32_t ip_to_search); 
 
+/** search the ip from arp table
+*
+* @param ip_string
+*  IPv4 string "x.x.x.x" to search from arp table. 
+* @return
+*   TRUE (pointer to an element on arp table linklist arp_table ) FALSE(NULL) 
+*/
+struct ether_addr * tw_search_arp_entry(char *ip_string);
 /** create and send the arp request packet for ip through ports ie. tw0, tw1.. where port_id can be find by eth_name_to_id
 *
 * @param ip
@@ -160,7 +177,12 @@ tw_buf_t * tw_new_buffer(uint16_t buffer_size);
 *   memory address to free 
 */ 
 inline void tw_free(void * ptr); 
-
+/** free a packet from memory buffer, this should be called when you want to free the memory of recevied packet after processing as done in examples
+*
+* @param buffer
+*   packet buffer whose packet memory is to be freed. 
+*/ 
+inline void tw_free_pkt(tw_buf_t *buffer);
 /** copy the buffer from source to destination memory address for given sizes
 *
 * @param dst

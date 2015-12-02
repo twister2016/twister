@@ -35,6 +35,6 @@ inline void tw_free_buffer(tw_buf_t *);
 struct rte_mbuf * tw_app_get_buffer(void);
 //tw_buf_t * tw_new_buffer(uint16_t);
 //void tw_memcpy (void *, const void *, size_t);
-inline void tw_free_pkt(tw_buf_t *);
+//inline void tw_free_pkt(tw_buf_t *);
 
 #endif
