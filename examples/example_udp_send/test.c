@@ -46,8 +46,8 @@ void pkt_tx(tw_tx_t *);
 int parse_user_params(char *);
 
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
-	eth = rte_pktmbuf_mtod(buffer->pkt, struct ether_hdr *);
-	if(rte_be_to_cpu_16(eth->ether_type) == ETHER_TYPE_ARP) {
+	eth = buffer->data;
+	if(tw_be_to_cpu_16(eth->ether_type) == ETHER_TYPE_ARP) {
 		global_stats_option.pkts_rx--;
 		tw_arp_parser(buffer, "tw0"); 
     }
@@ -124,7 +124,7 @@ void pkt_tx(tw_tx_t * handle)
 }
 void send_stats() {
     if (unlikely(stats_eth_addr) == NULL) {
-        struct arp_table * temp_arp_entry = tw_search_arp_table(rte_be_to_cpu_32(user_params.stats_server_ip));
+        struct arp_table * temp_arp_entry = tw_search_arp_table(tw_be_to_cpu_32(user_params.stats_server_ip));
         if(temp_arp_entry == NULL)
 		{
 			tw_construct_arp_packet(user_params.stats_server_ip, phy_port_id);
@@ -144,11 +144,11 @@ void send_stats() {
 		global_stats_option.pkts_tx--;
         stats_to_send = (struct stats_option*)(udp + 1);
         tw_memcpy(stats_to_send, (void const *) &global_stats_option, sizeof(global_stats_option));
-    	udp->src_port = rte_cpu_to_be_16(7777);
-    	udp->dst_port = rte_cpu_to_be_16(user_params.stats_server_port);
-    	udp->dgram_len = rte_cpu_to_be_16(tx_buf_stats->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
+    	udp->src_port = tw_cpu_to_be_16(7777);
+    	udp->dst_port = tw_cpu_to_be_16(user_params.stats_server_port);
+    	udp->dgram_len = tw_cpu_to_be_16(tx_buf_stats->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
     	udp->dgram_cksum = 0;
-    	ip->total_length = rte_cpu_to_be_16(tx_buf_stats->size - sizeof(struct ether_hdr));
+    	ip->total_length = tw_cpu_to_be_16(tx_buf_stats->size - sizeof(struct ether_hdr));
     	ip->next_proto_id = UDP_PROTO_ID;
     	ip->src_addr = ipv4_tw0;
     	ip->dst_addr = tw_cpu_to_be_32(user_params.stats_server_ip);
@@ -156,7 +156,7 @@ void send_stats() {
     	ip->time_to_live = 63;
     	ip->hdr_checksum = 0;
     	ip->hdr_checksum =tw_ipv4_cksum(ip);
-    	eth->ether_type = rte_cpu_to_be_16(ETHER_TYPE_IPv4);
+    	eth->ether_type = tw_cpu_to_be_16(ETHER_TYPE_IPv4);
         tw_copy_ether_addr(stats_eth_addr, &(eth->d_addr));
         tw_copy_ether_addr(port_info[phy_port_id].eth_mac, &(eth->s_addr));
     	tw_send_pkt(tx_buf_stats, "tw0");
@@ -171,8 +171,8 @@ int main(int argc, char **argv) {
     parse_user_params("udp_traffic_data");
     tw_map_port_to_engine("tw0", "engine0");
     phy_port_id = tw_eth_name_to_id("tw0");
-	tx_buf = tw_new_buffer(user_params.payload_size);
-	tx_buf_stats  = tw_new_buffer(128);
+    tx_buf = tw_new_buffer(user_params.payload_size);
+    tx_buf_stats  = tw_new_buffer(128);
 	//ppsdelay = tw_get_tsc_hz()/user_params.pps_limit;
     user_app_main(NULL);
     return 0;
@@ -184,7 +184,6 @@ int user_app_main(__attribute__((unused)) void * app_params) {
     tw_tx_t * tx_handle;
     tw_timer_t * timer_handle;
     int status;
-    struct tw_sockaddr_in * addr;
     tw_loop_t * tw_loop = tw_default_loop(INFINITE_LOOP);
 
     rx_handle = tw_rx_init(tw_loop);
