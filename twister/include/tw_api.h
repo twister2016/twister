@@ -235,4 +235,6 @@ int tw_send_arp_request(uint32_t ip_addr, char * port_name);
 *   TRUE (value 0)
 */
 void tw_print_arp_table(void); 
+
+void *  tw_malloc(char *type, uint32_t size);
 #endif

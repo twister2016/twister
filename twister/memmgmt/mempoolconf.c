@@ -61,6 +61,10 @@ inline void tw_free_pkt(tw_buf_t * ptr) {
     return;
 }
 
+void * tw_malloc(char *type, uint32_t size)
+{
+    return rte_malloc(type, size, RTE_CACHE_LINE_SIZE);
+}
 /*int create_queued_pkts_mempools(void) {		//--! To be used by queued packets including pakets waiting for an ARP reply
 	uint8_t numa_socket = 0;
         for(numa_socket=0;numa_socket<num_numa_sockets;numa_socket++) {
