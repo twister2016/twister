@@ -140,11 +140,9 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
     eth_type = tw_be_to_cpu_16(eth->ether_type);
         switch (eth_type) {
             case ETHER_TYPE_ARP:
-                printf("ARP\n");
                 tw_arp_parser(buffer, buffer->port_name);
                 break;
             case ETHER_TYPE_IPv4:
-                printf("IPV4\n");
                 ipHdr_d = buffer->data+sizeof(struct ether_hdr);
                 struct route_table * temp_route_ptr =tw_search_route(ipHdr_d->dst_addr);
                 if(temp_route_ptr == NULL)
@@ -152,10 +150,9 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                     tw_free_pkt(buffer);
                     return;
                 }
-                ipHdr_d->time_to_live--;
+                //ipHdr_d->time_to_live--;
                 struct arp_table * temp_arp_entry = tw_search_arp_table(ipHdr_d->dst_addr);
                 if(temp_arp_entry == NULL) {
-                    printf("ARP is NULL\n");
                     tw_send_arp_request(ipHdr_d->dst_addr, temp_route_ptr->port_name);
                     tw_sq_push(&sq_pkt_q , buffer);
                     return;
@@ -163,16 +160,13 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                 else {
                 dst_eth_addr = &temp_arp_entry->eth_mac;	
                 tw_copy_ether_addr(dst_eth_addr, &(eth->d_addr));
-                printf("iFace: %s \n",temp_route_ptr->port_name);
                 if (strcmp(temp_route_ptr->port_name,"tw0")==0 )
                 {
-                        printf("tw0 is sending\n");
                         tw_copy_ether_addr(dst_eth0, &(eth->s_addr));
                         tw_send_pkt(buffer, "tw0");
                 }
                 if (strcmp(temp_route_ptr->port_name,"tw1")==0 )
                 {
-                       printf("tw1 is sending\n");
                        tw_copy_ether_addr(dst_eth1, &(eth->s_addr));
                        tw_send_pkt(buffer, "tw1");
                     
@@ -184,7 +178,6 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 
 void update_queue()
 {
-     tw_print_arp_table();
     int i;
     int num=tw_sq_pop(&sq_pkt_q);
     if( num <1 )
@@ -195,6 +188,7 @@ void update_queue()
         {    
             reply_payload(NULL, sq_pkt_q.pkt[i]);
             sq_pkt_q.pkt[i]=NULL;
+            sq_pkt_q.n_pkts--;
         }
         
     }
@@ -269,7 +263,7 @@ int user_app_main(__attribute__((unused)) void * app_params) {
         exit(1);
     }
     timer_handle = tw_timer_init(tw_loop);
-    tw_timer_start(timer_handle, update_queue, 5000);
+    tw_timer_start(timer_handle, update_queue, 250);
     tw_run(tw_loop);
     return 0;
 }
