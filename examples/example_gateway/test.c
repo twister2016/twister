@@ -63,7 +63,7 @@ int tw_add_route_entry(uint32_t net_to_add, uint32_t netmask_to_add, uint32_t ga
         route_table_ptr = route_table_ptr->next;
     }
     if (route_table_ptr == NULL)
-        exit("CAN'T ALLOCATE ROUTE TABLE ENTRY\n");
+        exit(0);
 
     route_table_ptr->net_addr = tw_be_to_cpu_32(net_to_add);
     route_table_ptr->gateway = tw_be_to_cpu_32(gateway_to_add);
