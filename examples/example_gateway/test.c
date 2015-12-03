@@ -4,6 +4,7 @@
 #include <tw_common.h>
 #include <arpa/inet.h>
 
+#define MAX_QUEUE_PACKETS 1000
 
 int main(int, char **);
 int user_app_main(void *);
@@ -11,11 +12,10 @@ struct ether_addr * dst_eth0;
 struct ether_addr * dst_eth1;
 struct ether_hdr * eth;
 struct ipv4_hdr * ipHdr_d;
-struct udp_hdr * udp_hdr_d;
 uint16_t eth_type;
 struct ether_addr * dst_eth_addr;
 void reply_payload(tw_rx_t *, tw_buf_t *);
-#define MAX_QUEUE_PACKETS 1000
+
 struct route_table {
 	uint32_t net_addr;
 	uint32_t gateway;
@@ -28,9 +28,7 @@ struct sq_pkt {
 	tw_buf_t *pkt[MAX_QUEUE_PACKETS];
     	uint32_t n_pkts;
 };
-/*
- * simple link list to store packets as a queue
-*/
+
 
 struct sq_pkt sq_pkt_q;
 
@@ -46,7 +44,7 @@ int tw_sq_push(struct sq_pkt * q_list, tw_buf_t * pkt)
     return 1;
 }
 
-int tw_sq_pop(struct sq_pkt* q_list)
+int tw_n_queue(struct sq_pkt* q_list)
 {
 	if(q_list->n_pkts < 1)
 		return 0;
@@ -56,20 +54,20 @@ int tw_sq_pop(struct sq_pkt* q_list)
 int tw_add_route_entry(uint32_t net_to_add, uint32_t netmask_to_add, uint32_t gateway_to_add, char * port_id) {
     struct route_table * route_table_ptr = route_table_root;
     if (route_table_ptr == NULL) {
-        route_table_ptr = rte_malloc("struct route_table", sizeof (struct route_table), RTE_CACHE_LINE_SIZE);
+        route_table_ptr = tw_malloc("struct route_table", sizeof (struct route_table));
         route_table_root = route_table_ptr;
     } else {
         while (route_table_ptr->next != NULL)
             route_table_ptr = route_table_ptr->next;
-        route_table_ptr->next = rte_malloc("struct route_table", sizeof (struct route_table), RTE_CACHE_LINE_SIZE);
+        route_table_ptr->next = tw_malloc("struct route_table", sizeof (struct route_table));
         route_table_ptr = route_table_ptr->next;
     }
     if (route_table_ptr == NULL)
-        rte_exit(EXIT_FAILURE, "CAN'T ALLOCATE ROUTE TABLE ENTRY\n");
+        exit("CAN'T ALLOCATE ROUTE TABLE ENTRY\n");
 
-    route_table_ptr->net_addr = rte_be_to_cpu_32(net_to_add);
-    route_table_ptr->gateway = rte_be_to_cpu_32(gateway_to_add);
-    route_table_ptr->net_mask = rte_be_to_cpu_32(netmask_to_add);
+    route_table_ptr->net_addr = tw_be_to_cpu_32(net_to_add);
+    route_table_ptr->gateway = tw_be_to_cpu_32(gateway_to_add);
+    route_table_ptr->net_mask = tw_be_to_cpu_32(netmask_to_add);
     memcpy(route_table_ptr->port_name ,port_id ,3 );
     
     route_table_ptr->next = NULL;
@@ -179,7 +177,7 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 void update_queue()
 {
     int i;
-    int num=tw_sq_pop(&sq_pkt_q);
+    int num=tw_n_queue(&sq_pkt_q);
     if( num <1 )
         return;
     for(i=0;i<1000;i++)
