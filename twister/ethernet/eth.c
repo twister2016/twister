@@ -15,6 +15,7 @@
 
 inline uint16_t tw_ipv4_cksum(struct ipv4_hdr *ipv4_hdr)
 {
+    ipv4_hdr->hdr_checksum=0;
     return rte_ipv4_cksum(ipv4_hdr);
 
 }
