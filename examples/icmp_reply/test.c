@@ -59,7 +59,6 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                 src_ip = (ipHdr_d->src_addr);
                 ipHdr_d->dst_addr = (src_ip);
                 ipHdr_d->src_addr = (dst_ip);
-                ipHdr_d->hdr_checksum=0;
                 ipHdr_d->hdr_checksum = tw_ipv4_cksum(ipHdr_d);
 
                 tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
