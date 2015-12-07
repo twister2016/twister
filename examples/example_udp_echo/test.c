@@ -7,7 +7,8 @@ int main(int, char **);
 int user_app_main(void *);
 void reply_payload(tw_rx_t *, tw_buf_t *);
 
-uint8_t dst_port,src_port,dst_ip,src_ip;
+uint8_t dst_port,src_port;
+uint32_t dst_ip,src_ip;
 struct ether_hdr * eth;
 struct ipv4_hdr * ipHdr_d;
 struct udp_hdr * udp_hdr_d;
