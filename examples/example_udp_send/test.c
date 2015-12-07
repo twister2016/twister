@@ -112,7 +112,6 @@ void pkt_tx(tw_tx_t * handle)
 	ip->dst_addr = rte_cpu_to_be_32(user_params.server_ip);
 	ip->version_ihl = 0x45;
 	ip->time_to_live = 63;
-	ip->hdr_checksum = 0;
 	ip->hdr_checksum =tw_ipv4_cksum(ip);
 	eth->ether_type = rte_cpu_to_be_16(ETHER_TYPE_IPv4);
     tw_copy_ether_addr(dst_eth_addr, &(eth->d_addr));
@@ -154,7 +153,6 @@ void send_stats() {
     	ip->dst_addr = tw_cpu_to_be_32(user_params.stats_server_ip);
     	ip->version_ihl = 0x45;
     	ip->time_to_live = 63;
-    	ip->hdr_checksum = 0;
     	ip->hdr_checksum =tw_ipv4_cksum(ip);
     	eth->ether_type = tw_cpu_to_be_16(ETHER_TYPE_IPv4);
         tw_copy_ether_addr(stats_eth_addr, &(eth->d_addr));
