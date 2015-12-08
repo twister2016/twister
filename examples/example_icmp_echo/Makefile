@@ -32,7 +32,7 @@
 include twister.mk
 
 CC=gcc
-APP=UDP_SEND
+APP=ICMP_ECHO
 SRCS=test.c
 
 

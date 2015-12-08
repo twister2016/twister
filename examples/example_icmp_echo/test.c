@@ -24,15 +24,16 @@ struct icmp_echo{
 	unsigned short checksum;
 	unsigned short identifier;
 	unsigned short sequence;
-	long long time; /* we're going to send data MTU bytes at a time */
 };
 
 unsigned short calcsum(unsigned short *buffer, int length);
-int main(int, char **);
 static int console_input(int*);
 int user_app_main(void *);
 void pkt_rx(tw_rx_t *, tw_buf_t *);
 void pkt_tx(tw_tx_t *);
+bool isValidIpAddress(char *ipAddress);
+int main(int, char **);
+
 struct ether_hdr * eth;
 struct ipv4_hdr * ip;
 struct icmp_echo* icmp;
@@ -53,9 +54,6 @@ void sig_handler(int signo)
 
   }
 }
-bool isValidIpAddress(char *ipAddress);
-///////////////////////
-
 
 bool isValidIpAddress(char *ipAddress)
 {
@@ -92,13 +90,12 @@ void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
             tw_arp_parser(buffer, "tw0");
             break;
         case ETHER_TYPE_IPv4:
-            ip = (struct ipv4_hdr*) (eth + 1);
+            ip = buffer->data+sizeof(struct ether_hdr);
             switch (ip->next_proto_id) {
                 case ICMP_PROTO_ID:
-                    icmp = (struct icmp_echo*) (ip + 1);
-                    time_ms = icmp->time;
+                    icmp = buffer->data+sizeof(struct ether_hdr)+sizeof(struct ipv4_hdr);
                     double t1 = current_timestamp();
-                    time_ms = t1 - t2;
+                    time_ms = t1 - t2; //time difference between packet sent and received
                     struct in_addr ip_addr;
                     ip_addr.s_addr = ip->src_addr;
                     printf("64 bytes from %s: icmp_seq=%d ttl=%d time=%fms\n", inet_ntoa(ip_addr),icmp->sequence, ip->time_to_live,time_ms);
@@ -151,17 +148,17 @@ void pkt_tx(tw_tx_t * handle) {
     else {
     tw_buf_t * tx_buf = tw_new_buffer(BUFF_SIZE);
     eth = tx_buf->data;
-    ip  = (struct ipv4_hdr* )(eth + 1);
-    icmp = (struct icmp_echo* )(ip + 1);
+    ip  = tx_buf->data+sizeof(struct ether_hdr);
+    icmp = tx_buf->data+sizeof(struct ether_hdr)+sizeof(struct ipv4_hdr);
     icmp->type		= 8;		/* icmp echo */
     icmp->code		= 0;		/* only valid value for echo or echo reply */
     icmp->identifier	= 0x1337;	/* the id we'll be using to distinguish our data from other icmp packets */
     ping_count++;									// ^^^ Actually it won't. It is now distinguished with the ip header
     icmp->sequence		= ping_count;		/* our initial sequence will be zero
 	/* just like IP we have to zero the checksum before we calculate it */
-    icmp->time=0;
-    icmp->time=current_timestamp();
-    t2=icmp->time;
+    //icmp->time=0;
+    //icmp->time=current_timestamp();
+    t2=current_timestamp();
     icmp->checksum = 0;
 
 	/* now we can calculate the checksum */
