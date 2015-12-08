@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 
 #define MAX_QUEUE_PACKETS 1000
+#define ICMP_PROTO_ID 1
 
 int main(int, char **);
 int user_app_main(void *);
@@ -13,42 +14,65 @@ struct ether_addr * dst_eth1;
 struct ether_hdr * eth;
 struct ipv4_hdr * ipHdr_d;
 uint16_t eth_type;
+uint32_t dst_ip, src_ip;
 struct ether_addr * dst_eth_addr;
 void reply_payload(tw_rx_t *, tw_buf_t *);
 
+struct icmp_echo {
+    unsigned char type;
+    unsigned char code;
+    unsigned short checksum;
+    unsigned short identifier;
+    unsigned short sequence;
+};
+struct icmp_echo* ICMP;
+
 struct route_table {
-	uint32_t net_addr;
-	uint32_t gateway;
-	uint32_t net_mask;
-        char  port_name[3];
-	struct route_table * next;
+    uint32_t net_addr;
+    uint32_t gateway;
+    uint32_t net_mask;
+    char port_name[3];
+    struct route_table * next;
 } __attribute__((__packed__));
 
 struct sq_pkt {
-	tw_buf_t *pkt[MAX_QUEUE_PACKETS];
-    	uint32_t n_pkts;
+    tw_buf_t *pkt[MAX_QUEUE_PACKETS];
+    uint32_t n_pkts;
 };
+unsigned short calcsum(unsigned short *buffer, int length);
 
+unsigned short calcsum(unsigned short *buffer, int length) {
+    unsigned long sum;
+    // initialize sum to zero and loop until length (in words) is 0
+    for (sum = 0; length > 1; length -= 2) // sizeof() returns number of bytes, we're interested in number of words
+        sum += *buffer++; // add 1 word of buffer to sum and proceed to the next
+
+    // we may have an extra byte
+    if (length == 1)
+        sum += (char) *buffer;
+
+    sum = (sum >> 16) + (sum & 0xFFFF); // add high 16 to low 16
+    sum += (sum >> 16); // add carry
+    return ~sum;
+}
 
 struct sq_pkt sq_pkt_q;
 
 struct route_table * route_table_root = NULL;
 uint32_t route_table_size = 0;
 
-int tw_sq_push(struct sq_pkt * q_list, tw_buf_t * pkt)
-{
-    if(q_list->n_pkts >=1000)
+int tw_sq_push(struct sq_pkt * q_list, tw_buf_t * pkt) {
+    if (q_list->n_pkts >= 1000)
         return 0;
     q_list->pkt[q_list->n_pkts] = pkt;
     q_list->n_pkts++;
     return 1;
 }
 
-int tw_n_queue(struct sq_pkt* q_list)
-{
-	if(q_list->n_pkts < 1)
-		return 0;
-	return q_list->n_pkts;
+int tw_n_queue(struct sq_pkt* q_list) {
+    if (q_list->n_pkts < 1)
+        return 0;
+    return q_list->n_pkts;
 }
 
 int tw_add_route_entry(uint32_t net_to_add, uint32_t netmask_to_add, uint32_t gateway_to_add, char * port_id) {
@@ -68,8 +92,8 @@ int tw_add_route_entry(uint32_t net_to_add, uint32_t netmask_to_add, uint32_t ga
     route_table_ptr->net_addr = tw_be_to_cpu_32(net_to_add);
     route_table_ptr->gateway = tw_be_to_cpu_32(gateway_to_add);
     route_table_ptr->net_mask = tw_be_to_cpu_32(netmask_to_add);
-    memcpy(route_table_ptr->port_name ,port_id ,3 );
-    
+    memcpy(route_table_ptr->port_name, port_id, 3);
+
     route_table_ptr->next = NULL;
     route_table_size++;
     return 0;
@@ -87,7 +111,7 @@ void tw_print_route_table(void) {
         printf("|    %s ", inet_ntoa(ip_addr));
         ip_addr.s_addr = temp_route_entry->net_mask;
         printf("|    %s ", inet_ntoa(ip_addr));
-        printf("|    %s ", temp_route_entry->port_name); 
+        printf("|    %s ", temp_route_entry->port_name);
         temp_route_entry = temp_route_entry->next;
         printf("\n");
     }
@@ -98,7 +122,7 @@ void tw_print_route_table(void) {
 
 struct route_table* tw_search_route(uint32_t ip_to_search) {
     struct route_table * temp_route_entry = route_table_root;
-    uint32_t temp_ip; 
+    uint32_t temp_ip;
     while (temp_route_entry != NULL) {
         temp_ip = temp_route_entry ->net_mask & ip_to_search;
         if (temp_ip == temp_route_entry->net_addr)
@@ -111,91 +135,125 @@ struct route_table* tw_search_route(uint32_t ip_to_search) {
 }
 
 int parse_user_params(char * file_name) {
- uint8_t i;
- cJSON * json_file = tw_parse_json_file(file_name); 
- if (!json_file) {
-  printf("Error before: [%s]\n",cJSON_GetErrorPtr());
-  return -1;
- }
-        uint32_t net_addr_tmp;
-        uint32_t gateway_tmp;
-        uint32_t net_mask_tmp;
-        char* port_name_tmp;
+    uint8_t i;
+    cJSON * json_file = tw_parse_json_file(file_name);
+    if (!json_file) {
+        printf("Error before: [%s]\n", cJSON_GetErrorPtr());
+        return -1;
+    }
+    uint32_t net_addr_tmp;
+    uint32_t gateway_tmp;
+    uint32_t net_mask_tmp;
+    char* port_name_tmp;
 
- for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {
-            cJSON * subitem = cJSON_GetArrayItem(json_file, i);
-            net_addr_tmp = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "net_addr")->valuestring);
-            gateway_tmp = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "gateway")->valuestring);
-            net_mask_tmp = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "net_mask")->valuestring);
-            port_name_tmp = (cJSON_GetObjectItem(subitem, "port_name")->valuestring);
-            tw_add_route_entry(net_addr_tmp,net_mask_tmp,gateway_tmp,port_name_tmp);
- }
- return 0;
+    for (i = 0; i < cJSON_GetArraySize(json_file); i++) {
+        cJSON * subitem = cJSON_GetArrayItem(json_file, i);
+        net_addr_tmp = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "net_addr")->valuestring);
+        gateway_tmp = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "gateway")->valuestring);
+        net_mask_tmp = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "net_mask")->valuestring);
+        port_name_tmp = (cJSON_GetObjectItem(subitem, "port_name")->valuestring);
+        tw_add_route_entry(net_addr_tmp, net_mask_tmp, gateway_tmp, port_name_tmp);
+    }
+    return 0;
+}
+int check_gateway_ping(tw_buf_t* buffer);
+
+int check_gateway_ping(tw_buf_t* buffer) {
+
+    struct route_table * temp_route_entry = route_table_root;
+    uint32_t temp_ip;
+    struct ipv4_hdr * iphdr;
+    while (temp_route_entry != NULL) {
+
+        iphdr = buffer->data + sizeof (struct ether_hdr);
+        temp_ip = tw_get_ip_addr(temp_route_entry->port_name);
+        if (temp_ip == tw_be_to_cpu_32(iphdr->dst_addr)) {
+            struct in_addr ip_addr;
+            ip_addr.s_addr = temp_ip;
+            ip_addr.s_addr = iphdr->src_addr;
+
+            if (iphdr->next_proto_id == ICMP_PROTO_ID) {
+                ICMP = buffer->data + sizeof (struct ether_hdr) + sizeof (struct ipv4_hdr);
+                ICMP->type = 0; //for icmp reply type is zero
+                ICMP->checksum = 0;
+                ICMP->checksum = calcsum((unsigned short*) ICMP, sizeof (struct icmp_echo));
+            }
+            dst_ip = (iphdr->dst_addr);
+            src_ip = (iphdr->src_addr);
+            iphdr->dst_addr = (src_ip);
+            iphdr->src_addr = (dst_ip);
+            iphdr->hdr_checksum = tw_ipv4_cksum(iphdr);
+            tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
+
+            tw_copy_ether_addr(tw_get_ether_addr(temp_route_entry->port_name), &(eth->s_addr));
+            tw_send_pkt(buffer, temp_route_entry->port_name);
+
+            return 0;
+
+        } else
+            temp_route_entry = temp_route_entry->next;
+    }
+    return 1;
 }
 
 void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
     eth = buffer->data;
     eth_type = tw_be_to_cpu_16(eth->ether_type);
-        switch (eth_type) {
-            case ETHER_TYPE_ARP:
-                tw_arp_parser(buffer, buffer->port_name);
-                break;
-            case ETHER_TYPE_IPv4:
-                ipHdr_d = buffer->data+sizeof(struct ether_hdr);
-                struct route_table * temp_route_ptr =tw_search_route(ipHdr_d->dst_addr);
-                if(temp_route_ptr == NULL)
-                {
+    switch (eth_type) {
+        case ETHER_TYPE_ARP:
+            tw_arp_parser(buffer, buffer->port_name);
+            break;
+        case ETHER_TYPE_IPv4:
+            ipHdr_d = buffer->data + sizeof (struct ether_hdr);
+            int gateway_ping = check_gateway_ping(buffer);//check if gateway pinged or not
+            if (gateway_ping) { //gateway not pinged, lets route the packet.
+                struct route_table * temp_route_ptr = tw_search_route(ipHdr_d->dst_addr);
+                if (temp_route_ptr == NULL) {
                     tw_free_pkt(buffer);
                     return;
                 }
-                //ipHdr_d->time_to_live--;
                 struct arp_table * temp_arp_entry = tw_search_arp_table(ipHdr_d->dst_addr);
-                if(temp_arp_entry == NULL) {
+                if (temp_arp_entry == NULL) {
                     tw_send_arp_request(ipHdr_d->dst_addr, temp_route_ptr->port_name);
-                    tw_sq_push(&sq_pkt_q , buffer);
+                    tw_sq_push(&sq_pkt_q, buffer);
                     return;
-                }
-                else {
-                dst_eth_addr = &temp_arp_entry->eth_mac;	
-                tw_copy_ether_addr(dst_eth_addr, &(eth->d_addr));
-                if (strcmp(temp_route_ptr->port_name,"tw0")==0 )
-                {
+                } else {
+                    dst_eth_addr = &temp_arp_entry->eth_mac;
+                    tw_copy_ether_addr(dst_eth_addr, &(eth->d_addr));
+                    if (strcmp(temp_route_ptr->port_name, "tw0") == 0) {
                         tw_copy_ether_addr(dst_eth0, &(eth->s_addr));
                         tw_send_pkt(buffer, "tw0");
+                    }
+                    if (strcmp(temp_route_ptr->port_name, "tw1") == 0) {
+                        tw_copy_ether_addr(dst_eth1, &(eth->s_addr));
+                        tw_send_pkt(buffer, "tw1");
+
+                    }
                 }
-                if (strcmp(temp_route_ptr->port_name,"tw1")==0 )
-                {
-                       tw_copy_ether_addr(dst_eth1, &(eth->s_addr));
-                       tw_send_pkt(buffer, "tw1");
-                    
-                }
-                }
-                break;       
-        }
+                break;
+            }
+    }
 }
 
-void update_queue()
-{
+void update_queue() {
     int i;
-    int num=tw_n_queue(&sq_pkt_q);
-    if( num <1 )
+    int num = tw_n_queue(&sq_pkt_q);
+    if (num < 1)
         return;
-    for(i=0;i<1000;i++)
-    {
-        if(sq_pkt_q.pkt[i]!=NULL)
-        {    
+    for (i = 0; i < 1000; i++) {
+        if (sq_pkt_q.pkt[i] != NULL) {
             reply_payload(NULL, sq_pkt_q.pkt[i]);
-            sq_pkt_q.pkt[i]=NULL;
+            sq_pkt_q.pkt[i] = NULL;
             sq_pkt_q.n_pkts--;
         }
-        
+
     }
-   
-        
+
+
 }
 
 int main(int argc, char **argv) {
-     const char *temp0, *temp1, *temp2, *temp3, *temp4, *temp5, *temp6, *temp7, *temp8;
+    const char *temp0, *temp1, *temp2, *temp3, *temp4, *temp5, *temp6, *temp7, *temp8;
     temp0 = "-c";
     temp1 = "0x0C";
     temp2 = "-n";
@@ -205,40 +263,39 @@ int main(int argc, char **argv) {
     temp6 = "--";
     temp7 = "-p";
     temp8 = "0x3";
-    argv[1] = (char *)malloc(3 * sizeof(char));
-    argv[2] = (char *)malloc(5 * sizeof(char));
-    argv[3] = (char *)malloc(3 * sizeof(char));
-    argv[4] = (char *)malloc(2 * sizeof(char));
-    argv[5] = (char *)malloc(3 * sizeof(char));
-    argv[6] = (char *)malloc(8 * sizeof(char));
-    argv[7] = (char *)malloc(3 * sizeof(char));
-    argv[8] = (char *)malloc(3 * sizeof(char));
-    argv[9] = (char *)malloc(4 * sizeof(char));
-    strcpy (argv[1], temp0);
-    strcpy (argv[2], temp1);
-    strcpy (argv[3], temp2);
-    strcpy (argv[4], temp3);
-    strcpy (argv[5], temp4);
-    strcpy (argv[6], temp5);
-    strcpy (argv[7], temp6);
-    strcpy (argv[8], temp7);
-    strcpy (argv[9], temp8);
+    argv[1] = (char *) malloc(3 * sizeof (char));
+    argv[2] = (char *) malloc(5 * sizeof (char));
+    argv[3] = (char *) malloc(3 * sizeof (char));
+    argv[4] = (char *) malloc(2 * sizeof (char));
+    argv[5] = (char *) malloc(3 * sizeof (char));
+    argv[6] = (char *) malloc(8 * sizeof (char));
+    argv[7] = (char *) malloc(3 * sizeof (char));
+    argv[8] = (char *) malloc(3 * sizeof (char));
+    argv[9] = (char *) malloc(4 * sizeof (char));
+    strcpy(argv[1], temp0);
+    strcpy(argv[2], temp1);
+    strcpy(argv[3], temp2);
+    strcpy(argv[4], temp3);
+    strcpy(argv[5], temp4);
+    strcpy(argv[6], temp5);
+    strcpy(argv[7], temp6);
+    strcpy(argv[8], temp7);
+    strcpy(argv[9], temp8);
     argc = 10;
     tw_init_global(argc, argv);
     Printing_Enable = 0;
     tw_map_port_to_engine("tw0", "engine0");
-    dst_eth0=tw_get_ether_addr("tw0");
+    dst_eth0 = tw_get_ether_addr("tw0");
     tw_map_port_to_engine("tw1", "engine0");
-    dst_eth1=tw_get_ether_addr("tw1");
+    dst_eth1 = tw_get_ether_addr("tw1");
     parse_user_params("gw_conf");
     tw_print_route_table();
-    int i=0;
-    for(i=0;i<1000;i++)
-    {
-        sq_pkt_q.pkt[i]=NULL;
-           
+    int i = 0;
+    for (i = 0; i < 1000; i++) {
+        sq_pkt_q.pkt[i] = NULL;
+
     }
-    user_app_main(NULL);   
+    user_app_main(NULL);
     return 0;
 }
 
