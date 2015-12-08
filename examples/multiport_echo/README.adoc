@@ -1,0 +1,21 @@
+= Multiport Ethernet Echo
+:docinfo:
+[preface]
+
+The multiport example application is a example of packet processing built on Twister API which also takes advantage of more than one ethernet port.
+
+== Overview
+The multiport example application performs Layer 2 forwarding for each packet that is received on the ports. All the other fields in the packets remain the same - only the MAC addresses are affected as follows:
+
+* The source MAC address is replaced by the TX_PORT MAC address
+* The destination MAC address is replaced by the Source MAC address of the received packet
+
+== Compiling and Running the Application
+Build the application using the following command:
+--------------------------------------
+make
+--------------------------------------
+To run the application in linuxapp environment
+--------------------------------------
+./MULTI_ECHO
+--------------------------------------
