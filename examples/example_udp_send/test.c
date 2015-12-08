@@ -136,7 +136,7 @@ void send_stats() {
 
     else {
         eth = tx_buf_stats->data;
-		global_stats_option.pkts_tx=global_stats_option.pkts_tx-total_arps;
+	//	global_stats_option.pkts_tx=global_stats_option.pkts_tx-total_arps;
 		total_arps=0;
         ip  = (struct ipv4_hdr* )(eth + 1);
         udp = (struct udp_hdr* )(ip + 1);
