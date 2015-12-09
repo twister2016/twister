@@ -30,6 +30,6 @@ make
 --------------------------------------
 To run the application in linuxapp environment
 --------------------------------------
-./ICMP_ECHO
+./Router_G
 --------------------------------------
 
