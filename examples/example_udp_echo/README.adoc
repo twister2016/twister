@@ -1,0 +1,28 @@
+= UDP Echo Example
+:docinfo:
+[preface]
+
+The UDP example application is a example of packet processing built on Twister API to echo back the UDP traffic.
+
+== Overview
+The UDP example application performs Layer 4 forwarding for each packet that is received on the port. All the fields in the packets are affected as follows:
+
+* The source Port is swapped by the destination Port
+* The destination Port is swapped by the source Port
+* The source IP address is replaced by the IP address of the port
+* The destination IP address is replaced by the IP address of the sender
+* The checksum is calculated for the IP Layer
+* The source MAC address is replaced by the TX_PORT MAC address
+* The destination MAC address is replaced by the Source MAC address of the received packet
+
+the application also replies for the ARP queries.
+
+== Compiling and Running the Application
+Build the application using the following command:
+--------------------------------------
+make
+--------------------------------------
+To run the application in linuxapp environment
+--------------------------------------
+./UDP_ECHO
+--------------------------------------
