@@ -1,0 +1,35 @@
+= Gateway/Router Application
+:docinfo:
+[preface]
+
+Router
+This application plays the role of layer-3 router at smaller scale. The purpose is to harness the abstraction and functionality of twister
+API to write sophisticated networking applications. This router forwards the packets received from one network to another using L3 forwarding.
+It also responds to the ARP requests as well as PING request on its both interfaces.
+
+
+== Working
+Router have one additional conf file "gw_conf" in JSON format. This conf file lists the network entries for the interfaces of router. Since the router has two interfaces (tw0 and tw1), associated with two networks 5.5.5.0/24 and 4.4.4.0/24 respectively. The Ipv4 addresses of two interfaces are 5.5.5.1 and 4.4.4.1 accordingly.
+
+To test the functionality of router, you need to have two machines on two networks i.e., 5.5.5.0 and 4.4.4.0. The default gateway of these two machine should be set to one of the interface of router. So in order to send traffic outside of the network, your machine would send the packet to either tw0 or tw1.
+Router command on your machine should looke like this.
+--------------------
+
+
+Whenever a Packet arrives at one of the interface of router tw0 or tw1. There are following cases.
+* An ICMP packet with destination ip to one of its interface tw0 or tw1. It sends an ICMP reply packet from its interface.
+* An ICMP packet with source IP from one network and destination IP lying in another network. If router dont have the mac address of destination IP, it sends the ARP in that network through attached interface. After that it sends the packet to destination machine.
+* An ARP request packet to one of its interface tw0 tw1, it sends an ARP reply with its MAC of corresponding interface.
+* An ARP reply packet from one of the machines lying in associated networks. It saves the ARP entry in the table.
+
+
+== Compiling and Running the Application
+Build the application using the following command:
+--------------------------------------
+make
+--------------------------------------
+To run the application in linuxapp environment
+--------------------------------------
+./ICMP_ECHO
+--------------------------------------
+
