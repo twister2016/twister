@@ -22,6 +22,7 @@ struct user_params {
 };
 struct user_params user_params;
 ////////////////////////
+uint64_t arp_secs=-1;
 
 struct stats_option * stats_to_send; 
 struct ether_hdr * eth;
@@ -90,13 +91,19 @@ void pkt_tx(tw_tx_t * handle)
 	{
     if (unlikely(dst_eth_addr) == NULL) {
         struct arp_table * temp_arp_entry = tw_search_arp_table(rte_be_to_cpu_32(user_params.server_ip));
-        if(temp_arp_entry == NULL) {
-            tw_construct_arp_packet(user_params.server_ip, phy_port_id);
-			total_arps++;        
+        if(temp_arp_entry == NULL )
+        {
+            if (arp_secs!=global_stats_option.secs_passed) {
+                tw_construct_arp_packet(user_params.server_ip, phy_port_id);
+                arp_secs=global_stats_option.secs_passed;
+			total_arps++;     
+            } else
+            {
+                return;
+            }
         }
         else
-            dst_eth_addr = &temp_arp_entry->eth_mac;
-		
+            dst_eth_addr = &temp_arp_entry->eth_mac;	
     }
     else {
     eth = tx_buf->data;
@@ -171,6 +178,7 @@ int main(int argc, char **argv) {
     phy_port_id = tw_eth_name_to_id("tw0");
     tx_buf = tw_new_buffer(user_params.payload_size);
     tx_buf_stats  = tw_new_buffer(128);
+    global_stats_option.secs_passed=0;
 	//ppsdelay = tw_get_tsc_hz()/user_params.pps_limit;
     user_app_main(NULL);
     return 0;
