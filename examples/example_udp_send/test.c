@@ -22,6 +22,7 @@ struct user_params {
 };
 struct user_params user_params;
 ////////////////////////
+uint64_t arp_secs=-1;
 
 struct stats_option * stats_to_send; 
 struct ether_hdr * eth;
@@ -90,31 +91,37 @@ void pkt_tx(tw_tx_t * handle)
 	if((global_stats_option.pkts_tx < PacketLimit || PacketLimit == 0) && (global_stats_option.secs_passed < user_params.test_runtime || user_params.test_runtime == 0))
 	{
     if (unlikely(dst_eth_addr) == NULL) {
-        struct arp_table * temp_arp_entry = tw_search_arp_table(rte_be_to_cpu_32(user_params.server_ip));
-        if(temp_arp_entry == NULL) {
-            tw_construct_arp_packet(user_params.server_ip, phy_port_id);
-			total_arps++;        
+        struct arp_table * temp_arp_entry = tw_search_arp_table(tw_be_to_cpu_32(user_params.server_ip));
+        if(temp_arp_entry == NULL )
+        {
+            if (arp_secs!=global_stats_option.secs_passed) {
+                tw_construct_arp_packet(user_params.server_ip, phy_port_id);
+                arp_secs=global_stats_option.secs_passed;
+			total_arps++;     
+            } else
+            {
+                return;
+            }
         }
         else
-            dst_eth_addr = &temp_arp_entry->eth_mac;
-		
+            dst_eth_addr = &temp_arp_entry->eth_mac;	
     }
     else {
     eth = tx_buf->data;
     ip  = (struct ipv4_hdr* )(eth + 1);
     udp = (struct udp_hdr* )(ip + 1);
-	udp->src_port = rte_cpu_to_be_16(7777);
-	udp->dst_port = rte_cpu_to_be_16(user_params.server_port);
-	udp->dgram_len = rte_cpu_to_be_16(tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
+	udp->src_port = tw_cpu_to_be_16(7777);
+	udp->dst_port = tw_cpu_to_be_16(user_params.server_port);
+	udp->dgram_len = tw_cpu_to_be_16(tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
 	udp->dgram_cksum = 0;
-	ip->total_length = rte_cpu_to_be_16(tx_buf->size - sizeof(struct ether_hdr));
+	ip->total_length = tw_cpu_to_be_16(tx_buf->size - sizeof(struct ether_hdr));
 	ip->next_proto_id = UDP_PROTO_ID;
 	ip->src_addr = ipv4_tw0;
-	ip->dst_addr = rte_cpu_to_be_32(user_params.server_ip);
+	ip->dst_addr = tw_cpu_to_be_32(user_params.server_ip);
 	ip->version_ihl = 0x45;
 	ip->time_to_live = 63;
 	ip->hdr_checksum =tw_ipv4_cksum(ip);
-	eth->ether_type = rte_cpu_to_be_16(ETHER_TYPE_IPv4);
+	eth->ether_type = tw_cpu_to_be_16(ETHER_TYPE_IPv4);
     tw_copy_ether_addr(dst_eth_addr, &(eth->d_addr));
     tw_copy_ether_addr(port_info[phy_port_id].eth_mac, &(eth->s_addr));
 	tw_send_pkt(tx_buf, "tw0");	
@@ -132,7 +139,7 @@ void send_stats() {
 		}
 
         else
-            stats_eth_addr = &(temp_arp_entry->eth_mac);
+            stats_eth_addr = &temp_arp_entry->eth_mac;
     }
 
     else {
@@ -174,6 +181,7 @@ int main(int argc, char **argv) {
     phy_port_id = tw_eth_name_to_id("tw0");
     tx_buf = tw_new_buffer(user_params.payload_size);
     tx_buf_stats  = tw_new_buffer(128);
+    global_stats_option.secs_passed=0;
 	//ppsdelay = tw_get_tsc_hz()/user_params.pps_limit;
     user_app_main(NULL);
     return 0;
