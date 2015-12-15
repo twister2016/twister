@@ -42,6 +42,7 @@ uint8_t average_list_size;
 
 struct stats_option {
 	uint64_t secs_passed;
+        uint64_t payload_size;
 	uint64_t timestamp;
 	uint64_t rx_pps;
 	uint64_t tx_pps;

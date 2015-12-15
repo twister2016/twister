@@ -75,6 +75,7 @@ int parse_user_params(char * file_name) {
         user_params.stats_server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "StatsServerPort")->valuestring, 4);
 		user_params.pps_limit = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring, 7);
 	    global_stats_option.tag_heat_ip=user_params.tag_heat_ip ;
+	    global_stats_option.payload_size=user_params.payload_size ;
 	
 	}
 	return 0;
@@ -158,6 +159,8 @@ void send_stats() {
         tw_copy_ether_addr(stats_eth_addr, &(eth->d_addr));
         tw_copy_ether_addr(port_info[phy_port_id].eth_mac, &(eth->s_addr));
     	tw_send_pkt(tx_buf_stats, "tw0");
+	printf("stat server packet size=%u\n", user_params.payload_size);
+	//exit(0);
 	}
 
 }
