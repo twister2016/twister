@@ -74,8 +74,7 @@ int tw_get_port_conf_json_vals(const char * file_name) {
 		        port_info[port_id].num_tx_queues = 1;
     		    for (j = 0 ; j < cJSON_GetArraySize(ip_addrs) ; j++) {			//For each start_ip_addr and range
                 	cJSON * subdictip = cJSON_GetArrayItem(ip_addrs, j);
-    		    	port_info[port_id].start_ip_addr = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "start_ip_addr")->valuestring);
-        	    	port_info[port_id].num_ip_addrs = tw_parse_int_from_string( cJSON_GetObjectItem(subdictip, "num_ip_addrs")->valuestring );
+					port_info[port_id].start_ip_addr = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "ip_address")->valuestring);
     		    	port_info[port_id].gateway_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "gateway_ip")->valuestring);
     		        port_info[port_id].subnet_mask = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subdictip, "subnet_mask")->valuestring);	
     		    }

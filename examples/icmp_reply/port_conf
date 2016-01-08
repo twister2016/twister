@@ -1,1 +1,1 @@
-[{"ip_addrs": [{"num_ip_addrs": "01", "start_ip_addr": "6.6.6.5", "gateway_ip": "6.6.6.1", "subnet_mask": "255.255.255.0"}], "port_name": "tw0"}]
+[{"ip_addrs": [{ "ip_address": "6.6.6.5", "gateway_ip": "6.6.6.1", "subnet_mask": "255.255.255.0"}], "port_name": "tw0"}]

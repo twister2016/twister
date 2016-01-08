@@ -1,5 +1,2 @@
-<<<<<<< HEAD
-[{"ip_addrs": [{"num_ip_addrs": "1", "start_ip_addr": "1.1.99.2", "gateway_ip": "1.1.99.1", "subnet_mask": "255.0.0.0"}], "port_name": "tw0"}]
-=======
-[{"ip_addrs": [{"num_ip_addrs": "01", "start_ip_addr": "10.10.104.2", "gateway_ip": "10.10.104.1", "subnet_mask": "255.255.255.0"}], "port_name": "tw0"}]
->>>>>>> 3cc82af8c5a5936a436aa2a73d8d7c15f209841a
+[{"ip_addrs": [{"ip_address": "10.10.104.2", "gateway_ip": "10.10.104.1", "subnet_mask": "255.255.255.0"}], "port_name": "tw0"}]
+
