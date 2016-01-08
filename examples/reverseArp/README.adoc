@@ -2,7 +2,7 @@
 :docinfo:
 [preface]
 
-This application implements the reverse address resolution protocol(), it broadcasts its MAC address and RARP server replies to it and finds the mac address of that machine if it exist on same network.
+This application implements the reverse address resolution protocol. It sends the RARP request and displays the IP resolved from RARP response.
 
 == Overview
 This application implements the reverse RARP protocol.
