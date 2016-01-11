@@ -8,8 +8,8 @@ do
 
  then
 
-   pkill -9 UDP_SEND
-
+   sudo pkill -9 UDP_SEND
+   sudo ./UDP_SEND
    break
 
  else
