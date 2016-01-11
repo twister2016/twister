@@ -8,8 +8,8 @@ do
 
  then
 
-   pkill -9 ARP
-
+   sudo pkill -9 ARP
+   sudo ./ARP
    break
 
  else
