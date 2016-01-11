@@ -8,8 +8,8 @@ do
 
  then
 
-   pkill -9 UDP_ECHO
-
+   sudo pkill -9 UDP_ECHO
+   sudo ./UDP_ECHO
    break
 
  else
