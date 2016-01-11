@@ -8,8 +8,8 @@ do
 
  then
 
-   pkill -9 MULTI_ECHO
-
+   sudo pkill -9 MULTI_ECHO
+   sudo ./MULTI_ECHO
    break
 
  else
