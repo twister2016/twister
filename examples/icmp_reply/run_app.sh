@@ -8,8 +8,8 @@ do
 
  then
 
-   pkill -9 ICMP_REPLY
-
+   sudo pkill -9 ICMP_REPLY
+   sudo ./ICMP_REPLY
    break
 
  else
