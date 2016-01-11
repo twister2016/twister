@@ -8,8 +8,8 @@ do
 
  then
 
-   pkill -9 ICMP_ECHO
-
+   sudo pkill -9 ICMP_ECHO
+   sudo ./ICMP_ECHO
    break
 
  else
