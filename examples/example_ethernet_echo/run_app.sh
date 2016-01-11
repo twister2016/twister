@@ -8,8 +8,8 @@ do
 
  then
 
-   pkill -9 ETH_ECHO
-
+   sudo pkill -9 ETH_ECHO
+   sudo ./ETH_ECHO
    break
 
  else
