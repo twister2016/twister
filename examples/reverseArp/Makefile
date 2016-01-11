@@ -32,7 +32,7 @@
 include twister.mk
 
 CC=gcc
-APP=ARP
+APP=RARP
 SRCS=rarp.c
 
 

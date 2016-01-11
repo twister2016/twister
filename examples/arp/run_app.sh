@@ -4,11 +4,11 @@ while :
 
 do
 
- if pidof -x "UDP_SEND" >/dev/null;
+ if pidof -x "ARP" >/dev/null;
 
  then
 
-   pkill -9 UDP_SEND
+   pkill -9 ARP
 
    break
 
@@ -16,7 +16,7 @@ do
 
    echo "Not Running"
 
-   sudo ./UDP_SEND
+   sudo ./ARP
 
    sleep 1
 

@@ -4,11 +4,11 @@ while :
 
 do
 
- if pidof -x "UDP_SEND" >/dev/null;
+ if pidof -x "ETH_ECHO" >/dev/null;
 
  then
 
-   pkill -9 UDP_SEND
+   pkill -9 ETH_ECHO
 
    break
 
@@ -16,7 +16,7 @@ do
 
    echo "Not Running"
 
-   sudo ./UDP_SEND
+   sudo ./ETH_ECHO
 
    sleep 1
 

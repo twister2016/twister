@@ -1,13 +1,25 @@
 #!/bin/bash
+
 while :
+
 do
- if pidof -x "UDP_SEND" >/dev/null;
+
+ if pidof -x "ICMP_REPLY" >/dev/null;
+
  then
-   echo "Running"
+
+   pkill -9 ICMP_REPLY
+
    break
+
  else
+
    echo "Not Running"
-   screen -d -m ./UDP_SEND
+
+   sudo ./ICMP_REPLY
+
    sleep 1
+
  fi
+
 done
