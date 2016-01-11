@@ -8,8 +8,8 @@ do
 
  then
 
-   pkill -9 Router_G
-
+   sudo pkill -9 Router_G
+   sudo ./Router_G
    break
 
  else
