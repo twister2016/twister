@@ -8,8 +8,8 @@ do
 
  then
 
-   pkill -9 RARP
-
+   sudo pkill -9 RARP
+   sudo ./RARP
    break
 
  else
