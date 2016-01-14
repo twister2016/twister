@@ -7,8 +7,8 @@
 
 ///variables////
 char* ip;
-int arp_flag=-1;
-int mac_received=0;
+int arp_flag = -1;
+int mac_received = 0;
 
 //////prototypes//////
 int main(int, char **);
@@ -19,55 +19,50 @@ void check_arp(int* no);
 bool isValidIpAddress(char *ipAddress);
 ///////////////////////
 
-
-bool isValidIpAddress(char *ipAddress)
-{
+bool isValidIpAddress(char *ipAddress) {
     struct sockaddr_in sa;
     int result = inet_pton(AF_INET, ipAddress, &(sa.sin_addr));
     return result != 0;
 }
 
-static int console_input(int* dont){
+static int console_input(int* dont) {
     char line[1024];
     printf("\e[1;1H\e[2J");
     printf("\n ******** TWISTER ARP APPLICATION ***********\n");
     printf("\n enter IP address i.e., <xx.xx.xx.xx> or <arptable> or <exit>");
     printf("\n>>");
-    while(1){
-        
-        fgets (line, 1024, stdin);
-        line[strlen(line)-1] = 0;
-        if (isValidIpAddress(line)){
-            ip=line;
-            arp_flag=1;
-            mac_received=0;
-            uint8_t mac_heartbeat=0;
-            while(mac_received!=1){
+    while (1) {
+
+        fgets(line, 1024, stdin);
+        line[strlen(line) - 1] = 0;
+        if (isValidIpAddress(line)) {
+            ip = line;
+            arp_flag = 1;
+            mac_received = 0;
+            uint8_t mac_heartbeat = 0;
+            while (mac_received != 1) {
                 mac_heartbeat++;
                 usleep(1000000);
-                if ( mac_heartbeat>4 ){
+                if (mac_heartbeat > 4) {
                     printf("ARP not resolved\n");
                     break;
                 }
             }
-            printf("\n>>"); 
-           
-        }
-        else if (strcmp(line, "exit") == 0) {
-            printf ("exiting ......\n");
+            printf("\n>>");
+
+        } else if (strcmp(line, "exit") == 0) {
+            printf("exiting ......\n");
             exit(0);
-        }
-        else if (strcmp(line, "arptable") == 0) {
+        } else if (strcmp(line, "arptable") == 0) {
             tw_print_arp_table();
             printf("\n>>");
-        }
-        else{
+        } else {
             printf("command not valid\n");
             printf("\n>>");
         }
 
-       
-    }    
+
+    }
     return 0;
 }
 
@@ -76,41 +71,42 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
     struct ether_hdr * eth = buffer->data;
     struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth + 1);
 
-        switch (tw_be_to_cpu_16(eth->ether_type)) {
-            case ETHER_TYPE_ARP:
+    switch (tw_be_to_cpu_16(eth->ether_type)) {
+        case ETHER_TYPE_ARP:
+            if (mac_received == 0) {
                 tw_arp_parser(buffer, "tw0");
                 struct ether_addr * mac_addr = tw_search_arp_entry(ip);
-                if (mac_addr!=NULL && mac_received==0) {
+                if (mac_addr != NULL) {
                     dst_eth_addr = &mac_addr;
                     printf("MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n",
-                                dst_eth_addr->addr_bytes[0],
-                                dst_eth_addr->addr_bytes[1],
-                                dst_eth_addr->addr_bytes[2],
-                                dst_eth_addr->addr_bytes[3],
-                                dst_eth_addr->addr_bytes[4],
-                                dst_eth_addr->addr_bytes[5]);
-                    arp_flag=-1;
-              mac_received=1;
+                            dst_eth_addr->addr_bytes[0],
+                            dst_eth_addr->addr_bytes[1],
+                            dst_eth_addr->addr_bytes[2],
+                            dst_eth_addr->addr_bytes[3],
+                            dst_eth_addr->addr_bytes[4],
+                            dst_eth_addr->addr_bytes[5]);
+                    arp_flag = -1;
+                    mac_received = 1;
                     break;
                 }
-               // else
-                //    printf("temp arp entry returned NULL\n");    
-        }
+            }
+    }
     tw_free_pkt(buffer);
 
 }
-void check_arp(int* no){
-    if (arp_flag==1){
-        tw_send_arp_request(tw_convert_ip_str_to_dec(ip), "tw0"); 
-        arp_flag=-1;
+
+void check_arp(int* no) {
+    if (arp_flag == 1) {
+        tw_send_arp_request(tw_convert_ip_str_to_dec(ip), "tw0");
+        arp_flag = -1;
     }
 }
 
 int main(int argc, char **argv) {
-    tw_init_global(argc,argv);
+    tw_init_global(argc, argv);
     Printing_Enable = 0; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
-    tw_launch_engine(console_input,NULL, "engine1");
+    tw_launch_engine(console_input, NULL, "engine1");
     user_app_main(NULL);
 }
 
@@ -134,7 +130,7 @@ int user_app_main(__attribute__((unused)) void * app_params) {
     }
     timer_handle = tw_timer_init(tw_loop);
     tw_timer_start(timer_handle, check_arp, 1000);
-    
+
     tw_run(tw_loop);
     return 0;
 }
