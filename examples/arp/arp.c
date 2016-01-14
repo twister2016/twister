@@ -93,8 +93,8 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
               mac_received=1;
                     break;
                 }
-                else
-                    printf("temp arp entry returned NULL\n");    
+               // else
+                //    printf("temp arp entry returned NULL\n");    
         }
     tw_free_pkt(buffer);
 
