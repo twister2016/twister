@@ -106,7 +106,7 @@ int tw_add_arp_entry(uint32_t ip_to_add, struct ether_addr mac_to_add, uint8_t p
 int tw_send_arp_request(uint32_t ip_addr, char * port_name) {
     //uint32_t ip_addr = tw_convert_ip_str_to_dec(ip_string);
     int port_id = tw_eth_name_to_id(port_name);
-    tw_construct_arp_packet(rte_cpu_to_be_32(ip_addr), port_id);
+    tw_construct_arp_packet((ip_addr), port_id);
     return 0;
 }
 
