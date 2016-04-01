@@ -1,4 +1,6 @@
 #!/bin/sh
+export RTE_SDK=/home/mininet/twister/dpdk
+export RTE_TARGET=x86_64-native-linuxapp-gcc
 make clean
 make
 sudo mkdir -p /home/twister
