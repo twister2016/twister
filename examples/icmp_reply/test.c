@@ -75,6 +75,7 @@ int main(int argc, char **argv) {
     Printing_Enable=0;
     tw_map_port_to_engine("tw0", "engine0");
     src_tw0_eth=tw_get_ether_addr("tw0");
+    printf("\n Ping Echo is Running!!\n");
     user_app_main(NULL);
     return 0;
 }
