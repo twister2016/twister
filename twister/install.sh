@@ -1,4 +1,8 @@
 #!/bin/sh
+cd ../dpdk
+make config T=x86_64-native-linuxapp-gcc
+make install T=x86_64-native-linuxapp-gcc
+cd ../twister
 export RTE_SDK=$PWD/../dpdk
 export RTE_TARGET=x86_64-native-linuxapp-gcc
 make clean
