@@ -15,11 +15,6 @@ subdirs:
 	$(MAKE) -C $(SUBDIR2);
 
 clean:
-<<<<<<< HEAD
 	rm -rf $(SUBDIR2)/build;
 	rm -rf $(SUBDIR1)/build/build;
-=======
-	rm -rf $(SUBDIR1)/build;
-	rm -rf $(SUBDIR2)/build;
->>>>>>> b756bccf00526d6d21c9853ec9cf195d4b77986e
 	rm -rf $(SUBDIR1)/$(RTE_TARGET);
