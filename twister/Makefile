@@ -31,7 +31,7 @@
 	
 SRC_ROOT:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 ifeq ($(RTE_SDK),)
-$(error "Please define RTE_SDK environment variable")
+RTE_SDK = $(SRC_ROOT)/../dpdk
 endif
 # Default target, can be overridden by command line or environment
 RTE_TARGET = x86_64-native-linuxapp-gcc
