@@ -40,6 +40,6 @@ export RTE_SDK
 # directory list
 #
 
-ROOTDIRS-y := lib drivers app
+ROOTDIRS-y := lib drivers
 
 include $(RTE_SDK)/mk/rte.sdkroot.mk
