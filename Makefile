@@ -2,7 +2,7 @@ SUBDIR1 = dpdk
 SUBDIR2	= twister
 RTE_TARGET = x86_64-native-linuxapp-gcc
 
-all: clean subdirs
+all: clean dpdkconfig subdirs
 
 dpdkconfig:
 #	cd dpdk \;
