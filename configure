@@ -1,3 +1,10 @@
+#!/bin/sh
+sudo mkdir -p /home/twister
+sudo chmod 777 -R /home/twister
+mkdir -p /home/twister/include/.
+mkdir -p /home/twister/include/generic/.
+mkdir -p /home/twister/include/exec-env/.
+sudo cp ./twister/mk/twister.mk /usr/include
 cd dpdk
 make config T=x86_64-native-linuxapp-gcc
 cd ../
