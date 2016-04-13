@@ -1,0 +1,3 @@
+cd dpdk
+make config T=x86_64-native-linuxapp-gcc
+cd ../

@@ -5,9 +5,10 @@ RTE_TARGET = x86_64-native-linuxapp-gcc
 all: clean subdirs
 
 dpdkconfig:
-	cd dpdk \;
-	make config T=x86_64-native-linuxapp-gcc \;
-	cd .. \;
+#	cd dpdk \;
+#	make config T=x86_64-native-linuxapp-gcc \;
+#	cd .. \;
+	./configure
 
 subdirs:
 	$(MAKE) -C $(SUBDIR1);
