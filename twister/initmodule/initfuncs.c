@@ -28,38 +28,60 @@ struct app_params app = {
 	.burst_size_tx_write = 32,
 };
 
+int tw_parse_conf(const char * tw_conf_path){
+
+    cJSON * json_file = NULL;
+    json_file = tw_parse_json_file(tw_conf_path);
+    int i =0;
+    int PCI_ID_LEN = 12;  // "0000:00:00.0"
+
+    char * portmask = cJSON_GetObjectItem(json_file, "portmask")->valuestring;
+    char * coremask = cJSON_GetObjectItem(json_file, "coremask")->valuestring;
+
+    cJSON * blacklist_object = cJSON_GetObjectItem(json_file, "blacklist");
+    int blacklist_size = cJSON_GetArraySize(blacklist_object);
+
+    char ** blacklist_array = malloc(blacklist_size * sizeof(char*));
+    for (i=0; i<blacklist_size; i++) {
+        blacklist_array[i] = malloc(PCI_ID_LEN * sizeof(char*) );
+    }
+    for (i =0; i< blacklist_size; i++) {
+        blacklist_array[i] = cJSON_GetArrayItem(blacklist_object, i)->valuestring;
+    }
+
+
+    twister_config.portmask = portmask;
+    twister_config.coremask = coremask;
+    twister_config.blacklist = blacklist_array; // pci IDs of blacklisted devices
+    twister_config.blacklist_size = blacklist_size; //size of blacklist
+
+    return 0;
+}
+
 int tw_init_eal_env(int argc, char **argv) {
 
     if ( argc == 1 ) {
-    const char *temp0, *temp1, *temp2, *temp3, *temp4, *temp5, *temp6, *temp7, *temp8;
-    temp0 = "-c";
-    temp1 = "0x0E";
-    temp2 = "-n";
-    temp3 = "4";
-    temp4 = "-b";
-    temp5 = "00:03.0";
-    temp6 = "--";
-    temp7 = "-p";
-    temp8 = "0x1";
-    //argv = (char **)malloc(argc * sizeof(char *));
+
+    tw_parse_conf("/home/twister/config/twister_api.json");
+
     argv[1] = (char *)malloc(3 * sizeof(char));
     argv[2] = (char *)malloc(5 * sizeof(char));
     argv[3] = (char *)malloc(3 * sizeof(char));
     argv[4] = (char *)malloc(2 * sizeof(char));
     argv[5] = (char *)malloc(3 * sizeof(char));
-    argv[6] = (char *)malloc(8 * sizeof(char));
+    argv[6] = (char *)malloc(12 * sizeof(char));
     argv[7] = (char *)malloc(3 * sizeof(char));
     argv[8] = (char *)malloc(3 * sizeof(char));
     argv[9] = (char *)malloc(4 * sizeof(char));
-    strcpy (argv[1], temp0);
-    strcpy (argv[2], temp1);
-    strcpy (argv[3], temp2);
-    strcpy (argv[4], temp3);
-    strcpy (argv[5], temp4);
-    strcpy (argv[6], temp5);
-    strcpy (argv[7], temp6);
-    strcpy (argv[8], temp7);
-    strcpy (argv[9], temp8);
+    strcpy (argv[1], "-c");
+    strcpy (argv[2], twister_config.coremask);
+    strcpy (argv[3], "-n");
+    strcpy (argv[4], "4");
+    strcpy (argv[5], "-b");
+    strcpy (argv[6], twister_config.blacklist[0]);   // TODO update argv[6] to store all PCI ids
+    strcpy (argv[7], "--");
+    strcpy (argv[8], "-p");
+    strcpy (argv[9], twister_config.portmask);
     argc = 10;
     }
     
