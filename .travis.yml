@@ -10,7 +10,14 @@ addons:
     packages:
       - make
       - gcc
+      - coreutils
+      - gcc-multilib
+      - bc
+      - libssl-dev
+      - llvm-dev
+      - libjemalloc1
+      - libjemalloc-dev
 
 sudo: True
 
-script: make help && make all && make install
+script: uname -a && make help && make all && make install
