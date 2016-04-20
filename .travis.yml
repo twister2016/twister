@@ -5,6 +5,10 @@ compiler:
 os:
   - linux
 
+before_install:
+ - sudo apt-get -y update
+ - sudo apt-get -y install linux-generic linux-headers-generic
+ 
 addons:
   apt:
     packages:
@@ -20,6 +24,6 @@ addons:
 
 dist: trusty
   
-sudo: True
+sudo: required
 
 script: make help && sudo make all && sudo make install
