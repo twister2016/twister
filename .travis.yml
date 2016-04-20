@@ -17,7 +17,12 @@ addons:
       - llvm-dev
       - libjemalloc1
       - libjemalloc-dev
+      - linux-generic
+      - linux-headers-generic
 
+env:
+  - KERNEL=3.17.7
+  
 sudo: True
 
 script: uname -a && make help && make all && make install
