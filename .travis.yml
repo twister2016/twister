@@ -17,11 +17,9 @@ addons:
       - llvm-dev
       - libjemalloc1
       - libjemalloc-dev
-      - linux-generic
-      - linux-headers-generic
 
 dist: trusty
   
 sudo: True
 
-script: uname -a && make help && make all && make install
+script: make help && sudo make all && sudo make install
