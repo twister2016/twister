@@ -8,6 +8,7 @@ function install_kernel()
     tar xzvf linux-3.17.7.tar.gz > /dev/null
     cd linux-3.17.7
     make allmodconfig
+    make oldconfig && make prepare
     KERNELSRC=$(pwd)
     echo "Installed kernel source in $(pwd)"
     cd ..
@@ -21,6 +22,7 @@ function install_dpdk()
     sed -ri '/EXECENV_CFLAGS  = -pthread -fPIC/{s/$/\nelse ifeq ($(CONFIG_RTE_BUILD_FPIC),y)/;s/$/\nEXECENV_CFLAGS  = -pthread -fPIC/}' mk/exec-env/linuxapp/rte.vars.mk
     make config CC=gcc T=x86_64-native-linuxapp-gcc
     make CC=gcc RTE_KERNELDIR=$KERNELSRC
+    sudo make install CC=gcc T=x86_64-native-linuxapp-gcc RTE_KERNELDIR=$KERNELSRC
     echo "Installed DPDK source in $(pwd)"
     cd ..
 }
