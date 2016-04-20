@@ -20,8 +20,7 @@ addons:
       - linux-generic
       - linux-headers-generic
 
-env:
-  - KERNEL=3.17.7
+dist: trusty
   
 sudo: True
 
