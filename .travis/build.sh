@@ -9,6 +9,7 @@ function install_kernel()
     cd linux-3.17.7
     make allmodconfig
     make oldconfig && make prepare
+    make net/bridge/
     KERNELSRC=$(pwd)
     echo "Installed kernel source in $(pwd)"
     cd ..
