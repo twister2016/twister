@@ -1,1 +1,16 @@
 language: c
+compiler:
+  - gcc
+
+os:
+  - linux
+
+addons:
+  apt:
+    packages:
+      - make
+      - gcc
+
+sudo: True
+
+script: make help && make all && make install
