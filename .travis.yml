@@ -5,9 +5,7 @@ compiler:
 os:
   - linux
 
-before_install:
- - sudo apt-get -y update
- - sudo apt-get -y install linux-generic linux-headers-generic
+before_script: export PATH=$PATH:$HOME/bin
  
 addons:
   apt:
@@ -26,4 +24,4 @@ dist: trusty
   
 sudo: required
 
-script: make help && sudo make all && sudo make install
+script: ./.travis/build.sh
