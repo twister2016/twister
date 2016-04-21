@@ -134,6 +134,7 @@ int tw_run(tw_loop_t * event_loop) {
     struct mbuf_table m[qconf->num_port];
     struct rte_mbuf * pkt;
     tw_buf_t temp_buffer;
+    struct ether_hdr * temp_eth;
 
     tw_rx_t * temp_rx_handle;
     tw_tx_t * temp_tx_handle;
@@ -166,7 +167,8 @@ int tw_run(tw_loop_t * event_loop) {
             for (i = 0; i < qconf->num_port; i++) {
                 for (pkt_count = 0; pkt_count < m[i].len; pkt_count++) {
                     pkt = m[i].m_table[pkt_count];
-                    temp_buffer.pkt = pkt;
+                    rte_vlan_strip(pkt);
+		    temp_buffer.pkt = pkt;
                     temp_buffer.data = rte_pktmbuf_mtod(pkt, tw_buf_t *);
                     temp_buffer.size = pkt->data_len;
                     temp_buffer.port_name = port_info[i].port_name;
