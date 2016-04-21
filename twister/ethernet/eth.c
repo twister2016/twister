@@ -3,12 +3,10 @@
 
 #include <rte_ether.h>
 #include <portconf.h>
-#include <vlan.h>
 #include <eth.h>
 #include <rte_ether.h>
 #include <arplogic.h>
 #include <queued_pkts.h>
-#include <vlan.h>
 #include <event_loop.h>
 #include <tw_common.h>
 

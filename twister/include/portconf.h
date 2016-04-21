@@ -51,7 +51,6 @@ struct port_info {
     uint8_t num_rx_queues;
     uint8_t num_tx_queues;
     struct mbuf_table tx_pkt_array[TX_QUEUES_PER_PORT];
-    //struct port_stats;	//--! add stats info
 } __attribute__((__packed__));
 
 struct port_info port_info[MAX_ETH_PORTS];
@@ -70,11 +69,4 @@ static const struct rte_eth_conf port_conf = {
 	},
 };
 
-/*
-int tw_eth_port_init(void);
-int tw_get_port_by_ip(uint32_t);
-int tw_eth_name_to_id(char*);
-void tw_check_all_ports_link(void);
-uint32_t tw_get_ip_addr(char *);
-*/
 #endif
