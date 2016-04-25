@@ -134,7 +134,6 @@ int tw_run(tw_loop_t * event_loop) {
     struct mbuf_table m[qconf->num_port];
     struct rte_mbuf * pkt;
     tw_buf_t temp_buffer;
-    struct ether_hdr * temp_eth;
 
     tw_rx_t * temp_rx_handle;
     tw_tx_t * temp_tx_handle;
