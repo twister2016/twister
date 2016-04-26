@@ -39,22 +39,7 @@ struct average_filter *end_rtt_average ;
 const uint8_t average_filter_len ;
 
 uint8_t average_list_size;
-
-struct stats_option {
-	uint64_t secs_passed;
-        uint64_t payload_size;
-	uint64_t timestamp;
-	uint64_t rx_pps;
-	uint64_t tx_pps;
-	uint64_t pkts_rx;
-	uint64_t pkts_tx;
-	uint64_t pkts_dropped;
-	uint64_t rtt;
-	uint32_t tag_heat_ip;
-} __attribute__ ((__packed__));
-
 struct stats_option global_stats_option;
-
 extern uint64_t prev_pkts_rx, prev_pkts_tx;
 
 void tw_clear_scr(void);
