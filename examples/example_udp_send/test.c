@@ -6,6 +6,10 @@
 #include <unistd.h>
 #define PacketLimit 0
 #define UDP_PROTO_ID    17
+
+uint64_t curr_time_cycle,prev_stats_calc;
+uint64_t ppsdelay;
+
 struct user_params {
     uint32_t server_ip;
     uint16_t server_port;
@@ -51,16 +55,28 @@ int parse_user_params(char * file_name) {
     for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {
         cJSON * subitem = cJSON_GetArrayItem(json_file, i);
         user_params.server_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "ServerIP")->valuestring);
-        user_params.server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ServerPort")->valuestring, 4);
-        user_params.payload_size = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "Payload")->valuestring, 4);
-        user_params.test_runtime = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring, 2);
-        user_params.pps_limit = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring, 7);
+        user_params.server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ServerPort")->valuestring,
+                                                      strlen(cJSON_GetObjectItem(subitem, "ServerPort")->valuestring));
+        user_params.payload_size = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "Payload")->valuestring,
+                                                      strlen(cJSON_GetObjectItem(subitem, "Payload")->valuestring));
+        user_params.test_runtime = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring,
+                                                      strlen(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring));
+        user_params.pps_limit = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring, 
+                                                      strlen(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring));
+
         global_stats_option.payload_size=user_params.payload_size ;
     }
     return 0;
 }
 void pkt_tx(tw_tx_t * handle)
 {
+
+curr_time_cycle = tw_get_current_timer_cycles();
+if((curr_time_cycle - prev_stats_calc) > ppsdelay)
+{
+ prev_stats_calc=curr_time_cycle;
+
+
     if((global_stats_option.pkts_tx < PacketLimit || PacketLimit == 0) && (global_stats_option.secs_passed < user_params.test_runtime || user_params.test_runtime == 0))
     {
         if (unlikely(dst_eth_addr) == NULL) {
@@ -100,7 +116,9 @@ void pkt_tx(tw_tx_t * handle)
             tw_send_pkt(tx_buf, "tw0");
         }
     }
+ }
 }
+
 int main(int argc, char **argv) {
     tw_init_global(argc, argv);
     ipv4_tw0 = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
@@ -109,6 +127,7 @@ int main(int argc, char **argv) {
     phy_port_id = tw_eth_name_to_id("tw0");
     tx_buf = tw_new_buffer(user_params.payload_size);
     global_stats_option.secs_passed=0;
+    ppsdelay = tw_get_tsc_hz()/user_params.pps_limit;
     user_app_main(NULL);
     return 0;
 }
