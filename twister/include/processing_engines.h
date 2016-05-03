@@ -14,7 +14,6 @@ enum {
 	RESERVE_FIRST_ENGINE = 254
 };
 
-//void tw_launch_engine(void *, void *, int);
 unsigned tw_current_engine(void);
 
 #endif

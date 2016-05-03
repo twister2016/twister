@@ -1,5 +1,8 @@
 ## Twister API
 
+## Build Status:
+[![Build Status](https://travis-ci.org/twister2016/twister.png)](https://travis-ci.org/twister2016/twister)
+
 ## How To:
 
 ### Clone

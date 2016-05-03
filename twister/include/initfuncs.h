@@ -68,7 +68,6 @@ struct app_params app;
 int tw_init_eal_env(int, char **);
 int tw_parse_twister_args(int argc, char **argv);
 int tw_parse_conf(const char * tw_conf_path);
-//extern int tw_init_global(int argc, char **);
 int tw_init_user_given_vals(void);
 int tw_display_usage(const char *);
 int tw_parse_portmask(const char *);

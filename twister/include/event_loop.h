@@ -7,13 +7,11 @@
 #include <rte_ip.h>
 #include <rte_udp.h>
 #include "cJSON.h"
-//#include <tw_api.h>
 #define MAX_LCORES 16
 #define INFINITE_LOOP 0
 #define LOOP_PROCESS 1
 
 #include <rte_launch.h>
-//#include <tw_api.h>
 enum {
 	USE_ALL_ENGINES = 255,
 	ENGINE0 = 0,    //TODO use string in this case
@@ -23,7 +21,6 @@ enum {
 	RESERVE_FIRST_ENGINE = 254
 };
 
-//void tw_launch_engine(void *, void *, int);
 unsigned tw_current_engine(void);
 enum {
     TW_UDP_HANDLE = 0x01,
@@ -37,7 +34,6 @@ struct tw_handle_s {
     uint8_t handle_type;
     uint64_t last_run_time;
     struct tw_handle_s * next;
-    //UV_HANDLE_FIELDS
 } __attribute__((__packed__));
 
 struct tw_loop_s {
@@ -57,7 +53,6 @@ struct tw_loop_s {
 
 typedef struct tw_loop_s tw_loop_t;
 typedef struct tw_handle_s tw_handle_t;
-//tw_loop_t default_loop[MAX_LCORES];
 
 struct tw_udp_s {
     uint8_t handle_type;
@@ -110,19 +105,6 @@ typedef struct tw_timer_s tw_timer_t;
 typedef void * tw_timer_cb;
 
 int tw_loop_init(tw_loop_t *);
-//int tw_loop_close(tw_loop_t *);
 int tw_stop(tw_loop_t *);
-////int tw_run(tw_loop_t *);
-//tw_loop_t * tw_default_loop(uint16_t);
-
-////tw_rx_t * tw_rx_init(tw_loop_t *);
-////int tw_rx_start(tw_rx_t *, void *);
-
-//tw_tx_t * tw_tx_init(tw_loop_t *);
-//int tw_tx_start(tw_tx_t *, void *);
-
-//tw_timer_t * tw_timer_init(tw_loop_t *);
-//int tw_timer_bind(tw_timer_t *, struct tw_sockaddr_in *, int, uint8_t);
-//int tw_timer_start(tw_timer_t *, tw_timer_cb, uint64_t);
 
 #endif

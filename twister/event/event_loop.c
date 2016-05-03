@@ -166,7 +166,8 @@ int tw_run(tw_loop_t * event_loop) {
             for (i = 0; i < qconf->num_port; i++) {
                 for (pkt_count = 0; pkt_count < m[i].len; pkt_count++) {
                     pkt = m[i].m_table[pkt_count];
-                    temp_buffer.pkt = pkt;
+                    rte_vlan_strip(pkt);
+		    temp_buffer.pkt = pkt;
                     temp_buffer.data = rte_pktmbuf_mtod(pkt, tw_buf_t *);
                     temp_buffer.size = pkt->data_len;
                     temp_buffer.port_name = port_info[i].port_name;
