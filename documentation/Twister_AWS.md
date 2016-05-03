@@ -129,6 +129,8 @@ apt-get update -y
 apt-get upgrade -y
 apt-get install linux-generic linux-headers-generic make gcc gdb git unzip -y
 bash -c "echo vm.nr_hugepages = 1024 >> /etc/sysctl.conf"
+mkdir -p /mnt/huge
+sed -i -e '$i \mount -t hugetlbfs nodev /mnt/huge &\n' /etc/rc.local
 reboot
 ```
  ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815832/0bd3bd58-0bc7-11e6-887b-36f900d36ca2.png)
