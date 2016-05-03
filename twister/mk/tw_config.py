@@ -60,7 +60,7 @@ def get_total_cpus():
 def parse_twister_params(twister_conf):
 
     config = ConfigParser.RawConfigParser()   
-    config.readfp(open(r'twister.conf'))
+    config.readfp(open(twister_conf)
 
     blacklist = config.get('DEFAULT', 'blacklist').split(',')
     whitelist = config.get('DEFAULT', 'whitelist').split(',')
@@ -88,8 +88,8 @@ def parse_twister_params(twister_conf):
 
 if __name__ == '__main__':
 
-    cmd = "/home/ubuntu/dpdk-2.0.0/tools/dpdk_nic_bind.py"
-    twister_conf = "twister.conf"
+    cmd = "/home/twister/config/dpdk_nic_bind.py"
+    twister_conf = "/home/twister/config/twister.conf"
     twister_api = "/home/twister/config/twister_api.json"
 
     bind_dpdk_dev = check_bind_devices(cmd)

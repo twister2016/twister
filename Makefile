@@ -56,6 +56,7 @@ install: all
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/*.h /home/twister/include
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/generic/*.h /home/twister/include/generic/
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/exec-env/*.h /home/twister/include/exec-env/
+	./post-install
 
 uninstall: clean
 	rm -rf /home/twister/*
