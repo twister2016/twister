@@ -98,11 +98,8 @@ A dashboard will open up with list of all AWS components. Click on “VPC” ser
 2.	Creating an instance on Amazon Web Services EC2
 ---------------------------------------------------
 
-- Click on sign in button and log in with AWS credentials.
 
-![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815313/142f3cd2-0bc4-11e6-973f-df595a3615d7.png)
-
-- A dashboard will open up with list of all AWS components. Click on “EC2” service in compute section. This service is usually listed as first service, as also depicted in the figure below:
+- Click on “EC2” service in compute section from AWS portal. This service is usually listed as first service, as also depicted in the figure below:
 
  ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815818/fe4f7564-0bc6-11e6-95bf-185d285acf32.png)
 
