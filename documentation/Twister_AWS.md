@@ -133,6 +133,8 @@ mkdir -p /mnt/huge
 sed -i -e '$i \mount -t hugetlbfs nodev /mnt/huge &\n' /etc/rc.local
 reboot
 ```
+These commands in user-data will install the software dependecies required for twister, configure hugepages creation at boot time and reboot the VM for the changes to take effect.
+
  ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815832/0bd3bd58-0bc7-11e6-887b-36f900d36ca2.png)
 
 - Skip step 4 (Add storage) and step 5 (Tag instance) as there is no configurations required for them.
