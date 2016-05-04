@@ -60,7 +60,7 @@ def get_total_cpus():
 def parse_twister_params(twister_conf):
 
     config = ConfigParser.RawConfigParser()   
-    config.readfp(open(twister_conf)
+    config.readfp(open(twister_conf))
 
     blacklist = config.get('DEFAULT', 'blacklist').split(',')
     whitelist = config.get('DEFAULT', 'whitelist').split(',')
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     twister_api = "/home/twister/config/twister_api.json"
 
     bind_dpdk_dev = check_bind_devices(cmd)
-    print bind_dpdk_dev
+    print "These devices are already binded \n" , bind_dpdk_dev
 
     for device in bind_dpdk_dev:
         out, err = unbind_device(cmd, device)
