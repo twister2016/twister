@@ -45,7 +45,8 @@ static int console_input(int* dont) {
     printf("\n>>");
     while (1) {
 
-        fgets(line, 1024, stdin);
+        if(fgets(line, 1024, stdin) != NULL)
+	{
         line[strlen(line) - 1] = 0;
         if (strcmp(line, "send rarp") == 0) {
             rarp_flag = 1;
@@ -71,7 +72,7 @@ static int console_input(int* dont) {
             printf("\n>>");
         }
 
-
+	}
 
     }
     return 0;

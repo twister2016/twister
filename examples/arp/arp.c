@@ -33,7 +33,8 @@ static int console_input(int* dont) {
     printf("\n>>");
     while (1) {
 
-        fgets(line, 1024, stdin);
+        if(fgets(line, 1024, stdin) != NULL)
+	{
         line[strlen(line) - 1] = 0;
         if (isValidIpAddress(line)) {
             ip = line;
@@ -60,7 +61,7 @@ static int console_input(int* dont) {
             printf("command not valid\n");
             printf("\n>>");
         }
-
+	}
 
     }
     return 0;
@@ -77,7 +78,7 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                 tw_arp_parser(buffer, "tw0");
                 struct ether_addr * mac_addr = tw_search_arp_entry(ip);
                 if (mac_addr != NULL) {
-                    dst_eth_addr = &mac_addr;
+                    dst_eth_addr =  mac_addr;
                     printf("MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n",
                             dst_eth_addr->addr_bytes[0],
                             dst_eth_addr->addr_bytes[1],

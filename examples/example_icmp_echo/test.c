@@ -114,11 +114,12 @@ static int console_input(int* dont){
     printf("\n>>");
 
     while(1){
-        fgets (line, 1024, stdin);
-        line[strlen(line)-1] = 0;
-        if (isValidIpAddress(line)){
-            ping_ip=tw_convert_ip_str_to_dec(line);
-            ping=1;
+        if(fgets (line, 1024, stdin) != NULL)
+        {
+            line[strlen(line)-1] = 0;
+            if (isValidIpAddress(line)){
+                ping_ip=tw_convert_ip_str_to_dec(line);
+                ping=1;
         }
         else if (strcmp(line, "exit") == 0) {
             printf ("exiting ......\n");
@@ -129,6 +130,7 @@ static int console_input(int* dont){
             printf("command not valid\n");
             printf("\n>>");
         }
+        }
 
        
     }    
@@ -137,7 +139,7 @@ static int console_input(int* dont){
 
 void pkt_tx(tw_tx_t * handle) {
     if(ping==1){
-    if (unlikely(dst_eth_addr) == NULL) {
+    if (dst_eth_addr == NULL) {
         struct arp_table * temp_arp_entry = tw_search_arp_table(tw_be_to_cpu_32(ping_ip));
         if(temp_arp_entry == NULL) {
             tw_construct_arp_packet(ping_ip, phy_port_id);

@@ -24,14 +24,14 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                 tw_arp_parser(buffer, "tw0");
                 break;
             case ETHER_TYPE_IPv4:
-                ipHdr_d = buffer->data+sizeof(struct ether_hdr);
+                ipHdr_d = buffer->data + sizeof(struct ether_hdr);
                 dst_ip  = (ipHdr_d->dst_addr);
                 src_ip = (ipHdr_d->src_addr);
                 ipHdr_d->dst_addr = (src_ip);
                 ipHdr_d->src_addr = (dst_ip);
                 ipHdr_d->hdr_checksum = tw_ipv4_cksum(ipHdr_d);
 
-                udp_hdr_d = ipHdr_d + sizeof(struct ipv4_hdr);
+                udp_hdr_d = (struct udp_hdr *)ipHdr_d + sizeof(struct ipv4_hdr);
                 dst_port = (udp_hdr_d->dst_port);
                 src_port = (udp_hdr_d->src_port);
                 udp_hdr_d->dst_port = (src_port);

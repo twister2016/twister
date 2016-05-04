@@ -79,7 +79,7 @@ if((curr_time_cycle - prev_stats_calc) > ppsdelay)
 
     if((global_stats_option.pkts_tx < PacketLimit || PacketLimit == 0) && (global_stats_option.secs_passed < user_params.test_runtime || user_params.test_runtime == 0))
     {
-        if (unlikely(dst_eth_addr) == NULL) {
+        if (dst_eth_addr == NULL) {
             struct arp_table * temp_arp_entry = tw_search_arp_table(tw_be_to_cpu_32(user_params.server_ip));
             if(temp_arp_entry == NULL )
             {
