@@ -18,6 +18,6 @@ uint32_t arp_table_size;
 
 int tw_parse_arp(struct rte_mbuf *, uint8_t);
 int tw_send_arp_reply(struct rte_mbuf *, uint8_t);
-int tw_process_arp_reply(struct ether_hdr *, uint8_t);
+int tw_process_arp_reply(struct rte_mbuf* pkt, uint8_t);
 int tw_add_arp_entry(uint32_t ip_to_add, struct ether_addr, uint8_t);
 #endif

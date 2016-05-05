@@ -45,7 +45,6 @@ uint16_t eth_type;
 static struct ether_addr * dst_eth_addr;
 
 
-
 void sig_handler(int signo)
 {
   if (signo == SIGINT){
@@ -110,7 +109,7 @@ static int console_input(int* dont){
     char line[1024];
     printf("\e[1;1H\e[2J");
     printf("\n ******** TWISTER PING APPLICATION ***********\n");
-    printf("\n enter IP address i.e., ping <xx.xx.xx.xx> or <exit>");
+    printf("\n enter IP address i.e., <xx.xx.xx.xx> or <exit>");
     printf("\n>>");
 
     while(1){
@@ -179,6 +178,7 @@ void pkt_tx(tw_tx_t * handle) {
     tw_copy_ether_addr(tw_get_ether_addr("tw0"), &(eth->s_addr));
     tw_send_pkt(tx_buf, "tw0");
     tw_free(tx_buf);
+    printf("sent");
     }
     }
 }
