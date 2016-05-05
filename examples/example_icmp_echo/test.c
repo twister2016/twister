@@ -178,7 +178,6 @@ void pkt_tx(tw_tx_t * handle) {
     tw_copy_ether_addr(tw_get_ether_addr("tw0"), &(eth->s_addr));
     tw_send_pkt(tx_buf, "tw0");
     tw_free(tx_buf);
-    printf("sent");
     }
     }
 }

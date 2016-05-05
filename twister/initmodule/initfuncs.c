@@ -1,6 +1,7 @@
 #ifndef _INITFUNCS_C_
 #define _INITFUNCS_C_
-
+#include <unistd.h>
+#include <sys/types.h>
 #include <initfuncs.h>
 
 struct app_params app = {
@@ -59,7 +60,11 @@ int tw_parse_conf(const char * tw_conf_path){
 }
 
 int tw_init_eal_env(int argc, char **argv) {
-
+	if (getuid())
+	{
+	 printf("%s", "Permission denied: Please run the application using sudo to use Hugepages!\n");
+	 exit(0);
+	}
     if ( argc == 1 ) {
 
     tw_parse_conf("/home/twister/config/twister_api.json");

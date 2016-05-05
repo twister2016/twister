@@ -20,7 +20,7 @@ struct ether_addr querycastmac = {
     .addr_bytes[5] = 0x00,
     .addr_bytes[0] = 0x00,
 };
-int info(const char *fname, int lineno) { /* ... */ }
+
 int tw_parse_arp(struct rte_mbuf * pkt, uint8_t port_id) {
     struct ether_hdr * eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
     struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth + 1);
