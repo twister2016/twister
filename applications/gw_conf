@@ -1,0 +1,4 @@
+[
+{"net_addr": "5.5.5.0", "gateway": "5.5.5.1", "net_mask": "255.255.255.0", "port_name": "tw0"},
+{"net_addr": "4.4.4.0", "gateway": "4.4.4.1", "net_mask": "255.255.255.0", "port_name": "tw1"}
+]

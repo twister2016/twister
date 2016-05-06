@@ -159,7 +159,7 @@ int tw_init_global(int argc, char **argv) {
 	return 0;
 }
 int tw_init_user_given_vals(void) {
-	tw_get_port_conf_json_vals("port_conf");
+	tw_get_port_conf_json_vals("/home/twister/config/config.json");
 //	get_lcore_queue_conf_json_vals("lcore_queue_conf");
 	queued_pkt_time_limit = 10;			//--!TODO use file values parsed by jSON
 	return 0;				//--!JSON...port ips...num of rx/tx queues...flags...vlan tag

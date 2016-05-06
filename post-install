@@ -8,5 +8,6 @@ else
     echo "Inserting Modules in kernel"
     sudo insmod ./dpdk/x86_64-native-linuxapp-gcc/kmod/igb_uio.ko
 fi
+cp twister/mk/config.json /home/twister/config/.
 python /home/twister/config/tw_config.py
 
