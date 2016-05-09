@@ -282,7 +282,7 @@ int main(int argc, char **argv) {
     strcpy(argv[8], temp7);
     strcpy(argv[9], temp8);
     argc = 10;
-    tw_init_global(argc, argv);
+    tw_init_global();
     Printing_Enable = 0;
     tw_map_port_to_engine("tw0", "engine0");
     dst_eth0 = tw_get_ether_addr("tw0");

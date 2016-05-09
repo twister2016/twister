@@ -54,8 +54,9 @@ GATEWAY: twgateway.c
 	$(CC) twgateway.c $(TWFLAGS) -o build/twgateway
 
 install: build
-	sudo mkdir /home/twister/bin
-	sudo cp ./build/* /home/twister/bin/. 
+	mkdir -p /home/twister/bin
+	cp ./build/* /home/twister/bin/.
+	export PATH=$PATH:/home/twister/bin
 clean:
 	rm -rf build
 

@@ -71,7 +71,7 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 }
 
 int main(int argc, char **argv) {
-    tw_init_global(argc,argv);
+    tw_init_global();
     Printing_Enable=0;
     tw_map_port_to_engine("tw0", "engine0");
     src_tw0_eth=tw_get_ether_addr("tw0");

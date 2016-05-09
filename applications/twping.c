@@ -182,7 +182,7 @@ void pkt_tx(tw_tx_t * handle) {
     }
 }
 int main(int argc, char **argv) {
-    tw_init_global(argc, argv);
+    tw_init_global();
     Printing_Enable = 0; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
     phy_port_id = tw_eth_name_to_id("tw0");

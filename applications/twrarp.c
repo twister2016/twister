@@ -140,7 +140,7 @@ void check_arp(int* no) {
 }
 
 int main(int argc, char **argv) {
-    tw_init_global(argc, argv);
+    tw_init_global();
     Printing_Enable = 0; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
     tw_launch_engine(console_input, NULL, "engine1");

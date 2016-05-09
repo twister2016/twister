@@ -4,6 +4,8 @@
 #include <sys/types.h>
 #include <initfuncs.h>
 
+int argc1=0;
+char * argv1[]={NULL};
 struct app_params app = {
 	/* Ports*/
 	.n_ports = MAX_ETH_PORTS,
@@ -65,10 +67,9 @@ int tw_init_eal_env(int argc, char **argv) {
 	 printf("%s", "Permission denied: Please run the application using sudo to use Hugepages!\n");
 	 exit(0);
 	}
-    if ( argc == 1 ) {
 
     tw_parse_conf("/home/twister/config/twister_api.json");
-
+    argv[0] = (char *)malloc(3 * sizeof(char));
     argv[1] = (char *)malloc(3 * sizeof(char));
     argv[2] = (char *)malloc(5 * sizeof(char));
     argv[3] = (char *)malloc(3 * sizeof(char));
@@ -78,6 +79,7 @@ int tw_init_eal_env(int argc, char **argv) {
     argv[7] = (char *)malloc(3 * sizeof(char));
     argv[8] = (char *)malloc(3 * sizeof(char));
     argv[9] = (char *)malloc(4 * sizeof(char));
+    strcpy (argv[0], "ab");
     strcpy (argv[1], "-c");
     strcpy (argv[2], twister_config.coremask);
     strcpy (argv[3], "-n");
@@ -88,7 +90,6 @@ int tw_init_eal_env(int argc, char **argv) {
     strcpy (argv[8], "-p");
     strcpy (argv[9], twister_config.portmask);
     argc = 10;
-    }
     
     	int ret = rte_eal_init(argc, argv);
 	if (ret < 0)
@@ -146,11 +147,10 @@ int tw_parse_twister_args(int argc, char **argv) {
 }
 
 
-int tw_init_global(int argc, char **argv) {
-	tw_init_eal_env(argc, argv);
+int tw_init_global(void) {
+        tw_init_eal_env(argc1, argv1);
 	tw_init_user_given_vals();
 	tw_create_rx_tx_mempools();
-//	tw_create_queued_pkts_mempools();
 	tw_lcore_conf_init();
 	tw_eth_port_init();	
 	tw_init_timer_vals();
@@ -160,7 +160,6 @@ int tw_init_global(int argc, char **argv) {
 }
 int tw_init_user_given_vals(void) {
 	tw_get_port_conf_json_vals("/home/twister/config/config.json");
-//	get_lcore_queue_conf_json_vals("lcore_queue_conf");
 	queued_pkt_time_limit = 10;			//--!TODO use file values parsed by jSON
 	return 0;				//--!JSON...port ips...num of rx/tx queues...flags...vlan tag
 }

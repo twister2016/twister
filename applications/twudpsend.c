@@ -120,7 +120,7 @@ if((curr_time_cycle - prev_stats_calc) > ppsdelay)
 }
 
 int main(int argc, char **argv) {
-    tw_init_global(argc, argv);
+    tw_init_global();
     ipv4_tw0 = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
     parse_user_params("udp_traffic_data");
     tw_map_port_to_engine("tw0", "engine0");

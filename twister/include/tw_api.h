@@ -23,7 +23,7 @@ struct arp_table {
 * @return
 *   TRUE (value 0) else cause panic
 */
-int tw_init_global(int argc, char** argv);
+int tw_init_global(void);
 
 /** run any given function on availbale engines described in launch_type
 *
