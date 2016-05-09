@@ -98,6 +98,20 @@ int tw_eth_name_to_id(char* portName);
 */
 void tw_check_all_ports_link(void);
 
+/** returns the subnet mask against port tw0, tw1 etc
+* @param portName
+*   A char pointer with portname string <tw0> <tw1> etc.
+* @return
+*   An unsigned 32-bit Ipv4 address
+*/
+uint32_t tw_get_gateway_ip(char *portName);
+/** returns the gateway address of port tw0, tw1 etc
+* @param portName
+*   A char pointer with portname string <tw0> <tw1> etc.
+* @return
+*   An unsigned 32-bit Ipv4 address
+*/
+uint32_t tw_get_subnet_mask(char *portName);
 /** returns the Ip address of port tw0, tw1 etc
 * @param portName
 *   A char pointer with portname string <tw0> <tw1> etc.

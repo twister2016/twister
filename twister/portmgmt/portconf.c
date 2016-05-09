@@ -51,9 +51,15 @@ int tw_get_port_by_ip(uint32_t ip_addr)
 	return -1;
 	
 }
+uint32_t tw_get_gateway_ip(char * port_name) {
+    return (port_info[tw_eth_name_to_id(port_name)].gateway_ip);
+}
 
 uint32_t tw_get_ip_addr(char * port_name) {
     return (port_info[tw_eth_name_to_id(port_name)].start_ip_addr);
+}
+uint32_t tw_get_subnet_mask(char * port_name) {
+    return (port_info[tw_eth_name_to_id(port_name)].subnet_mask);
 }
 
 int tw_eth_port_init(void) {
@@ -74,7 +80,7 @@ int tw_eth_port_init(void) {
 			continue;
 		}
 		
-		printf("port_id %d, num_rx_queues %d, num_tx_queues %d\n", port_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues);
+		//printf("port_id %d, num_rx_queues %d, num_tx_queues %d\n", port_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues);
 		ret = rte_eth_dev_configure(port_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues, &port_conf);
 		//ret = rte_eth_dev_configure(port_id, 1, 1, &port_conf);
 		if (ret < 0)
@@ -84,21 +90,21 @@ int tw_eth_port_init(void) {
 		port_info[port_id].eth_mac = rte_malloc("struct ether_addr", sizeof(struct ether_addr), RTE_CACHE_LINE_SIZE);
 		rte_eth_macaddr_get(port_id, port_info[port_id].eth_mac);
 
-		printf("Port %u, MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n\n",
+		/*printf("Port %u, MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n\n",
 				(unsigned) port_id,
 				port_info[port_id].eth_mac->addr_bytes[0],
 				port_info[port_id].eth_mac->addr_bytes[1],
 				port_info[port_id].eth_mac->addr_bytes[2],
 				port_info[port_id].eth_mac->addr_bytes[3],
 				port_info[port_id].eth_mac->addr_bytes[4],
-				port_info[port_id].eth_mac->addr_bytes[5]);
+				port_info[port_id].eth_mac->addr_bytes[5]);*/
 
 		socket_id = rte_eth_dev_socket_id(port_id);
 		if(socket_id == -1)
 			socket_id = 0;
 		port_info[port_id].socket_id = socket_id;
 		rte_eth_dev_info_get(port_id, &dev_info);			//--!TODO use dev_info in port_info struct
-		printf("%d port_id, %d socket id, %d num rx q, %d num tx q\n", port_id, port_info[port_id].socket_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues);
+		//printf("%d port_id, %d socket id, %d num rx q, %d num tx q\n", port_id, port_info[port_id].socket_id, port_info[port_id].num_rx_queues, port_info[port_id].num_tx_queues);
 		for(counter=0;counter<port_info[port_id].num_rx_queues;counter++) {
 			ret = rte_eth_rx_queue_setup(port_id, counter, nb_rxd,rte_eth_dev_socket_id(port_id), NULL, rx_mempool[socket_id]);
 			if (ret < 0)
@@ -139,14 +145,5 @@ void tw_check_all_ports_link(void) {
 		rte_panic("Some NIC ports are DOWN\n");
 	return;
 }
-/*
-void print_port_info(void) {
-	int i = 0;
-	for(i = 0; i < MAX_ETH_PORTS; i++) {
-		printf("port name %s, extern id %d, start ip %d, num ip addrs %d, socket_id %d, num_rx_queues %d num_tx_queues %dn", port_info[i].port_name, port_info[i].port_id_external, );
-	}	
-	return;
-}
-*/
 
 #endif
