@@ -8,28 +8,6 @@ import shlex
 
 dpdk_drivers =["igb_uio", "vfio-pci", "uio_pci_generic"]
 
-def populate_lshw_paramas():
-    ports = []
-    proc = subprocess.Popen(['lshw','-json'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = proc.communicate()
-    sys_tree = json.loads(out)
-
-    for boards in sys_tree["children"]:
-        for devices in boards["children"]:
-            if devices["id"]=="pci":
-                for pcichild in devices["children"]:
-                    if pcichild["class"]=="network":
-                        tempdic={}
-                        pciaddr = pcichild["handle"]
-                        tempdic["pciaddress"]=pciaddr[4:]
-                        tempdic["logicalname"]=pcichild["logicalname"]
-                        ports.append(tempdic)
-
-    return ports
-
-
-
-
 def get_kernel_drv(devices):
 
     global dpdk_drivers
@@ -70,11 +48,6 @@ def bind_device(cmd, device, driver):
     status = subprocess.Popen(['sudo', cmd, '-b', driver,  device], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return status.communicate()
 
-#def unbind_device(cmd, device, driver):
-#
-#    status = subprocess.Popen(['sudo', cmd, '-b', driver,  device], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#    return status.communicate()
-
 def get_total_cpus():
     lscpu_out = subprocess.Popen(shlex.split("/usr/bin/lscpu "), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     cpu_status = subprocess.Popen(shlex.split("grep CPU(s):"), stdin=lscpu_out.stdout,
@@ -106,48 +79,11 @@ def get_coremask(config):
     coremask = hex((2**total_cpus-1) << cores)
     return coremask
 
-def parse_twister_params(twister_conf):
-    pass
-
-    config = ConfigParser.RawConfigParser()   
-    config.readfp(open(twister_conf))
-
-    blacklist = config.get('DEFAULT', 'blacklist').split(',')
-    blacklist_pci = get_pci_address(sys_tree, blacklist)
-
-
-
-    whitelist = config.get('DEFAULT', 'whitelist').split(',')
-    whitelist_pci = get_pci_address(sys_tree, whitelist)
-
-
-
-    cores = int(config.get('DEFAULT', 'cores'))
-    coremask = hex((2**total_cpus-1) << cores)
-
-    print "blacklist " , blacklist
-    print "whitelist" , whitelist
-
-    sys_tree = populate_lshw_paramas()
-
-    if not set(whitelist).issubset([dev['logicalname'] for dev in sys_tree ]):
-        raise Exception("whitelist interfaces in twister.conf do not exist")
-
-    if not set(whitelist).isdisjoint(blacklist):
-        raise Exception("whitelist conflicts with blacklist in twister.conf")
-    total_cpus = get_total_cpus()
-    portmask = hex(len(whitelist))
-
-
-    return coremask, portmask, blacklist_pci, whitelist_pci
-
 def bind_all_to_linux(cmd, devices):
     
     kernel_driver = get_kernel_drv(devices)
     for dev in devices.keys():
         bind_device(cmd, dev, kernel_driver)
-
-
 
 def main():
     cmd = "/home/twister/config/dpdk_nic_bind.py"
