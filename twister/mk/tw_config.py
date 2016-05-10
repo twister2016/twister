@@ -4,6 +4,7 @@ import subprocess
 import json
 import ConfigParser
 import dpdk_nic_bind as lib_dpdk
+import shlex
 
 dpdk_drivers =["igb_uio", "vfio-pci", "uio_pci_generic"]
 
@@ -75,10 +76,11 @@ def bind_device(cmd, device, driver):
 #    return status.communicate()
 
 def get_total_cpus():
-
-    cpu_status = subprocess.Popen(["/usr/bin/lscpu"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    lscpu_out = subprocess.Popen(shlex.split("/usr/bin/lscpu "), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    cpu_status = subprocess.Popen(shlex.split("grep CPU(s):"), stdin=lscpu_out.stdout,
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = cpu_status.communicate()
-    total_cpus = int(out.split()[11]) -1
+    total_cpus = int(out.split()[-1])
     return total_cpus
 
 def get_whitelist(devices, config):
