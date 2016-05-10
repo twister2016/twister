@@ -56,7 +56,7 @@ GATEWAY: twgateway.c
 install: build
 	mkdir -p /home/twister/bin
 	cp ./build/* /home/twister/bin/.
-	export PATH=$PATH:/home/twister/bin
+	export PATH="$(PATH):/home/twister/bin"
 clean:
 	rm -rf build
 

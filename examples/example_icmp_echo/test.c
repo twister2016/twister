@@ -183,9 +183,9 @@ void pkt_tx(tw_tx_t * handle) {
 int main(int argc, char **argv) {
     argvector = argv ;
     argcount = argc;
-    rte_set_log_level(RTE_LOG_EMERG);
-    rte_set_log_type(RTE_LOGTYPE_EAL,0);
-    rte_set_log_type(RTE_LOGTYPE_PMD,0); 	
+//    rte_set_log_level(RTE_LOG_EMERG);
+//    rte_set_log_type(RTE_LOGTYPE_EAL,0);
+//    rte_set_log_type(RTE_LOGTYPE_PMD,0); 	
     tw_init_global();
     Printing_Enable = 0; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");

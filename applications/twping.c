@@ -37,7 +37,7 @@ char** argvector; int argcount;
 struct ether_hdr * eth;
 struct ipv4_hdr * ip;
 struct icmp_echo* icmp;
-int ping=-1;
+int ping=-1,arp_counter=0;
 uint32_t ping_ip,ping_count, reply_count=0;
 double time_ms, t1 ,t2, total_init_time;
 uint16_t eth_type;
@@ -58,13 +58,19 @@ void sig_handler(int signo)
      ip_addr.s_addr = tw_cpu_to_be_32(ping_ip);
      printf(" --- %s ping statistics ---\n", inet_ntoa(ip_addr));
      double total_ping_time =  total_end_time-total_init_time;
-     int loss;
+     float loss;
+     int packet_transmitted=ping_count;
      if (ping_count > 0)
-         loss = (1-(reply_count/ping_count))*100;  
-     else 
-        loss = 0;
-     printf("%d packets transmitted, %d  received, %d%% packet loss, time %.0lfms\n",ping_count, reply_count, loss,total_ping_time);
-
+         loss = (1-(reply_count/(float)ping_count))*100;  
+     else if (ping_count == 0){
+        if (arp_counter > 0){
+            loss = (double)(1-((reply_count/(float)arp_counter)))*100;  
+            packet_transmitted = arp_counter;
+        }
+        else
+            loss =0;
+     } 
+     printf("%d packets transmitted, %d received, %.2f%% packet loss, time %.0lfms\n",packet_transmitted, reply_count, loss,total_ping_time);
      exit(1);
   }
 }
@@ -123,16 +129,21 @@ void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
 
 void pkt_tx(tw_tx_t * handle) {
     if(ping==1){
-
         if (dst_eth_addr == NULL )
-        {   
+        {  
             uint32_t first_hop_ip = ping_ip;    
             if (isSameNetwork(ping_ip)!=1)
                     first_hop_ip = tw_get_gateway_ip("tw0");
             struct arp_table * temp_arp_entry = tw_search_arp_table(tw_be_to_cpu_32(first_hop_ip));
             if(temp_arp_entry == NULL) {
                 tw_send_arp_request(first_hop_ip, "tw0");
-                return;
+                arp_counter++;
+                if (arp_counter > 3) {
+                    struct in_addr ip_addr;
+                    ip_addr.s_addr =tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
+                    printf("From %s icmp_seq=%d Destination Host Unreachable\n",inet_ntoa(ip_addr), arp_counter-3);
+                    return;
+                }    
             }
             else
                 dst_eth_addr = &temp_arp_entry->eth_mac;
@@ -172,9 +183,6 @@ void pkt_tx(tw_tx_t * handle) {
 int main(int argc, char **argv) {
     argvector = argv ;
     argcount = argc;
-    rte_set_log_level(RTE_LOG_EMERG);
-    rte_set_log_type(RTE_LOGTYPE_EAL,0);
-    rte_set_log_type(RTE_LOGTYPE_PMD,0); 	
     tw_init_global();
     Printing_Enable = 0; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
