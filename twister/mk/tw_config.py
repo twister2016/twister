@@ -41,7 +41,7 @@ def get_total_cpus():
                                   stdout=subprocess.PIPE,
                                   stderr=subprocess.PIPE)
     out, err = cpu_status.communicate()
-    total_cpus = int(out.split()[-1])
+    total_cpus = int(out.split()[1])
     return total_cpus
 
 
