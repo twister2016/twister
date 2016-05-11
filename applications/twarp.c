@@ -19,11 +19,9 @@ bool isValidIpAddress(char *ipAddress);
 ///////////////////////
 bool isSameNetwork(char* ip){
     uint32_t ipp = tw_convert_ip_str_to_dec(ip);
-
     uint32_t desAnd = ipp & tw_get_subnet_mask("tw0");
     uint32_t souAnd = tw_get_ip_addr("tw0") & tw_get_subnet_mask("tw0");
     return desAnd == souAnd; 
-
 }
 
 bool isValidIpAddress(char *ipAddress) {
@@ -75,20 +73,23 @@ int main(int argc, char **argv) {
     tw_map_port_to_engine("tw0", "engine0");
     if (argc == 2) {
         ip = argv[1];    
-        if (isSameNetwork(ip)){
-            if (isValidIpAddress(ip)){
+        if (isValidIpAddress(ip)){
+            if (isSameNetwork(ip))                                                                                                    
                 arp_flag = 1;
-            }
+            else{
+                printf("Cannot resolve address outside of network.\n");
+                exit(1);
+            }   
         }
         else{
-            printf("Cannot resolve address outside of network.\n");
+            printf("Host address not valid.\n");
             exit(1);
         }
     }
     else{
         printf("Please specify twarp <x.x.x.x> \n");
-        exit(1);}
-    
+        exit(1);
+    }
     user_app_main(NULL);
 }
 
