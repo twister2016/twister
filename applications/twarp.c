@@ -8,73 +8,37 @@
 ///variables////
 char* ip;
 int arp_flag = -1;
-int mac_received = 0;
 
 //////prototypes//////
 int main(int, char **);
 int user_app_main(void *);
 void reply_payload(tw_rx_t *, tw_buf_t *);
-static int console_input(int*);
-void check_arp(int* no);
+void check_arp();
+bool isSameNetwork(char * );
 bool isValidIpAddress(char *ipAddress);
 ///////////////////////
+bool isSameNetwork(char* ip){
+    uint32_t ipp = tw_convert_ip_str_to_dec(ip);
+
+    uint32_t desAnd = ipp & tw_get_subnet_mask("tw0");
+    uint32_t souAnd = tw_get_ip_addr("tw0") & tw_get_subnet_mask("tw0");
+    return desAnd == souAnd; 
+
+}
 
 bool isValidIpAddress(char *ipAddress) {
     struct sockaddr_in sa;
     int result = inet_pton(AF_INET, ipAddress, &(sa.sin_addr));
     return result != 0;
 }
-
-static int console_input(int* dont) {
-    char line[1024];
-    printf("\e[1;1H\e[2J");
-    printf("\n ******** TWISTER ARP APPLICATION ***********\n");
-    printf("\n enter IP address i.e., <xx.xx.xx.xx> or <arptable> or <exit>");
-    printf("\n>>");
-    while (1) {
-
-        if(fgets(line, 1024, stdin) != NULL)
-	{
-        line[strlen(line) - 1] = 0;
-        if (isValidIpAddress(line)) {
-            ip = line;
-            arp_flag = 1;
-            mac_received = 0;
-            uint8_t mac_heartbeat = 0;
-            while (mac_received != 1) {
-                mac_heartbeat++;
-                usleep(1000000);
-                if (mac_heartbeat > 4) {
-                    printf("ARP not resolved\n");
-                    break;
-                }
-            }
-            printf("\n>>");
-
-        } else if (strcmp(line, "exit") == 0) {
-            printf("exiting ......\n");
-            exit(0);
-        } else if (strcmp(line, "arptable") == 0) {
-            tw_print_arp_table();
-            printf("\n>>");
-        } else {
-            printf("command not valid\n");
-            printf("\n>>");
-        }
-	}
-
-    }
-    return 0;
-}
-
 void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
     struct ether_addr * dst_eth_addr;
     struct ether_hdr * eth = buffer->data;
-    struct arp_hdr * arp_pkt = (struct arp_hdr *) (eth + 1);
+    struct arp_hdr * arp_pkt =buffer->data + sizeof(struct ether_hdr);
 
     switch (tw_be_to_cpu_16(eth->ether_type)) {
         case ETHER_TYPE_ARP:
-            if (mac_received == 0) {
+            if (arp_flag == 1) {
                 tw_arp_parser(buffer, "tw0");
                 struct ether_addr * mac_addr = tw_search_arp_entry(ip);
                 if (mac_addr != NULL) {
@@ -87,8 +51,7 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                             dst_eth_addr->addr_bytes[4],
                             dst_eth_addr->addr_bytes[5]);
                     arp_flag = -1;
-                    mac_received = 1;
-                    break;
+                    exit(0);
                 }
             }
     }
@@ -96,18 +59,36 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 
 }
 
-void check_arp(int* no) {
-    if (arp_flag == 1) {
-        tw_send_arp_request(tw_convert_ip_str_to_dec(ip), "tw0");
-        arp_flag = -1;
-    }
+void check_arp() {
+    static arp_resolv_count = 0;    
+    arp_resolv_count++;
+    tw_send_arp_request(tw_convert_ip_str_to_dec(ip), "tw0");
+    if ( arp_flag == 1 && arp_resolv_count > 4 ) {
+        printf("arp not resolved.\n");
+        exit(1);
+    }    
 }
 
 int main(int argc, char **argv) {
     tw_init_global();
     Printing_Enable = 0; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
-    tw_launch_engine(console_input, NULL, "engine1");
+    if (argc == 2) {
+        ip = argv[1];    
+        if (isSameNetwork(ip)){
+            if (isValidIpAddress(ip)){
+                arp_flag = 1;
+            }
+        }
+        else{
+            printf("Cannot resolve address outside of network.\n");
+            exit(1);
+        }
+    }
+    else{
+        printf("Please specify twarp <x.x.x.x> \n");
+        exit(1);}
+    
     user_app_main(NULL);
 }
 
