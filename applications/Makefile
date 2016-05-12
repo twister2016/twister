@@ -53,6 +53,9 @@ MULTIETHERECHO: twmetherecho.c
 GATEWAY: twgateway.c
 	$(CC) twgateway.c $(TWFLAGS) -o build/twgateway
 
+IPERF: twiperf.c
+	$(CC) twiperf.c $(TWFLAGS) -o build/twiperf
+
 install: build
 	mkdir -p /home/twister/bin
 	cp ./build/* /home/twister/bin/.
