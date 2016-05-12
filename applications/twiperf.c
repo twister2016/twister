@@ -42,7 +42,7 @@ struct udp_hdr * udp_hdr_d;
 uint16_t eth_type;
 struct ether_addr * dst_eth;
 struct iperf_test {
-	char role;
+	int role;
 	int protocol_id;
 	int server_port; 
 };
@@ -60,28 +60,29 @@ void twiperf_usage(void)
 
 int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
 {
+
     int server_flag, client_flag, udp_flag, ethernet_flag;
+		printf("role %d type %d",test->role,test->protocol_id);
     static struct option longopts[] =
     {
         {"udp", no_argument, NULL, 'u'},
         {"ethernet", no_argument, NULL, 'e'},
         {"server", no_argument, NULL, 's'},
         {"client", no_argument, NULL, 'c'},
-        {"port", no_argument, NULL, 'p'},
         {"help", no_argument, NULL, 'h'},
         {NULL, 0, NULL, 0}
     };
     int flag;
     server_flag = client_flag = udp_flag = ethernet_flag = 0;
-    while ((flag = getopt_long(argc, argv, "ue:cs:p:h:", longopts, NULL)) != -1) {
+    while ((flag = getopt_long(argc, argv, "ue:cs:h:", longopts, NULL)) != -1) {
         switch (flag) {
             case 'c':
 		client_flag = 1;
-		test->role = 'c';
+		test->role = 2;
 		break;
             case 's':
 		server_flag = 1;
-		test->role = 's';
+		test->role = 1;
 		break;
             case 'e':
 		ethernet_flag = 1;
@@ -90,10 +91,6 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
             case 'u':
 		udp_flag = 1;
 		test->protocol_id = 2;
-		break;
-            case 'p':
-		test->server_port = atoi(optarg);
-		printf("Port %d \n",test->server_port);
 		break;
             case 'h':
 		twiperf_usage();
@@ -111,6 +108,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
 		twiperf_usage();
                 exit(1);
 	}
+	printf("role %d type %d",test->role,test->protocol_id);
 	return 0;
 
 }
@@ -239,14 +237,12 @@ int parse_user_params(char * file_name) {
                                                       strlen(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring));
         user_params.pps_limit = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring, 
                                                       strlen(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring));
-
-        global_stats_option.payload_size=user_params.payload_size ;
+	        global_stats_option.payload_size=user_params.payload_size ;
     }
     return 0;
 }
 void pkt_tx(tw_tx_t * handle)
 {
-
 curr_time_cycle = tw_get_current_timer_cycles();
 if((curr_time_cycle - prev_stats_calc) > ppsdelay)
 {
@@ -329,24 +325,29 @@ int udp_app_client(__attribute__((unused)) void * app_params) {
 int main(int argc, char **argv) {
     tw_init_global();
     twiperf_parse_arguments(&test, argc, argv);
-    //Printing_Enable = 0; //disable the real-time printing of Tx/Rx,
+    Printing_Enable = 1; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
     dst_eth=tw_get_ether_addr("tw0");
-    if(test.protocol_id == 1 && test.role == 's')
+    if(test.protocol_id == 1 && test.role == 1)
     {
 	ether_app_server(NULL);
     }
-    else if (test.protocol_id == 2 && test.role == 's')
+    else if (test.protocol_id == 2 && test.role == 1)
     {
 	udp_app_server(NULL);
     }
-    else if (test.protocol_id ==1 && test.role == 'c')
+    else if (test.protocol_id == 1 && test.role == 2)
     {
 	printf("Functionality not supported yet\n");
     }
-    else if (test.protocol_id ==2 && test.role == 'c')
-    {
+    if (test.protocol_id == 2 && test.role == 2)
+	{
+	parse_user_params("udp_traffic_data");
+	ipv4_tw0 = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
+	tx_buf = tw_new_buffer(user_params.payload_size);
+	global_stats_option.secs_passed=0;
 	udp_app_client(NULL);
-    }
+	}
+    
     return 0;
 }
