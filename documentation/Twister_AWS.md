@@ -133,7 +133,13 @@ Select “Ubuntu Server 14.04 LTS (HVM), SSD Volume Type” (64 bit) image from 
 ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815821/03430ef0-0bc7-11e6-9ced-3321d83a97c6.jpg)
  
 
-- In step 2, you will be prompted choose instance type. Any instance type from “compute optimized” family can be used. For ease of use “c4.xlarge” instance type is selected here.
+- In step 2, choose an instance type from the menu.
+
+The NICs connected with Virtual Machine should either be virtual functions or other DPDK supported NICs. [See the list of DPDK supported NICS]
+(http://dpdk.org/doc/nics)
+
+In Instance Types, only "Compute Optimized" Family supports virtual functions. Other Instance Type Families connect xen based NICs which are not supported by Twister.
+For ease of use “c4.xlarge” instance type is selected here.
 
  ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815824/05b384f8-0bc7-11e6-8cb1-76e2a82d49c1.png)
 
