@@ -115,7 +115,21 @@ A dashboard will open up with list of all AWS components. Click on “VPC” ser
  
  ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815819/00b39f92-0bc7-11e6-8f5d-a3f49cf6b58b.jpg)
 
-- A list will be given to choose Amazon Machine image. Select “Ubuntu Server 14.04 LTS (HVM), SSD Volume Type” (64 bit) image. 
+- Choose Amazon Machine Image (AMI) for launching an instance.
+
+Twister should work on all operating systems that are supported by DPDK. [See list of DPDK support OS.]
+(http://dpdk.org/doc/guides/rel_notes/supported_os.html)
+
+Twister should work on any 64bit Amazon linux image which support hardware virtual machine (HVM). Following HVM images have been tested on Amazon EC2.
+* Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+
+Following Amazon Images should work with Twister as they meet the requirements of Twister. But they have not been tested yet.
+
+* Amazon Linux AMI 2016.03.1 (HVM), SSD Volume Type
+* Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
+* SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
+
+Select “Ubuntu Server 14.04 LTS (HVM), SSD Volume Type” (64 bit) image from the list. 
 ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815821/03430ef0-0bc7-11e6-9ced-3321d83a97c6.jpg)
  
 
