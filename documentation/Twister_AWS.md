@@ -89,11 +89,19 @@ A dashboard will open up with list of all AWS components. Click on “VPC” ser
 
  ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815492/1a88a54a-0bc5-11e6-8401-1e23e3ecfd7c.png)
 
+- In VPC dashboard, go to 'Security Group' tab under 'Security' panel. Click on 'Create Security Group' button.
 
+ ![alt tag](https://cloud.githubusercontent.com/assets/3003907/15205852/3842d576-1834-11e6-838e-59f9c6041b18.png)
 
+- Provide name for security groug and select VPC from drop down menu. Also add rules to allow TCP, UDP and ICMP traffic as shown in figure below.
+ ![alt tag](https://cloud.githubusercontent.com/assets/3003907/15205853/39332954-1834-11e6-86ed-72da6d5ec18d.png)
 
+- Now to EC2 dashboard, go to 'Key Pairs' tab in 'Network & Security' panel. Click on 'Create Key Pair'.
 
+ ![alt tag](https://cloud.githubusercontent.com/assets/3003907/15205857/3a706796-1834-11e6-8d19-a08e87363443.png)
 
+- Create a new keypair and save the ".pem" key generated. This keypair will be used to create access EC2 instances.   
+ ![alt tag](https://cloud.githubusercontent.com/assets/3003907/15205858/3b525e4e-1834-11e6-83bc-6ba34a61733f.png)
 
 2.	Creating an instance on Amazon Web Services EC2
 ---------------------------------------------------
@@ -135,13 +143,13 @@ These commands in user-data will install the software dependecies required for t
  ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815832/0bd3bd58-0bc7-11e6-887b-36f900d36ca2.png)
 
 - Skip step 4 (Add storage) and step 5 (Tag instance) as there is no configurations required for them.
-- Go to Step 6 (Configure Security Group), create a new security group for Twister. Add rules for ICMP and SSH traffic, as shown in figure below:
+- Go to Step 6 (Configure Security Group), click on 'Choose an existing security group' and select the security group created in previous step.
   
-   ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815835/0e9be79a-0bc7-11e6-9183-f22e658f3d94.png)
+   ![alt tag](https://cloud.githubusercontent.com/assets/3003907/15206071/cf30215e-1835-11e6-8e45-8b591fab7cf2.png)
 
-- Click on Launch button. A window will pop up to select a key pair. Select an existing key pair if you have created it earlier. Otherwise create a new key pair and download it.
+- Click on Launch button. A window will pop up to select a key pair. Select 'Choose an existing key pair' and select key pair created in previous section. Otherwise create a new key pair and download it.
 
- ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815840/1119cd66-0bc7-11e6-89db-03331d379987.png)
+ ![alt tag](https://cloud.githubusercontent.com/assets/3003907/15205861/3d55537c-1834-11e6-9d65-0f8e026dd026.png)
 
 - After selecting a key pair, tick the acknowledgement check box and click on “Launch Instances” button. Dashboard will redirect to Launch Status page. Click on the instance link given on this page as shown in figure below.
 
