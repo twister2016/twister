@@ -20,25 +20,12 @@ void tw_clear_scr(void)
 }
 
 int tw_calc_global_stats(void) {
-//	int proc_engine_id = rte_lcore_id();
-	global_stats_option.secs_passed++;
-	global_stats_option.rtt = average_rtt;
-	global_stats_option.rx_pps = global_stats_option.pkts_rx - prev_pkts_rx;
-	global_stats_option.tx_pps = global_stats_option.pkts_tx - prev_pkts_tx;
-	prev_pkts_rx = global_stats_option.pkts_rx;
-	prev_pkts_tx = global_stats_option.pkts_tx;
-	//if(global_pps_delay > 10) {
-	//	float change = ((float)global_pps_limit - global_stats_option.tx_pps)/global_pps_limit;
-	//	if(global_pps_delay == 0)
-	//		global_pps_delay = 10;
-	//	if(change != 0)
-	//		global_pps_delay -= (change * global_pps_delay);
-	////}
-	//if(global_stats_option.secs_passed <= 5) //TODO check if this logic is required
-	//{
-	//	global_pps_delay = global_pps_delay * 5;
-	//}
-	//global_stats_option.timestamp = tw_get_current_timer_cycles(); //TODO get current time from event loop
+	tw_stats.secs_passed++;
+	tw_stats.rtt = average_rtt;
+	tw_stats.rx_pps = tw_stats.pkts_rx - prev_pkts_rx;
+	tw_stats.tx_pps = tw_stats.pkts_tx - prev_pkts_tx;
+	prev_pkts_rx = tw_stats.pkts_rx;
+	prev_pkts_tx = tw_stats.pkts_tx;
 	return 0;
 }
 
@@ -46,7 +33,7 @@ void tw_print_global_stats(void) {
 	//int proc_engine_id = rte_lcore_id();
 	tw_clear_scr();
 	printf("****Global Stats****\n");
-	printf("Secs Passed %lu\nRX PPS %lu\nTX PPS %lu\nPkts RX %lu\nPkts TX %lu\n", global_stats_option.secs_passed, global_stats_option.rx_pps, global_stats_option.tx_pps, global_stats_option.pkts_rx, global_stats_option.pkts_tx);
+	printf("Secs Passed %lu\nRX PPS %lu\nTX PPS %lu\nPkts RX %lu\nPkts TX %lu\n", tw_stats.secs_passed, tw_stats.rx_pps, tw_stats.tx_pps, tw_stats.pkts_rx, tw_stats.pkts_tx);
 
 }
 

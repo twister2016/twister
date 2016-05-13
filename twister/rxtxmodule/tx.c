@@ -7,16 +7,14 @@ static int
 tw_send_burst(struct lcore_conf *qconf, unsigned n, uint8_t port) {
     struct rte_mbuf **m_table;
     unsigned ret;
-    //unsigned queueid = 0;
-   // int proc_engine_id = rte_lcore_id();
     m_table = (struct rte_mbuf **) qconf->tx_mbufs[port].m_table;
     ret = rte_eth_tx_burst(port, /*(uint16_t) queueid*/0, m_table, (uint16_t) n);
-    global_stats_option.pkts_tx += ret; //global variable in stats.h
+    tw_stats.pkts_tx += ret; //global variable in stats.h
     if (unlikely(ret < n)) {
         do {
             rte_pktmbuf_free(m_table[ret]);
         } while (++ret < n);
-        global_stats_option.pkts_dropped += (n - ret);
+        tw_stats.pkts_dropped += (n - ret);
     }
 
     return 0;
@@ -50,8 +48,6 @@ int tw_timely_burst(void) {
 }
 
 int tw_add_pkt_to_tx_queue(struct rte_mbuf * m, uint8_t port) {
-    //printf("\n\nTX PKT\n");
-    //rte_pktmbuf_dump(stdout, m, 100);
     unsigned lcore_id, len;
     struct lcore_conf *qconf;
 

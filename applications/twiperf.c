@@ -3,7 +3,6 @@
 #include <getopt.h>
 #include <tw_common.h>
 #include <tw_api.h>
-#include <stats.h>
 #define PacketLimit 0
 #define UDP_PROTO_ID    17
 
@@ -212,7 +211,7 @@ int parse_user_params(char *);
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     eth = buffer->data;
     if(tw_be_to_cpu_16(eth->ether_type) == ETHER_TYPE_ARP) {
-        global_stats_option.pkts_rx--;
+        tw_stats.pkts_rx--;
         tw_arp_parser(buffer, "tw0");
     }
     tw_free_pkt(buffer);
@@ -237,7 +236,7 @@ int parse_user_params(char * file_name) {
                                                       strlen(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring));
         user_params.pps_limit = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring, 
                                                       strlen(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring));
-	        global_stats_option.payload_size=user_params.payload_size ;
+	        tw_stats.payload_size=user_params.payload_size ;
     }
     return 0;
 }
@@ -249,15 +248,15 @@ if((curr_time_cycle - prev_stats_calc) > ppsdelay)
  prev_stats_calc=curr_time_cycle;
 
 
-    if((global_stats_option.pkts_tx < PacketLimit || PacketLimit == 0) && (global_stats_option.secs_passed < user_params.test_runtime || user_params.test_runtime == 0))
+    if((tw_stats.pkts_tx < PacketLimit || PacketLimit == 0) && (tw_stats.secs_passed < user_params.test_runtime || user_params.test_runtime == 0))
     {
         if (dst_eth_addr == NULL) {
             struct arp_table * temp_arp_entry = tw_search_arp_table(tw_be_to_cpu_32(user_params.server_ip));
             if(temp_arp_entry == NULL )
             {
-                if (arp_secs!=global_stats_option.secs_passed) {
+                if (arp_secs!=tw_stats.secs_passed) {
                     tw_construct_arp_packet(user_params.server_ip, phy_port_id);
-                    arp_secs=global_stats_option.secs_passed;
+                    arp_secs=tw_stats.secs_passed;
                     total_arps++;
                 } else
                 {
@@ -345,7 +344,7 @@ int main(int argc, char **argv) {
 	parse_user_params("udp_traffic_data");
 	ipv4_tw0 = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
 	tx_buf = tw_new_buffer(user_params.payload_size);
-	global_stats_option.secs_passed=0;
+	tw_stats.secs_passed=0;
 	udp_app_client(NULL);
 	}
     
