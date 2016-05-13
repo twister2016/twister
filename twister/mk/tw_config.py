@@ -67,8 +67,15 @@ def get_coremask(config):
     "Returns CPU coremask usable by Twister"
     cores = int(config.get('DEFAULT', 'cores'))
     total_cpus = get_total_cpus()
-    coremask = hex((2**total_cpus-1) << cores)
-    return coremask
+    coremask = ''
+
+    for i in range(total_cpus):
+        if cores > i:
+            coremask = coremask + "1"
+        else:
+            coremask = coremask + "0"
+
+    return hex(int(coremask,2))
 
 
 def bind_all_to_linux(cmd, devices):
