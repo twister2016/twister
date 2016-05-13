@@ -56,10 +56,14 @@ def get_whitelist(devices, config):
 
 def get_blacklist(devices, config):
     "Return list of blacklist devices in bus:slot:func format"
-    blacklist = config.get('DEFAULT', 'blacklist').split(',')
     blacklist_pci = []
-    for device_name in blacklist:
-        blacklist_pci.append(lib_dpdk.dev_id_from_dev_name(device_name))
+    try:
+        blacklist = config.get('DEFAULT', 'blacklist').split(',')
+        for device_name in blacklist:
+            blacklist_pci.append(lib_dpdk.dev_id_from_dev_name(device_name))
+    except:
+        print "Preparing an empty blacklist"
+
     return blacklist_pci
 
 
