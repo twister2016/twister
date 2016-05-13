@@ -11,7 +11,6 @@
 int Printing_Enable = 1;
 int tw_loop_init(tw_loop_t * event_loop) { //TODO secs_to_run for  event loop
     event_loop->data = NULL;
-//    int core_id = rte_lcore_id();
     if (global_pps_limit)
         global_pps_delay = 10000000000 / global_pps_limit;
     else
@@ -122,14 +121,10 @@ int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t time
 }
 
 int tw_run(tw_loop_t * event_loop) {
-
-	uint64_t stats_calc_lim = stats_calc_limit* rte_get_tsc_hz();
-    uint8_t/* infinite_loop = 0,*/ continue_loop = 1;
-    //if (event_loop->secs_to_run == INFINITE_LOOP)
-      //  infinite_loop = 1;
+    uint64_t stats_calc_lim = stats_calc_limit* rte_get_tsc_hz();
+    uint8_t continue_loop = 1;
     int num_rx_pkts = 0, pkt_count = 0, i;
-    uint64_t curr_time_cycle = 0, /*prev_queued_pkts_cycle = 0,*/ prev_stats_calc = 0, time_diff = 0;
-    //uint64_t loop_start_time = tw_get_current_timer_cycles();
+    uint64_t curr_time_cycle = 0, prev_stats_calc = 0, time_diff = 0;
     struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()];
     struct mbuf_table m[qconf->num_port];
     struct rte_mbuf * pkt;
@@ -152,13 +147,8 @@ int tw_run(tw_loop_t * event_loop) {
 	time_diff = (curr_time_cycle - prev_stats_calc);
         if (unlikely(time_diff > stats_calc_lim)) {
             tw_calc_global_stats();
-            if(Printing_Enable)
-            tw_print_global_stats();
             prev_stats_calc = curr_time_cycle;
         }
-
-       
-
         temp_rx_handle = event_loop->rx_handle_queue;
         if (temp_rx_handle != NULL)
             num_rx_pkts = tw_rx_for_each_queue(m);

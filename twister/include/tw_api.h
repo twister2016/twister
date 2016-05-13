@@ -2,6 +2,7 @@
 #define _TWAPI_H_
 #include <event_loop.h>
 #include <lcoreconf.h>
+#include <stats.h>
 /**
  * @file
  *

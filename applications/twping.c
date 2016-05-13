@@ -184,7 +184,6 @@ int main(int argc, char **argv) {
     argvector = argv ;
     argcount = argc;
     tw_init_global();
-    Printing_Enable = 0; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
     if (signal(SIGINT, sig_handler) == SIG_ERR)
         printf("\ncan't catch SIGINT\n");
