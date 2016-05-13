@@ -104,6 +104,7 @@ def main():
     devices = lib_dpdk.devices
 
     bind_all_to_linux(cmd, devices)
+    lib_dpdk.get_nic_details()
 
     config = ConfigParser.RawConfigParser()
     config.readfp(open(twister_conf))
