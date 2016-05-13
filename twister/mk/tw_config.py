@@ -47,10 +47,14 @@ def get_total_cpus():
 
 def get_whitelist(devices, config):
     "Return list of whitelist devices in bus:slot:func format"
-    whitelist = config.get('DEFAULT', 'whitelist').split(',')
     whitelist_pci = []
-    for device_name in whitelist:
-        whitelist_pci.append(lib_dpdk.dev_id_from_dev_name(device_name))
+    try:
+        whitelist = config.get('DEFAULT', 'whitelist').split(',')
+        for device_name in whitelist:
+            whitelist_pci.append(lib_dpdk.dev_id_from_dev_name(device_name))
+    except:
+        print "Preparing an empty whitelist"
+
     return whitelist_pci
 
 
