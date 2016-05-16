@@ -34,6 +34,7 @@ uint32_t ping_ip,ping_count, reply_count=0;
 double time_ms, t1 ,t2, total_init_time;
 uint16_t eth_type;
 static struct ether_addr * dst_eth_addr;
+uint32_t dst_ip, src_ip;
 
 double current_timestamp() {
     clock_t start = clock();
@@ -81,26 +82,38 @@ bool isSameNetwork(uint32_t ip){
 }
 
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
-    eth = buffer->data;
-    eth_type = tw_be_to_cpu_16(eth->ether_type);
-    switch (eth_type) {
-        case ETHER_TYPE_ARP:
-            tw_arp_parser(buffer, "tw0");
-            break;
-        case ETHER_TYPE_IPv4:
+	    eth = buffer->data;
             ip = buffer->data+sizeof(struct ether_hdr);
             switch (ip->next_proto_id) {
                 case ICMP_PROTO_ID:
                     icmp = buffer->data+sizeof(struct ether_hdr)+sizeof(struct ipv4_hdr);
-                    double t1 = current_timestamp();
-                    time_ms = t1 - t2; //time difference between packet sent and received
-                    struct in_addr ip_addr;
-                    ip_addr.s_addr = ip->src_addr;
-                    printf("64 bytes from %s: icmp_seq=%d ttl=%d time=%fms\n", inet_ntoa(ip_addr),icmp->sequence, ip->time_to_live,time_ms);
-                    reply_count++;
-                    break;
-            }
-    }
+		    if(icmp->type == 0)
+		    {
+                    	double t1 = current_timestamp();
+                    	time_ms = t1 - t2; //time difference between packet sent and received
+                    	struct in_addr ip_addr;
+                    	ip_addr.s_addr = ip->src_addr;
+                    	printf("64 bytes from %s: icmp_seq=%d ttl=%d time=%fms\n", inet_ntoa(ip_addr),icmp->sequence, ip->time_to_live,time_ms);
+                    	reply_count++;
+                    	break;
+            	     }
+		    if(icmp->type == 8)
+		    {
+
+                    	icmp->type=0;//for icmp reply type is zero
+                    	icmp->checksum=0;
+                    	icmp->checksum=tw_calcsum((unsigned short*)icmp, sizeof(struct icmp_echo)); 
+                	dst_ip  = (ip->dst_addr);
+                	src_ip = (ip->src_addr);
+               		ip->dst_addr = (src_ip);
+                	ip->src_addr = (dst_ip);
+                	ip->hdr_checksum = tw_ipv4_cksum(ip);
+                	tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
+                	tw_copy_ether_addr(tw_get_ether_addr("tw0"), &(eth->s_addr));
+                	tw_send_pkt(buffer, "tw0");
+                	break;
+		     }
+		}
     tw_free_pkt(buffer);
     return;
 }

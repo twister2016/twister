@@ -134,8 +134,8 @@ int tw_run(tw_loop_t * event_loop) {
     tw_buf_t temp_buffer;
     struct ether_hdr* eth;
     uint16_t eth_type;
-    struct ipv4_hdr * ipHdr_d;
-    uint32_t dst_ip,src_ip;
+    //struct ipv4_hdr * ipHdr_d;
+    //uint32_t dst_ip,src_ip;
  
     tw_rx_t * temp_rx_handle;
     tw_tx_t * temp_tx_handle;
@@ -163,18 +163,25 @@ int tw_run(tw_loop_t * event_loop) {
             for (i = 0; i < qconf->num_port; i++) {
                 for (pkt_count = 0; pkt_count < m[i].len; pkt_count++) {
                     pkt = m[i].m_table[pkt_count];
+label:
 		    eth = rte_pktmbuf_mtod(pkt, struct ether_hdr *);
     		    eth_type = rte_be_to_cpu_16(eth->ether_type);
 		    switch (eth_type) {
 			case ETHER_TYPE_VLAN:
 				rte_vlan_strip(pkt);
+				goto label;
             		case ETHER_TYPE_ARP:
                 		tw_parse_arp(pkt, i);
                 		break;
 			case ETHER_TYPE_IPv4:
-                		ipHdr_d = (struct ipv4_hdr * )eth+sizeof(struct ether_hdr);
-                		if (ipHdr_d->next_proto_id == ICMP_PROTO_ID) {
-                    			ICMP=(struct icmp_echo*)eth + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
+				temp_buffer.pkt = pkt;
+                    		temp_buffer.data = rte_pktmbuf_mtod(pkt, tw_buf_t *);
+                    		temp_buffer.size = pkt->data_len;
+                    		temp_buffer.port_name = port_info[i].port_name;
+/*				ipHdr_d = (struct ipv4_hdr *) ((uint8_t*)temp_buffer.data + sizeof(struct ether_hdr));
+				printf("ipHdr_d->next_proto_id == ICMP_PROTO_ID %02x == %02x\n", ipHdr_d->next_proto_id , ICMP_PROTO_ID);
+				if (ipHdr_d->next_proto_id == ICMP_PROTO_ID) {
+                    			ICMP=(struct icmp_echo*)((uint8_t*)temp_buffer.data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr));
                     			ICMP->type=0;//for icmp reply type is zero
                     			ICMP->checksum=0;
                     			ICMP->checksum= tw_calcsum((unsigned short*)ICMP, sizeof(struct icmp_echo));
@@ -185,12 +192,10 @@ int tw_run(tw_loop_t * event_loop) {
                     			ipHdr_d->hdr_checksum = tw_ipv4_cksum(ipHdr_d);
                     			tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
                 			tw_copy_ether_addr(port_info[i].eth_mac, &(eth->s_addr));
-                    			tw_add_pkt_to_tx_queue(pkt, i);
+                    			printf("ICMP\n");
+					tw_add_pkt_to_tx_queue(pkt, i);
                 		}
-		    		temp_buffer.pkt = pkt;
-                    		temp_buffer.data = rte_pktmbuf_mtod(pkt, tw_buf_t *);
-                    		temp_buffer.size = pkt->data_len;
-                    		temp_buffer.port_name = port_info[i].port_name;
+*/
                     		tw_rx_cb = temp_rx_handle->recv_cb;
                     		tw_rx_cb(temp_rx_handle, &temp_buffer);
 				break;
