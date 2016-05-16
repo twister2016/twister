@@ -47,19 +47,27 @@ def get_total_cpus():
 
 def get_whitelist(devices, config):
     "Return list of whitelist devices in bus:slot:func format"
-    whitelist = config.get('DEFAULT', 'whitelist').split(',')
     whitelist_pci = []
-    for device_name in whitelist:
-        whitelist_pci.append(lib_dpdk.dev_id_from_dev_name(device_name))
+    try:
+        whitelist = config.get('DEFAULT', 'whitelist').split(',')
+        for device_name in whitelist:
+            whitelist_pci.append(lib_dpdk.dev_id_from_dev_name(device_name))
+    except:
+        print "Preparing an empty whitelist"
+
     return whitelist_pci
 
 
 def get_blacklist(devices, config):
     "Return list of blacklist devices in bus:slot:func format"
-    blacklist = config.get('DEFAULT', 'blacklist').split(',')
     blacklist_pci = []
-    for device_name in blacklist:
-        blacklist_pci.append(lib_dpdk.dev_id_from_dev_name(device_name))
+    try:
+        blacklist = config.get('DEFAULT', 'blacklist').split(',')
+        for device_name in blacklist:
+            blacklist_pci.append(lib_dpdk.dev_id_from_dev_name(device_name))
+    except:
+        print "Preparing an empty blacklist"
+
     return blacklist_pci
 
 
@@ -67,8 +75,15 @@ def get_coremask(config):
     "Returns CPU coremask usable by Twister"
     cores = int(config.get('DEFAULT', 'cores'))
     total_cpus = get_total_cpus()
-    coremask = hex((2**total_cpus-1) << cores)
-    return coremask
+    coremask = ''
+
+    for i in range(total_cpus):
+        if cores > i:
+            coremask = coremask + "1"
+        else:
+            coremask = coremask + "0"
+
+    return hex(int(coremask,2))
 
 
 def bind_all_to_linux(cmd, devices):
@@ -89,6 +104,7 @@ def main():
     devices = lib_dpdk.devices
 
     bind_all_to_linux(cmd, devices)
+    lib_dpdk.get_nic_details()
 
     config = ConfigParser.RawConfigParser()
     config.readfp(open(twister_conf))

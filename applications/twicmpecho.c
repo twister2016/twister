@@ -17,29 +17,7 @@ struct udp_hdr * udp_hdr_d;
 uint16_t eth_type;
 struct ether_addr * src_tw0_eth;
 
-struct icmp_echo{
-	unsigned char type;
-	unsigned char code;
-	unsigned short checksum;
-	unsigned short identifier;
-	unsigned short sequence;
-};
 struct icmp_echo* ICMP;
-unsigned short calcsum(unsigned short *buffer, int length);
-unsigned short calcsum(unsigned short *buffer, int length){
-	unsigned long sum;
-	// initialize sum to zero and loop until length (in words) is 0
-	for (sum=0; length>1; length-=2) // sizeof() returns number of bytes, we're interested in number of words
-		sum += *buffer++;	// add 1 word of buffer to sum and proceed to the next
-
-	// we may have an extra byte
-	if (length==1)
-		sum += (char)*buffer;
-
-	sum = (sum >> 16) + (sum & 0xFFFF);  // add high 16 to low 16
-	sum += (sum >> 16);		     // add carry
-	return ~sum;
-}
 void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
     eth = buffer->data;
     eth_type = tw_be_to_cpu_16(eth->ether_type);
@@ -53,7 +31,7 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
                     ICMP=buffer->data+sizeof(struct ether_hdr)+sizeof(struct ipv4_hdr);
                     ICMP->type=0;//for icmp reply type is zero
                     ICMP->checksum=0;
-                    ICMP->checksum=calcsum((unsigned short*)ICMP, sizeof(struct icmp_echo)); 
+                    ICMP->checksum=tw_calcsum((unsigned short*)ICMP, sizeof(struct icmp_echo)); 
                 }
                 dst_ip  = (ipHdr_d->dst_addr);
                 src_ip = (ipHdr_d->src_addr);

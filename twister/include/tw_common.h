@@ -30,7 +30,10 @@ inline struct ether_addr * tw_get_ether_addr(char * portname);
 * @return
 *   Unsigned 32bit Integer corresponding to IPv4 string.
 */
-uint32_t tw_convert_ip_str_to_dec(const char *ip);
+
+inline unsigned short tw_calcsum(unsigned short *buffer, int length);
+
+inline uint32_t tw_convert_ip_str_to_dec(const char *ip);
 
 /** Co a 16-bit value from big endian to CPU order.
 */

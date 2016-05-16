@@ -18,13 +18,6 @@ uint32_t dst_ip, src_ip;
 struct ether_addr * dst_eth_addr;
 void reply_payload(tw_rx_t *, tw_buf_t *);
 
-struct icmp_echo {
-    unsigned char type;
-    unsigned char code;
-    unsigned short checksum;
-    unsigned short identifier;
-    unsigned short sequence;
-};
 struct icmp_echo* ICMP;
 
 struct route_table {
@@ -39,22 +32,6 @@ struct sq_pkt {
     tw_buf_t *pkt[MAX_QUEUE_PACKETS];
     uint32_t n_pkts;
 };
-unsigned short calcsum(unsigned short *buffer, int length);
-
-unsigned short calcsum(unsigned short *buffer, int length) {
-    unsigned long sum;
-    // initialize sum to zero and loop until length (in words) is 0
-    for (sum = 0; length > 1; length -= 2) // sizeof() returns number of bytes, we're interested in number of words
-        sum += *buffer++; // add 1 word of buffer to sum and proceed to the next
-
-    // we may have an extra byte
-    if (length == 1)
-        sum += (char) *buffer;
-
-    sum = (sum >> 16) + (sum & 0xFFFF); // add high 16 to low 16
-    sum += (sum >> 16); // add carry
-    return ~sum;
-}
 
 struct sq_pkt sq_pkt_q;
 
@@ -176,7 +153,7 @@ int check_gateway_ping(tw_buf_t* buffer) {
                 ICMP = buffer->data + sizeof (struct ether_hdr) + sizeof (struct ipv4_hdr);
                 ICMP->type = 0; //for icmp reply type is zero
                 ICMP->checksum = 0;
-                ICMP->checksum = calcsum((unsigned short*) ICMP, sizeof (struct icmp_echo));
+                ICMP->checksum = tw_calcsum((unsigned short*) ICMP, sizeof (struct icmp_echo));
             }
             dst_ip = (iphdr->dst_addr);
             src_ip = (iphdr->src_addr);

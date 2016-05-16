@@ -49,7 +49,7 @@ struct average_filter *end_rtt_average ;
 const uint8_t average_filter_len ;
 
 uint8_t average_list_size;
-struct stats_option global_stats_option;
+struct stats_option tw_stats;
 extern uint64_t prev_pkts_rx, prev_pkts_tx;
 
 void tw_clear_scr(void);
