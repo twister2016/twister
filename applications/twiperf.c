@@ -355,19 +355,11 @@ int main(int argc, char **argv) {
     }
     if (test.protocol_id == 2 && test.role == 2)
 	{
-<<<<<<< HEAD
-        parse_user_params("udp_traffic_data");
-        ipv4_tw0 = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
-        tx_buf = tw_new_buffer(user_params.payload_size);
-        global_stats_option.secs_passed=0;
-        udp_app_client(NULL);
-=======
 	parse_user_params("udp_traffic_data");
 	ipv4_tw0 = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
 	tx_buf = tw_new_buffer(user_params.payload_size);
 	tw_stats.secs_passed=0;
 	udp_app_client(NULL);
->>>>>>> 89fd5c926f980b008b69ce2abeb34864e4bf2076
 	}
     
     return 0;
