@@ -1,5 +1,9 @@
 [{
+<<<<<<< HEAD
+	"ServerIP": "192.168.3.211",
+=======
 	"ServerIP": "192.168.3.25",
+>>>>>>> 89fd5c926f980b008b69ce2abeb34864e4bf2076
 	"ppsLimit": "6000000",
 	"testRuntime": "00",
 	"ServerPort": "7777",
