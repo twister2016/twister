@@ -18,15 +18,7 @@
 #define ICMP_PROTO_ID	1
 #define BUFF_SIZE 74
 
-struct icmp_echo{
-	unsigned char type;
-	unsigned char code;
-	unsigned short checksum;
-	unsigned short identifier;
-	unsigned short sequence;
-};
 
-unsigned short calcsum(unsigned short *buffer, int length);
 static int console_input(void*);
 int user_app_main(void *);
 void pkt_rx(tw_rx_t *, tw_buf_t *);
@@ -88,20 +80,6 @@ bool isSameNetwork(uint32_t ip){
 
 }
 
-unsigned short calcsum(unsigned short *buffer, int length){
-	unsigned long sum;
-	// initialize sum to zero and loop until length (in words) is 0
-	for (sum=0; length>1; length-=2) // sizeof() returns number of bytes, we're interested in number of words
-		sum += *buffer++;	// add 1 word of buffer to sum and proceed to the next
-
-	// we may have an extra byte
-	if (length==1)
-		sum += (char)*buffer;
-
-	sum = (sum >> 16) + (sum & 0xFFFF);  // add high 16 to low 16
-	sum += (sum >> 16);		     // add carry
-	return ~sum;
-}
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     eth = buffer->data;
     eth_type = tw_be_to_cpu_16(eth->ether_type);
@@ -162,7 +140,7 @@ void pkt_tx(tw_tx_t * handle) {
             t2=current_timestamp();
             icmp->checksum = 0;
                 /* now we can calculate the checksum */
-            icmp->checksum = calcsum((unsigned short*)icmp, sizeof(struct icmp_echo));
+            icmp->checksum = tw_calcsum((unsigned short*)icmp, sizeof(struct icmp_echo));
             ip->total_length = tw_cpu_to_be_16(tx_buf->size - sizeof(struct ether_hdr));
             ip->next_proto_id = ICMP_PROTO_ID;
             ip->src_addr = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));

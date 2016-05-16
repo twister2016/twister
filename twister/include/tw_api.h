@@ -8,6 +8,15 @@
  *
  * Main twister API functions
  */
+
+struct icmp_echo{
+	unsigned char type;
+	unsigned char code;
+	unsigned short checksum;
+	unsigned short identifier;
+	unsigned short sequence;
+};
+
 struct arp_table {
 	uint32_t ip_addr;
 	struct ether_addr eth_mac;
