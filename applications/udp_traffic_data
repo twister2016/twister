@@ -1,5 +1,5 @@
 [{
-	"ServerIP": "10.0.2.169",
+	"ServerIP": "192.168.3.211",
 	"ppsLimit": "6000000",
 	"testRuntime": "00",
 	"ServerPort": "7777",

@@ -4,6 +4,7 @@
 #include <tw_common.h>
 #include <tw_api.h>
 #include <stats.h>
+#include "twiperf.h"
 #define PacketLimit 0
 #define UDP_PROTO_ID    17
 
@@ -31,7 +32,7 @@ uint32_t ipv4_tw0;
 tw_buf_t * tx_buf;
 tw_buf_t * tx_buf_stats;
 
-
+int i_errno;
 int main(int, char **);
 
 uint8_t dst_port,src_port;
@@ -41,74 +42,81 @@ struct ipv4_hdr * ipHdr_d;
 struct udp_hdr * udp_hdr_d;
 uint16_t eth_type;
 struct ether_addr * dst_eth;
-struct iperf_test {
-	int role;
-	int protocol_id;
-	int server_port; 
-};
 struct iperf_test test;
-
-/* display usage */
-void twiperf_usage(void)
-{
-	printf("\nUsage: twiperf ");
-	printf("IPERF options:\n"
-	       "  --ethernet/udp       Specify the protocol to be either ethernet or udp\n"
-	       "  --server/client      Specify whether the program is a client or server\n"
-	       "\n");
-}
 
 int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
 {
 
     int server_flag, client_flag, udp_flag, ethernet_flag;
-		printf("role %d type %d",test->role,test->protocol_id);
     static struct option longopts[] =
     {
         {"udp", no_argument, NULL, 'u'},
         {"ethernet", no_argument, NULL, 'e'},
         {"server", no_argument, NULL, 's'},
-        {"client", no_argument, NULL, 'c'},
+        {"client", required_argument, NULL, 'c'},
         {"help", no_argument, NULL, 'h'},
+        {"port", required_argument, NULL, 'p'},
+        {"bytes", required_argument, NULL, 'n'},
         {NULL, 0, NULL, 0}
     };
     int flag;
     server_flag = client_flag = udp_flag = ethernet_flag = 0;
-    while ((flag = getopt_long(argc, argv, "ue:cs:h:", longopts, NULL)) != -1) {
+    test->bytes = 64; //initialized to default value of 64 bytes pcket size
+    test->server_port = 5001;  //initialized to default port of 5001
+    while ((flag = getopt_long(argc, argv, "n:p:ue:cs:h:", longopts, NULL)) != -1) {
         switch (flag) {
+            case 'p':
+                test->server_port = atoi(optarg);
+                break;
+            case 'n':
+                test->bytes =atoi(optarg);
+                break;
             case 'c':
-		client_flag = 1;
-		test->role = 2;
-		break;
+                client_flag = 1;
+                test->role = 2;
+                test->server_ip =tw_convert_ip_str_to_dec(strdup(optarg));
+                printf("unint = %u \n",test->server_ip);
+                exit(1);
+                break;
             case 's':
-		server_flag = 1;
-		test->role = 1;
-		break;
+                server_flag = 1;
+                test->role = 1;
+                break;
             case 'e':
-		ethernet_flag = 1;
-		test->protocol_id = 1;
-		break;
+                ethernet_flag = 1;
+                test->protocol_id = 1;
+                break;
             case 'u':
-		udp_flag = 1;
-		test->protocol_id = 2;
-		break;
+                udp_flag = 1;
+                test->protocol_id = 2;
+                break;
             case 'h':
-		twiperf_usage();
-		exit(1);
-		break;
-	}
+                twiperf_usage();
+                exit(1);
+                break;
+            default:
+                twiperf_usage();
+                exit(1);
+        }
 	}
 	if(server_flag == 1 && client_flag == 1 || udp_flag == 1 && ethernet_flag == 1 )
 	{
 		twiperf_usage();
-                exit(1);
+        exit(1);
 	}
 	if(server_flag == 0 && client_flag == 0 || udp_flag == 0 && ethernet_flag == 0 )
 	{
 		twiperf_usage();
-                exit(1);
+        exit(1);
 	}
-	printf("role %d type %d",test->role,test->protocol_id);
+    if ((test->role != 1) && (test->role != 2)) {
+        i_errno = IENOROLE;
+        return -1;
+    }
+    if (udp_flag == 1 && test->bytes > MAX_UDP_BLOCKSIZE) {
+        i_errno = IEUDPBLOCKSIZE;
+        return -1;
+    }
 	return 0;
 
 }
@@ -324,29 +332,34 @@ int udp_app_client(__attribute__((unused)) void * app_params) {
 // MAIN
 int main(int argc, char **argv) {
     tw_init_global();
-    twiperf_parse_arguments(&test, argc, argv);
+    if (twiperf_parse_arguments(&test, argc, argv) < 0) {
+        iperf_err(&test, "parameter error - %s", iperf_strerror(i_errno));
+        fprintf(stderr, "\n");
+        twiperf_usage();
+        exit(1);
+    }
     Printing_Enable = 1; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
     dst_eth=tw_get_ether_addr("tw0");
     if(test.protocol_id == 1 && test.role == 1)
     {
-	ether_app_server(NULL);
+	    ether_app_server(NULL);
     }
     else if (test.protocol_id == 2 && test.role == 1)
     {
-	udp_app_server(NULL);
+        udp_app_server(NULL);
     }
     else if (test.protocol_id == 1 && test.role == 2)
     {
-	printf("Functionality not supported yet\n");
+        printf("Functionality not supported yet\n");
     }
     if (test.protocol_id == 2 && test.role == 2)
 	{
-	parse_user_params("udp_traffic_data");
-	ipv4_tw0 = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
-	tx_buf = tw_new_buffer(user_params.payload_size);
-	global_stats_option.secs_passed=0;
-	udp_app_client(NULL);
+        parse_user_params("udp_traffic_data");
+        ipv4_tw0 = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
+        tx_buf = tw_new_buffer(user_params.payload_size);
+        global_stats_option.secs_passed=0;
+        udp_app_client(NULL);
 	}
     
     return 0;
