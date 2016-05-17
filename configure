@@ -7,9 +7,9 @@ mkdir -p /home/twister/include/generic/.
 mkdir -p /home/twister/include/exec-env/.
 mkdir -p /home/twister/driver/.
 cp ./twister/mk/tw_config.py /home/twister/config/tw_config.py
-cp ./twister/mk/twister.conf /home/twister/config/twister.conf
-cp ./twister/mk/config.json /home/twister/config/config.json
-cp ./twister/mk/twister_api.json /home/twister/config/twister_api.json
+cp -n ./twister/mk/twister.conf /home/twister/config/twister.conf
+cp -n ./twister/mk/config.json /home/twister/config/config.json
+cp -n ./twister/mk/twister_api.json /home/twister/config/twister_api.json
 sudo cp ./twister/mk/twister.mk /usr/include
 cp ./dpdk/tools/dpdk_nic_bind.py /home/twister/config/dpdk_nic_bind.py
 cd dpdk
