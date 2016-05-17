@@ -93,12 +93,56 @@ def bind_all_to_linux(cmd, devices):
         bind_device(cmd, dev, kernel_driver)
 
 
+def load_dpdk_module(dpdk_kernel_module):
+    "Load DPDK kernel Modules to whom DPDK ports will be bind"
+
+    # "lsmod | grep igb_uio | wc -l"
+    # to check if module already exists
+
+    lsmod_out = subprocess.Popen(shlex.split("/sbin/lsmod"),
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+    lsmod_grep = subprocess.Popen(shlex.split("grep igb_uio"),
+                                  stdin=lsmod_out.stdout,
+                                  stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE)
+    lsmod_count = subprocess.Popen(shlex.split("wc -l"),
+                                  stdin=lsmod_grep.stdout,
+                                  stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE)
+    out, err = lsmod_count.communicate()
+    if int(out.split()[0]) > 0:
+        print "igb_uio module already exists"
+        return
+
+    # Now inserting DPDK kernel module
+    try:
+        load_uio = subprocess.Popen(['sudo', '/sbin/modprobe', 'uio'],
+                                  stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE)
+    except:
+        out, err = load_uio.communicate()
+        print "Unable to run 'sudo modprobe uio' "
+        print "Modprobe exited with this error: ", err
+
+    try:
+        load_dpdk_module = subprocess.Popen(['sudo',
+                                  '/sbin/insmod', dpdk_kernel_module],
+                                  stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE)
+    except:
+        out, err = load_dpdk_module.communicate()
+        print "Unable to insert DPDK kernel module : " , dpdk_kernel_module
+        print "insmod exited with this error: " , err
+
 def main():
     cmd = "/home/twister/config/dpdk_nic_bind.py"
     twister_conf = "/home/twister/config/twister.conf"
     twister_api = "/home/twister/config/twister_api.json"
     dpdk_drv = "igb_uio"
+    dpdk_kernel_module = "/home/twister/driver/igb_uio.ko"
 
+    load_dpdk_module(dpdk_kernel_module)
     lib_dpdk.check_modules()
     lib_dpdk.get_nic_details()
     devices = lib_dpdk.devices

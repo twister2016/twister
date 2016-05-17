@@ -32,6 +32,7 @@ build:
 	$(MAKE) -C $(SUBDIR1);
 	cp -R $(SUBDIR1)/build $(SUBDIR1)/$(RTE_TARGET);
 	$(MAKE) -C $(SUBDIR2);
+	cp $(SUBDIR1)/$(RTE_TARGET)/kmod/igb_uio.ko /home/twister/driver/igb_uio.ko
 
 rebuild-lib:
 	rm -rf $(SUBDIR2)/build;
@@ -56,7 +57,7 @@ install: all
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/*.h /home/twister/include
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/generic/*.h /home/twister/include/generic/
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/exec-env/*.h /home/twister/include/exec-env/
-	./post-install
+	python /home/twister/config/tw_config.py
 
 uninstall: clean
 	rm -rf /home/twister/*
