@@ -13,7 +13,7 @@ The Twister source can be clone using the following command:
 ```
 
 ### Compile and Install
-The Twister package can be install using the following commands:
+The Twister package can be installed using the following commands:
 
 ```
 	make install
