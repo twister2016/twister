@@ -17,6 +17,7 @@ struct iperf_test {
     uint32_t server_port; 
     uint32_t server_ip; 
     uint32_t bytes; 
+    uint32_t test_runtime; 
 };
 /* display usage */                                                                                                                 
 const char usage_longstr[] = "Usage: iperf [-s|-c host] [options]\n"

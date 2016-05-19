@@ -11,14 +11,6 @@
 uint64_t curr_time_cycle,prev_stats_calc;
 uint64_t ppsdelay;
 
-struct user_params {
-    uint32_t server_ip;
-    uint16_t server_port;
-    uint16_t payload_size;
-    uint32_t pps_limit;
-    uint32_t test_runtime;
-};
-struct user_params user_params;
 ////////////////////////
 uint64_t arp_secs=-1;
 struct ether_hdr * eth;
@@ -63,10 +55,12 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
     server_flag = client_flag = udp_flag = ethernet_flag = 0;
     test->bytes = 64; //initialized to default value of 64 bytes pcket size
     test->server_port = 5001;  //initialized to default port of 5001
+    test->test_runtime = 0;  //initialized to default infinite runtime
     while ((flag = getopt_long(argc, argv, "n:p:ue:cs:h:", longopts, NULL)) != -1) {
         switch (flag) {
             case 'p':
                 test->server_port = atoi(optarg);
+		printf("port\n");
                 break;
             case 'n':
                 test->bytes =atoi(optarg);
@@ -75,8 +69,8 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
                 client_flag = 1;
                 test->role = 2;
                 test->server_ip =tw_convert_ip_str_to_dec(strdup(optarg));
-                printf("unint = %u \n",test->server_ip);
-                exit(1);
+                //printf("unint = %u \n",test->server_ip);
+//                exit(1);
                 break;
             case 's':
                 server_flag = 1;
@@ -216,7 +210,6 @@ int ether_app_server(__attribute__((unused)) void * app_params) {
 int user_app_main(void *);
 void pkt_rx(tw_rx_t *, tw_buf_t *);
 void pkt_tx(tw_tx_t *);
-int parse_user_params(char *);
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     eth = buffer->data;
     if(tw_be_to_cpu_16(eth->ether_type) == ETHER_TYPE_ARP) {
@@ -227,44 +220,24 @@ void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     return;
 }
 
-int parse_user_params(char * file_name) {
-    uint8_t i;
-    cJSON * json_file = tw_parse_json_file(file_name);
-    if (!json_file) {
-        printf("Error before: [%s]n",cJSON_GetErrorPtr());
-        return -1;
-    }
-    for (i = 0 ; i < cJSON_GetArraySize(json_file) ; i++) {
-        cJSON * subitem = cJSON_GetArrayItem(json_file, i);
-        user_params.server_ip = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "ServerIP")->valuestring);
-        user_params.server_port = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ServerPort")->valuestring,
-                                                      strlen(cJSON_GetObjectItem(subitem, "ServerPort")->valuestring));
-        user_params.payload_size = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "Payload")->valuestring,
-                                                      strlen(cJSON_GetObjectItem(subitem, "Payload")->valuestring));
-        user_params.test_runtime = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring,
-                                                      strlen(cJSON_GetObjectItem(subitem, "testRuntime")->valuestring));
-        user_params.pps_limit = tw_convert_str_to_int(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring, 
-                                                      strlen(cJSON_GetObjectItem(subitem, "ppsLimit")->valuestring));
-	        tw_stats.payload_size=user_params.payload_size ;
-    }
-    return 0;
-}
+
 void pkt_tx(tw_tx_t * handle)
 {
+
 curr_time_cycle = tw_get_current_timer_cycles();
 if((curr_time_cycle - prev_stats_calc) > ppsdelay)
 {
  prev_stats_calc=curr_time_cycle;
 
 
-    if((tw_stats.pkts_tx < PacketLimit || PacketLimit == 0) && (tw_stats.secs_passed < user_params.test_runtime || user_params.test_runtime == 0))
+    if((tw_stats.pkts_tx < PacketLimit || PacketLimit == 0) && (tw_stats.secs_passed < test.test_runtime || test.test_runtime == 0))
     {
         if (dst_eth_addr == NULL) {
-            struct arp_table * temp_arp_entry = tw_search_arp_table(tw_be_to_cpu_32(user_params.server_ip));
+            struct arp_table * temp_arp_entry = tw_search_arp_table(tw_be_to_cpu_32(test.server_ip));
             if(temp_arp_entry == NULL )
             {
                 if (arp_secs!=tw_stats.secs_passed) {
-                    tw_construct_arp_packet(user_params.server_ip, phy_port_id);
+                    tw_construct_arp_packet(test.server_ip, phy_port_id);
                     arp_secs=tw_stats.secs_passed;
                     total_arps++;
                 } else
@@ -280,13 +253,13 @@ if((curr_time_cycle - prev_stats_calc) > ppsdelay)
             ip  = (struct ipv4_hdr* )(eth + 1);
             udp = (struct udp_hdr* )(ip + 1);
             udp->src_port = tw_cpu_to_be_16(7777);
-            udp->dst_port = tw_cpu_to_be_16(user_params.server_port);
+            udp->dst_port = tw_cpu_to_be_16(test.server_port);
             udp->dgram_len = tw_cpu_to_be_16(tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
             udp->dgram_cksum = 0;
             ip->total_length = tw_cpu_to_be_16(tx_buf->size - sizeof(struct ether_hdr));
             ip->next_proto_id = UDP_PROTO_ID;
             ip->src_addr = ipv4_tw0;
-            ip->dst_addr = tw_cpu_to_be_32(user_params.server_ip);
+            ip->dst_addr = tw_cpu_to_be_32(test.server_ip);
             ip->version_ihl = 0x45;
             ip->time_to_live = 63;
             ip->hdr_checksum =tw_ipv4_cksum(ip);
@@ -298,6 +271,13 @@ if((curr_time_cycle - prev_stats_calc) > ppsdelay)
     }
  }
 }
+
+
+
+
+
+
+
 
 int udp_app_client(__attribute__((unused)) void * app_params) {
     tw_rx_t * rx_handle;
@@ -355,9 +335,9 @@ int main(int argc, char **argv) {
     }
     if (test.protocol_id == 2 && test.role == 2)
 	{
-	parse_user_params("udp_traffic_data");
+	//parse_user_params("udp_traffic_data");
 	ipv4_tw0 = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
-	tx_buf = tw_new_buffer(user_params.payload_size);
+	tx_buf = tw_new_buffer(test.bytes);
 	tw_stats.secs_passed=0;
 	udp_app_client(NULL);
 	}
