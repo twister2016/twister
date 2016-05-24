@@ -1,10 +1,18 @@
 SUBDIR1 = dpdk
 SUBDIR2	= twister
+SUBDIR3 = applications
+
 RTE_TARGET = x86_64-native-linuxapp-gcc
 
 DEB_DEPENDS  = make gcc
 
-.PHONY: help bootstrap build clean all install install-lib uninstall rebuild-lib
+.PHONY: help bootstrap build clean all install install-lib uninstall rebuild-lib \
+	applications
+
+build:  bootstrap
+	$(MAKE) -C $(SUBDIR1);
+	cp -R $(SUBDIR1)/build $(SUBDIR1)/$(RTE_TARGET);
+	$(MAKE) -C $(SUBDIR2);
 
 help:
 	@echo "Make Targets:"
@@ -16,6 +24,7 @@ help:
 	@echo " build       - wipe and build the whole twister package"
 	@echo " rebuild-lib - wipe and build the twister"
 	@echo " install-lib - build and install the twister"
+	@echo " applications - build and install twister example applications"
 
 bootstrap:
 ifeq ("$(shell lsb_release -si)", "Ubuntu")
@@ -28,15 +37,12 @@ ifeq ("$(shell lsb_release -si)", "Ubuntu")
 endif
 	./configure
 
-build:
-	$(MAKE) -C $(SUBDIR1);
-	cp -R $(SUBDIR1)/build $(SUBDIR1)/$(RTE_TARGET);
-	$(MAKE) -C $(SUBDIR2);
-	cp $(SUBDIR1)/$(RTE_TARGET)/kmod/igb_uio.ko /home/twister/driver/igb_uio.ko
-
 rebuild-lib:
 	rm -rf $(SUBDIR2)/build;
 	$(MAKE) -C $(SUBDIR2);
+
+applications: copy-files
+	$(MAKE) install -C $(SUBDIR3);
 
 install-lib: rebuild-lib
 	cp $(SUBDIR2)/build/libtwister.a /home/twister/.
@@ -49,7 +55,7 @@ clean:
 
 all: clean bootstrap build
 
-install: all
+copy-files: all
 	cp $(SUBDIR2)/build/libtwister.a /home/twister/.
 	cp $(SUBDIR1)/$(RTE_TARGET)/lib/* /home/twister/
 	echo 'install all twister headers'
@@ -57,7 +63,12 @@ install: all
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/*.h /home/twister/include
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/generic/*.h /home/twister/include/generic/
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/exec-env/*.h /home/twister/include/exec-env/
+	cp $(SUBDIR1)/$(RTE_TARGET)/kmod/igb_uio.ko /home/twister/driver/igb_uio.ko
 	python /home/twister/config/tw_config.py
 
-uninstall: clean
+install: applications
+
+uninstall: clean 
+	$(MAKE) clean -C $(SUBDIR3);
 	rm -rf /home/twister/*
+        
