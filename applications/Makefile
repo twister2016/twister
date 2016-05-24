@@ -56,10 +56,18 @@ GATEWAY: twgateway.c
 IPERF: twiperf.c
 	$(CC) twiperf.c $(TWFLAGS) -o build/twiperf
 
+
+
 install: build
-	mkdir -p /home/twister/bin
-	cp ./build/* /home/twister/bin/.
-	export PATH="$(PATH):/home/twister/bin"
-clean:
-	rm -rf build
+	cp ./build/* /usr/bin/
+	
+clean:  
+
+	if [ -d "build" ] ; then \
+  	  for i in $$( cd build && ls )  ; do  \
+	    echo $$i ; \
+	    rm -rf /usr/bin/$$i ; \
+	  done ;  \
+	  rm -rf build ; \
+	fi ; 
 
