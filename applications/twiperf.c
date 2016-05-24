@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <arpa/inet.h>
 #include <getopt.h>
 #include <tw_common.h>
 #include <tw_api.h>
@@ -229,7 +230,9 @@ void print_perf_stats(){
     static float interval_window=0.0;
     interval_window += 1.0;
     tw_calc_global_stats();
-    printf("\n    %.2f-%.2f      %llu           %llu            ", interval_window-1.0, interval_window, tw_stats.rx_pps,tw_stats.tx_pps);
+    uint64_t transfer = (   (  (tw_stats.rx_pps + tw_stats.tx_pps )*(test.bytes)  ) /1000   ); //KBytes
+    float bandwidth = (transfer *8*1000 )/ (float)(1048576.0) ; // Mbit / sec 
+    printf("\n %.2f-%.2f   sec      %llu           %llu           %llu KBytes   %.2f Mbits/sec ", interval_window-1.0, interval_window, tw_stats.rx_pps,tw_stats.tx_pps, transfer, bandwidth);
     
 }
 
@@ -323,7 +326,7 @@ void tw_udp_connect(){
              tw_timer_t * timer_handle;
              timer_handle = tw_timer_init(tw_loop);
              tw_timer_start(timer_handle, print_perf_stats, 1000);
-             printf("\n Interval          RX              TX    ");
+             printf("\n Interval             RX              TX      Transfer    Bandwidth");
              //////////////////////////////////////////////
         }
     }
@@ -345,7 +348,6 @@ int main(int argc, char **argv) {
     }
     Printing_Enable = 1; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
-    dst_eth=tw_get_ether_addr("tw0");
     if(test.protocol_id == 1 && test.role == 1)
     {
 	    ether_app_server(NULL);
