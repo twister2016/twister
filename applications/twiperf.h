@@ -18,10 +18,12 @@ enum {
     IENOROLE= 3,           // Iperf must either be a client (-c) or server (-s)
 };
 struct iperf_test {                                                                                                                          
-    int role;
+    int role; //1 for server, 2 for client
     uint32_t protocol_id;// 1 for ethernet, 2 for udp
     uint32_t server_port; 
+    uint32_t client_port; 
     uint32_t server_ip; 
+    uint32_t client_ip; 
     uint32_t bytes; 
     struct ether_addr * server_mac;
     struct ether_addr * client_mac;

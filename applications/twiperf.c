@@ -56,12 +56,14 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
     server_flag = client_flag = udp_flag = ethernet_flag = 0;
     test->bytes = 64; //initialized to default value of 64 bytes pcket size
     test->server_port = 5001;  //initialized to default port of 5001
+    test->client_port = 7777;  //initialized to default port of 5001
     test->test_runtime = 0;  //initialized to default infinite runtime
+    test->client_mac = tw_get_ether_addr("tw0");
+    test->client_ip = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
     while ((flag = getopt_long(argc, argv, "n:p:ue:cs:h:", longopts, NULL)) != -1) {
         switch (flag) {
             case 'p':
                 test->server_port = atoi(optarg);
-		printf("port\n");
                 break;
             case 'n':
                 test->bytes =atoi(optarg);
@@ -69,6 +71,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
             case 'c':
                 client_flag = 1;
                 test->role = 2;
+                //test->server_ip =tw_cpu_to_be_32( tw_convert_ip_str_to_dec(strdup(optarg)));
                 test->server_ip =tw_convert_ip_str_to_dec(strdup(optarg));
                 //printf("unint = %u \n",test->server_ip);
 //                exit(1);
@@ -206,12 +209,13 @@ int ether_app_server(__attribute__((unused)) void * app_params) {
     return 0;
 }
 
-// UDP Client
+// UDP j Client
 
 int user_app_main(void *);
 void pkt_rx(tw_rx_t *, tw_buf_t *);
 void pkt_tx(tw_tx_t *);
 void tw_udp_connect();
+void print_perf_stats();
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     eth = buffer->data;
     if(tw_be_to_cpu_16(eth->ether_type) == ETHER_TYPE_ARP) {
@@ -221,7 +225,13 @@ void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     tw_free_pkt(buffer);
     return;
 }
-
+void print_perf_stats(){
+    static float interval_window=0.0;
+    interval_window += 1.0;
+    tw_calc_global_stats();
+    printf("\n    %.2f-%.2f      %llu           %llu            ", interval_window-1.0, interval_window, tw_stats.rx_pps,tw_stats.tx_pps);
+    
+}
 
 void pkt_tx(tw_tx_t * handle)
 {
@@ -236,20 +246,20 @@ void pkt_tx(tw_tx_t * handle)
             test.eth = test.tx_buf->data;
             test.ip  = (test.tx_buf->data + sizeof(struct ether_hdr));
             test.udp = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
-            test.udp->src_port = tw_cpu_to_be_16(7777);
+            test.udp->src_port = tw_cpu_to_be_16(test.client_port);
             test.udp->dst_port = tw_cpu_to_be_16(test.server_port);
             test.udp->dgram_len = tw_cpu_to_be_16(test.tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
             test.udp->dgram_cksum = 0;
             test.ip->total_length = tw_cpu_to_be_16(test.tx_buf->size - sizeof(struct ether_hdr));
             test.ip->next_proto_id = UDP_PROTO_ID;
-            test.ip->src_addr = ipv4_tw0;
+            test.ip->src_addr = test.client_ip;
             test.ip->dst_addr = tw_cpu_to_be_32(test.server_ip);
             test.ip->version_ihl = 0x45;
             test.ip->time_to_live = 63;
             test.ip->hdr_checksum =tw_ipv4_cksum(test.ip);
             test.eth->ether_type = tw_cpu_to_be_16(ETHER_TYPE_IPv4);
             tw_copy_ether_addr(test.server_mac, &(test.eth->d_addr));
-            tw_copy_ether_addr(port_info[phy_port_id].eth_mac, &(test.eth->s_addr));
+            tw_copy_ether_addr(test.client_mac, &(test.eth->s_addr));
             tw_send_pkt(test.tx_buf, "tw0");
             //usleep(1000000);
         }
@@ -282,26 +292,24 @@ int udp_app_client(__attribute__((unused)) void * app_params) {
 void tw_udp_connect(){
     static arpCount=0;
     struct arp_table* temp_arp_entry=NULL;
-    printf("arpcount = %d \n", arpCount);
     if (arpCount < 4){
         temp_arp_entry = tw_search_arp_table(tw_be_to_cpu_32(test.server_ip));
         if(temp_arp_entry == NULL )  {
              //tw_send_arp_request(test->server_ip, "tw0");
              tw_construct_arp_packet(test.server_ip, phy_port_id);                                                                    
-             tw_print_arp_table();
              arpCount++;
              return;
          }
         else {
 
              test.server_mac = &temp_arp_entry->eth_mac;
-             printf("connected to udp server.\n");
+             struct in_addr server_ip; server_ip.s_addr = tw_cpu_to_be_32(test.server_ip);
+             struct in_addr client_ip; client_ip.s_addr = (test.client_ip);
+             printf("local %s, port %u ", inet_ntoa(client_ip), test.client_port);
+             printf("connected to %s port %u\n", inet_ntoa(server_ip), test.server_port);
                 /////////////////////////////////////////////
-             printf("stopping timer handles\n");
              tw_loop->timer_handle_queue=NULL;
              tw_loop->active_handles--;
-             printf("stopped\n");
-
              tw_tx_t * tx_handle = tw_tx_init(tw_loop);
              if (tx_handle == NULL) {
                  printf("Error in TX initn");
@@ -312,6 +320,10 @@ void tw_udp_connect(){
                   printf("Error in transmit startn");
                   exit(1);
              }
+             tw_timer_t * timer_handle;
+             timer_handle = tw_timer_init(tw_loop);
+             tw_timer_start(timer_handle, print_perf_stats, 1000);
+             printf("\n Interval          RX              TX    ");
              //////////////////////////////////////////////
         }
     }
@@ -349,9 +361,10 @@ int main(int argc, char **argv) {
     if (test.protocol_id == 2 && test.role == 2)
 	{
 	//parse_user_params("udp_traffic_data");
-	ipv4_tw0 = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
 	test.tx_buf = tw_new_buffer(test.bytes);
 	tw_stats.secs_passed=0;
+    struct in_addr server_ip; server_ip.s_addr = tw_cpu_to_be_32(test.server_ip);
+    printf("Connecting to host %s, port %u\n", inet_ntoa(server_ip), test.server_port);
     udp_app_client(NULL);
 	}
     
@@ -359,6 +372,7 @@ int main(int argc, char **argv) {
 }
 
     
+
 
 
 
