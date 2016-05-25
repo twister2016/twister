@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <arpa/inet.h>
 #include <getopt.h>
 #include <tw_common.h>
 #include <tw_api.h>
@@ -37,6 +36,19 @@ struct udp_hdr * udp_hdr_d;
 uint16_t eth_type;
 struct ether_addr * dst_eth;
 struct iperf_test test;
+struct iperf_stats test_stats;
+
+void sig_handler(int signo)
+{
+    if (signo == SIGINT){
+        twiprintf(&test, summary_dot_line);
+        twiprintf(&test, summary_head);
+        twiprintf(&test, summary_stats_number, 0.0, test_stats.interval_window, test_stats.total_transfered_bytes, test_stats.bandwidth, test_stats.datagrams_sent-test_stats.datagrams_recv, test_stats.datagrams_sent);
+        exit(1);
+  }
+}
+
+
 
 int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
 {
@@ -55,7 +67,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
     };
     int flag;
     server_flag = client_flag = udp_flag = ethernet_flag = 0;
-    test->bytes = 64; //initialized to default value of 64 bytes pcket size
+    test->packet_size = 64; //initialized to default value of 64 bytes pcket size
     test->server_port = 5001;  //initialized to default port of 5001
     test->client_port = 7777;  //initialized to default port of 5001
     test->test_runtime = 0;  //initialized to default infinite runtime
@@ -67,7 +79,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
                 test->server_port = atoi(optarg);
                 break;
             case 'n':
-                test->bytes =atoi(optarg);
+                test->packet_size =atoi(optarg);
                 break;
             case 'c':
                 client_flag = 1;
@@ -114,7 +126,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
         i_errno = IENOROLE;
         return -1;
     }
-    if (udp_flag == 1 && test->bytes > MAX_UDP_BLOCKSIZE) {
+    if (udp_flag == 1 && test->packet_size > MAX_UDP_BLOCKSIZE) {
         i_errno = IEUDPBLOCKSIZE;
         return -1;
     }
@@ -144,8 +156,6 @@ void reply_udp_payload(tw_rx_t * handle, tw_buf_t * buffer) {
      tw_copy_ether_addr(test.server_mac, &(eth->s_addr));
      tw_send_pkt(buffer, "tw0");
                  
-         }
-  
  }
 
 int udp_app_server(__attribute__((unused)) void * app_params) {
@@ -212,6 +222,7 @@ void tw_udp_connect();
 void print_perf_stats();
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     eth = buffer->data;
+    test_stats.datagrams_recv++;
     if(tw_be_to_cpu_16(eth->ether_type) == ETHER_TYPE_ARP) {
         tw_stats.pkts_rx--;
         tw_arp_parser(buffer, "tw0");
@@ -220,14 +231,15 @@ void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     return;
 }
 void print_perf_stats(){
-    static float interval_window=0.0;
-    interval_window += 1.0;
 
-    tw_calc_global_stats();
-    uint64_t transfer = (   (  (tw_stats.rx_pps + tw_stats.tx_pps )*(test.bytes)  ) /1000   ); //KBytes
-    float bandwidth = (transfer *8*1000 )/ (float)(1048576.0) ; // Mbit / sec 
-    twiprintf(&test, stats_number, interval_window-1.0, interval_window, tw_stats.rx_pps,tw_stats.tx_pps, transfer, bandwidth);
-    
+    //tw_calc_global_stats();
+    test_stats.interval_window = test_stats.interval_window + 1.0;
+    uint64_t bytes = (   (  (tw_stats.rx_pps + tw_stats.tx_pps )*(test.packet_size)  ) /1000   ); //KBytes
+    float bandwidth = (bytes *8*1000 )/ (float)(1048576.0) ; // Mbit / sec 
+    twiprintf(&test, stats_number, test_stats.interval_window-1.0, test_stats.interval_window, tw_stats.rx_pps,tw_stats.tx_pps, bytes, bandwidth, test_stats.datagrams_sent, test_stats.datagrams_recv);
+
+    test_stats.total_transfered_bytes += bytes;
+    test_stats.bandwidth += bandwidth;
 }
 
 void pkt_tx(tw_tx_t * handle)
@@ -258,6 +270,7 @@ void pkt_tx(tw_tx_t * handle)
             tw_copy_ether_addr(test.server_mac, &(test.eth->d_addr));
             tw_copy_ether_addr(test.client_mac, &(test.eth->s_addr));
             tw_send_pkt(test.tx_buf, "tw0");
+            test_stats.datagrams_sent++;
             //usleep(1000000);
         }
     }
@@ -339,6 +352,10 @@ int main(int argc, char **argv) {
         twiperf_usage();
         exit(1); 
     }
+    
+    if (signal(SIGINT, sig_handler) == SIG_ERR)
+        printf("\ncan't catch SIGINT\n");
+    
     Printing_Enable = 1; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
     if(test.protocol_id == 1 && test.role == 1)
@@ -356,7 +373,7 @@ int main(int argc, char **argv) {
     if (test.protocol_id == 2 && test.role == 2)
 	{
 	//parse_user_params("udp_traffic_data");
-	test.tx_buf = tw_new_buffer(test.bytes);
+	test.tx_buf = tw_new_buffer(test.packet_size);
 	tw_stats.secs_passed=0;
     struct in_addr server_ip; server_ip.s_addr = tw_cpu_to_be_32(test.server_ip);
     twiprintf(&test, on_host_conn, inet_ntoa(server_ip), test.server_port);

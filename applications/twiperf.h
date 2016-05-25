@@ -4,20 +4,26 @@
 #include <getopt.h>
 #include <tw_common.h>
 #include <tw_api.h>
+#include <arpa/inet.h>
 #include <stats.h>
-
+#include <signal.h>
 /* Maximum size UDP send is (64K - 1) - IP and UDP header sizes */
 //#define MAX_UDP_BLOCKSIZE (65535 - 8 - 20)
 #define MAX_UDP_BLOCKSIZE 1500
 const
 
 const char stats_head[] =
-"\n    Interval                RX              TX        Transfer         Bandwidth";
+"\n Interval                RX              TX        Transfer         Bandwidth        Total Datagrams       Datagrams Recv";
+const char summary_head[]=
+"\n   Interval               Transfer         Bandwidth        Lost/Total Datagrams";
 const char stats_number[]=
-"\n %6.2f-%-6.2f   sec     %7llu       %7llu      %5llu KBytes   %7.2f Mbits/sec" ;
+"\n %6.2f-%-6.2f  sec     %7llu       %7llu      %5llu KBytes   %7.2f Mbits/sec     %7llu         %7llu" ;
+const char summary_stats_number[]=
+"\n %6.2f-%-6.2f  sec     %5llu KBytes   %7.2f Mbits/sec     %5llu/%5llu" ;
 const char on_host_conn[]=
 "Connecting to host %s, port %u\n";
-
+const char summary_dot_line[]=
+"\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -";
 enum {
     IENONE = 0,             // No error
                 /* Parameter errors */
@@ -32,7 +38,7 @@ struct iperf_test {
     uint32_t client_port; 
     uint32_t server_ip; 
     uint32_t client_ip; 
-    uint32_t bytes; 
+    uint32_t packet_size; 
     struct ether_addr * server_mac;
     struct ether_addr * client_mac;
     struct ether_hdr * eth;
@@ -40,6 +46,13 @@ struct iperf_test {
     struct udp_hdr * udp;
     uint8_t test_runtime;
     tw_buf_t * tx_buf;
+};
+struct iperf_stats {                                                                                                                          
+    uint64_t datagrams_sent;
+    uint64_t datagrams_recv;
+    uint64_t total_transfered_bytes;
+    float bandwidth;
+    float interval_window;    
 };
 /* display usage */                                                                                                                 
 const char usage_longstr[] = "Usage: iperf [-s|-c host] [options]\n"
