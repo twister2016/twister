@@ -73,6 +73,9 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
     test->test_runtime = 0;  //initialized to default infinite runtime
 //    test->client_mac = tw_get_ether_addr("tw0");
 
+	udp_flag = 1;
+        test->protocol_id = 2;
+
     while ((flag = getopt_long(argc, argv, "n:p:ue:cs:h:", longopts, NULL)) != -1) {
         switch (flag) {
             case 'p':
@@ -97,6 +100,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
                 break;
             case 'e':
                 ethernet_flag = 1;
+		udp_flag = 0;
                 test->protocol_id = 1;
                 break;
             case 'u':
@@ -134,6 +138,8 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
 
 }
 
+void print_perf_stats();
+
 // UDP Server
 int udp_app_server(void *);
 void reply_udp_payload(tw_rx_t *, tw_buf_t *);
@@ -156,7 +162,7 @@ void reply_udp_payload(tw_rx_t * handle, tw_buf_t * buffer) {
      tw_copy_ether_addr(test.server_mac, &(eth->s_addr));
      tw_send_pkt(buffer, "tw0");
                  
- }
+}
 
 int udp_app_server(__attribute__((unused)) void * app_params) {
 
@@ -175,6 +181,10 @@ int udp_app_server(__attribute__((unused)) void * app_params) {
         printf("Error in receive start\n");
         exit(1);
     }
+    tw_timer_t * timer_handle;
+    timer_handle = tw_timer_init(tw_loop);
+    tw_timer_start(timer_handle, print_perf_stats, 1000);
+    twiprintf(&test, stats_head);
     tw_run(tw_loop);
     return 0;
 }
@@ -186,7 +196,7 @@ void reply_ether_payload(tw_rx_t *, tw_buf_t *);
 void reply_ether_payload(tw_rx_t * handle, tw_buf_t * buffer) {
     struct ether_hdr * eth = buffer->data;
     tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
-	tw_copy_ether_addr(dst_eth, &(eth->s_addr));
+	tw_copy_ether_addr(test.server_mac, &(eth->s_addr));
 	tw_send_pkt(buffer, "tw0");
 }
 
@@ -208,7 +218,10 @@ int ether_app_server(__attribute__((unused)) void * app_params) {
         printf("Error in receive start\n");
         exit(1);
     }
-
+    tw_timer_t * timer_handle;
+    timer_handle = tw_timer_init(tw_loop);
+    tw_timer_start(timer_handle, print_perf_stats, 1000);
+    twiprintf(&test, stats_head);
     tw_run(tw_loop);
     return 0;
 }
@@ -219,7 +232,7 @@ int user_app_main(void *);
 void pkt_rx(tw_rx_t *, tw_buf_t *);
 void pkt_tx(tw_tx_t *);
 void tw_udp_connect();
-void print_perf_stats();
+
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     eth = buffer->data;
     test_stats.datagrams_recv++;
