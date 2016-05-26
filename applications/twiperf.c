@@ -42,7 +42,8 @@ void sig_handler(int signo)
     if (signo == SIGINT){
         twiprintf(&test, summary_dot_line);
         twiprintf(&test, summary_head);
-        twiprintf(&test, summary_stats_number, 0.0, test_stats.interval_window, test_stats.total_transfered_bytes, test_stats.bandwidth, test_stats.datagrams_sent-test_stats.datagrams_recv, test_stats.datagrams_sent);
+        twiprintf(&test, summary_stats_number, 0.0, test_stats.interval_window, test_stats.total_transfered_bytes, test_stats.bandwidth, test_stats.datagrams_sent);
+	printf("\n\n");
         exit(1);
   }
 }
@@ -157,6 +158,7 @@ void reply_udp_payload(tw_rx_t * handle, tw_buf_t * buffer) {
      udp_hdr_d->dgram_cksum = 0;
      tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
      tw_copy_ether_addr(test.server_mac, &(eth->s_addr));
+     test_stats.datagrams_recv++;
      tw_send_pkt(buffer, "tw0");
                  
 }
@@ -232,10 +234,6 @@ void tw_udp_connect();
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     eth = buffer->data;
     test_stats.datagrams_recv++;
-    if(tw_be_to_cpu_16(eth->ether_type) == ETHER_TYPE_ARP) {
-        tw_stats.pkts_rx--;
-        tw_arp_parser(buffer, "tw0");
-    }
     tw_free_pkt(buffer);
     return;
 }

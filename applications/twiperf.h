@@ -15,11 +15,11 @@ const
 const char stats_head[] =
 "\n Interval                RX              TX        Transfer         Bandwidth        Total Datagrams       Datagrams Recv";
 const char summary_head[]=
-"\n   Interval               Transfer         Bandwidth        Lost/Total Datagrams";
+"\n   Interval               Transfer         Bandwidth        Total Datagrams";
 const char stats_number[]=
 "\n %6.2f-%-6.2f  sec     %7llu       %7llu      %5llu KBytes   %7.2f Mbits/sec     %7llu         %7llu" ;
 const char summary_stats_number[]=
-"\n %6.2f-%-6.2f  sec     %5llu KBytes   %7.2f Mbits/sec     %5llu/%5llu" ;
+"\n %6.2f-%-6.2f  sec     %5llu KBytes   %7.2f Mbits/sec     %5llu" ;
 const char on_host_conn[]=
 "Connecting to host %s, port %u\n";
 const char summary_dot_line[]=
