@@ -17,7 +17,6 @@ struct ether_hdr * eth;
 struct ether_addr * stats_eth_addr;
 struct ipv4_hdr * ip;
 struct udp_hdr * udp;
-int phy_port_id;
 uint32_t total_arps;
 static struct ether_addr * dst_eth_addr;
 uint32_t ipv4_tw0;
@@ -71,10 +70,9 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
     test->server_port = 5001;  //initialized to default port of 5001
     test->client_port = 7777;  //initialized to default port of 5001
     test->test_runtime = 0;  //initialized to default infinite runtime
-//    test->client_mac = tw_get_ether_addr("tw0");
 
 	udp_flag = 1;
-        test->protocol_id = 2;
+    test->protocol_id = 2;
 
     while ((flag = getopt_long(argc, argv, "n:p:ue:cs:h:", longopts, NULL)) != -1) {
         switch (flag) {
@@ -88,8 +86,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
                 client_flag = 1;
                 test->role = 2;
                 test->client_mac = tw_get_ether_addr("tw0");
-                //test->server_ip =tw_cpu_to_be_32( tw_convert_ip_str_to_dec(strdup(optarg)));
-                test->server_ip =tw_convert_ip_str_to_dec(strdup(optarg));
+                test->server_ip =tw_cpu_to_be_32( tw_convert_ip_str_to_dec(strdup(optarg)));
                 test->client_ip = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
                 break;
             case 's':
@@ -100,7 +97,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv)
                 break;
             case 'e':
                 ethernet_flag = 1;
-		udp_flag = 0;
+		        udp_flag = 0;
                 test->protocol_id = 1;
                 break;
             case 'u':
@@ -226,7 +223,6 @@ int ether_app_server(__attribute__((unused)) void * app_params) {
     return 0;
 }
 
-// UDP j Client
 
 int user_app_main(void *);
 void pkt_rx(tw_rx_t *, tw_buf_t *);
@@ -275,7 +271,7 @@ void pkt_tx(tw_tx_t * handle)
             test.ip->total_length = tw_cpu_to_be_16(test.tx_buf->size - sizeof(struct ether_hdr));
             test.ip->next_proto_id = UDP_PROTO_ID;
             test.ip->src_addr = test.client_ip;
-            test.ip->dst_addr = tw_cpu_to_be_32(test.server_ip);
+            test.ip->dst_addr = test.server_ip;
             test.ip->version_ihl = 0x45;
             test.ip->time_to_live = 63;
             test.ip->hdr_checksum =tw_ipv4_cksum(test.ip);
@@ -316,17 +312,17 @@ void tw_udp_connect(){
     static arpCount=0;
     struct arp_table* temp_arp_entry=NULL;
     if (arpCount < 4){
-        temp_arp_entry = tw_search_arp_table(tw_be_to_cpu_32(test.server_ip));
+        temp_arp_entry = tw_search_arp_table(test.server_ip);
         if(temp_arp_entry == NULL )  {
-             tw_construct_arp_packet(test.server_ip, phy_port_id);                                                                    
+             tw_send_arp_request(tw_cpu_to_be_32(test.server_ip), "tw0");                                                                    
              arpCount++;
              return;
          }
         else {
 
              test.server_mac = &temp_arp_entry->eth_mac;
-             struct in_addr server_ip; server_ip.s_addr = tw_cpu_to_be_32(test.server_ip);
-             struct in_addr client_ip; client_ip.s_addr = (test.client_ip);
+             struct in_addr server_ip; server_ip.s_addr = test.server_ip;
+             struct in_addr client_ip; client_ip.s_addr = test.client_ip;
              printf("local %s, port %u ", inet_ntoa(client_ip), test.client_port);
              printf("connected to %s port %u\n", inet_ntoa(server_ip), test.server_port);
                 /////////////////////////////////////////////
@@ -385,12 +381,11 @@ int main(int argc, char **argv) {
     }
     if (test.protocol_id == 2 && test.role == 2)
 	{
-	//parse_user_params("udp_traffic_data");
-	test.tx_buf = tw_new_buffer(test.packet_size);
-	tw_stats.secs_passed=0;
-    struct in_addr server_ip; server_ip.s_addr = tw_cpu_to_be_32(test.server_ip);
-    twiprintf(&test, on_host_conn, inet_ntoa(server_ip), test.server_port);
-    udp_app_client(NULL);
+	    test.tx_buf = tw_new_buffer(test.packet_size);
+	    tw_stats.secs_passed=0;
+        struct in_addr server_ip; server_ip.s_addr = (test.server_ip);
+        twiprintf(&test, on_host_conn, inet_ntoa(server_ip), test.server_port);
+        udp_app_client(NULL);
 	}
     
     return 0;
