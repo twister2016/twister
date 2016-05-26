@@ -33,7 +33,7 @@ void tw_print_global_stats(void) {
 	//int proc_engine_id = rte_lcore_id();
 	tw_clear_scr();
 	printf("****Global Stats****\n");
-	printf("Secs Passed %lu\nRX PPS %lu\nTX PPS %lu\nPkts RX %lu\nPkts TX %lu\n", tw_stats.secs_passed, tw_stats.rx_pps, tw_stats.tx_pps, tw_stats.pkts_rx, tw_stats.pkts_tx);
+	printf("Secs Passed %llu\nRX PPS %llu\nTX PPS %llu\nPkts RX %llu\nPkts TX %llu\n", tw_stats.secs_passed, tw_stats.rx_pps, tw_stats.tx_pps, tw_stats.pkts_rx, tw_stats.pkts_tx);
 
 }
 

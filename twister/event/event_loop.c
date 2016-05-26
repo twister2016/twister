@@ -108,12 +108,56 @@ tw_timer_t * tw_timer_init(tw_loop_t * loop) {
     return temp_handle;
 }
 
-/*int tw_timer_bind(tw_timer_t * timer_handle, struct tw_sockaddr_in * addr, int sock_fd, uint8_t flags) {
-    timer_handle->flags = flags;
-    timer_handle->sock_fd = sock_fd;
-    timer_handle->dst_addr = addr;
-    return 0;
-}*/
+uint8_t tw_timer_unregister (tw_timer_t * timer_handle, tw_loop_t * ev_loop ){
+    tw_timer_t * temp_handle = ev_loop->timer_handle_queue;
+    if (temp_handle == NULL)
+        return -1;
+    else{
+        if ( temp_handle == timer_handle ) {//first callback                
+            ev_loop->timer_handle_queue = timer_handle->next;
+            rte_free(timer_handle);
+            ev_loop->active_handles--; 
+            return 0;
+        }
+                        
+        while (temp_handle->next!=timer_handle) {
+            if (temp_handle->next == NULL)
+                return -1;
+            temp_handle= temp_handle->next;        
+        }
+
+        temp_handle->next = timer_handle->next;
+        rte_free(timer_handle);
+        ev_loop->active_handles--;
+        return 0;        
+
+    }
+}
+uint8_t tw_tx_unregister (tw_tx_t * transmit_handle, tw_loop_t * ev_loop ){
+    tw_tx_t * temp_tx_handle = ev_loop->tx_handle_queue;
+    if (temp_tx_handle == NULL || transmit_handle == NULL)
+        return -1;
+    else{
+        if ( temp_tx_handle == transmit_handle ) {//first callback                
+            ev_loop->tx_handle_queue = transmit_handle->next;
+            rte_free(transmit_handle);
+            ev_loop->active_handles--; 
+            return 0;
+        }
+                        
+        while (temp_tx_handle->next!=transmit_handle) {
+            if (temp_tx_handle->next == NULL)
+                return -1;
+            temp_tx_handle= temp_tx_handle->next;        
+        }
+
+        temp_tx_handle->next = transmit_handle->next;
+        rte_free(temp_tx_handle);
+        ev_loop->active_handles--;
+        return 0;        
+
+    }
+}
 
 int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t timeout) {
     if (timer_handle == NULL)
@@ -124,10 +168,9 @@ int tw_timer_start(tw_timer_t* timer_handle, tw_timer_cb timer_cb, uint64_t time
 }
 
 int tw_run(tw_loop_t * event_loop) {
-    uint64_t stats_calc_lim = stats_calc_limit* rte_get_tsc_hz();
     uint8_t continue_loop = 1;
     int num_rx_pkts = 0, pkt_count = 0, i;
-    uint64_t curr_time_cycle = 0, prev_stats_calc = 0, time_diff = 0;
+    uint64_t curr_time_cycle = 0, time_diff = 0;
     struct lcore_conf *qconf = &lcore_conf[rte_lcore_id()];
     struct mbuf_table m[qconf->num_port];
     struct rte_mbuf * pkt;
@@ -149,13 +192,7 @@ int tw_run(tw_loop_t * event_loop) {
        /* if (event_loop->stop_flag)
             return 0;*/
         curr_time_cycle = tw_get_current_timer_cycles();
-		
         tw_timely_burst();
-	time_diff = (curr_time_cycle - prev_stats_calc);
-        if (unlikely(time_diff > stats_calc_lim)) {
-            tw_calc_global_stats();
-            prev_stats_calc = curr_time_cycle;
-        }
         temp_rx_handle = event_loop->rx_handle_queue;
         if (temp_rx_handle != NULL)
             num_rx_pkts = tw_rx_for_each_queue(m);

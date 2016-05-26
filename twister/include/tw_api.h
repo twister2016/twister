@@ -55,6 +55,27 @@ void tw_launch_engine(void * func, void * arg, char* engine_name);
 *   TRUE(1), False(-1)
  */
 int tw_map_port_to_engine(char portName[10], char coreName[10]);
+/** unregister a tx event with callback from program event loop
+ *
+ * @param transmit_handle
+ *    tw_tx_s struct which is to be unregisterd from event loop
+ * @param ev_loop
+ *    A Pointer to an event loop struct
+ * @return
+ *   TRUE(1), False (-1) 
+ */  
+uint8_t tw_tx_unregister (tw_tx_t * transmit_handle, tw_loop_t * ev_loop );
+
+/** unregister a timer event with callback from program event loop
+ *
+ * @param timer_handle
+ *    tw_timer_s struct which is to be unregisterd from event loop
+ * @param ev_loop
+ *    A Pointer to an event loop struct
+ * @return
+ *   TRUE(1), False (-1) 
+ */  
+uint8_t tw_timer_unregister (tw_timer_t * timer_handle, tw_loop_t * ev_loop );
 /** Initialize an eventloop for a specified number of time
 *
 * @param time_to_run (seconds)

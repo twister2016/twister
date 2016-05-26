@@ -30,13 +30,13 @@ struct iperf_test test;
 struct iperf_stats test_stats;
 
 /**** prototypes ****/
-void print_perf_stats();
+void print_perf_stats(tw_timer_t * timer_handle);
 int udp_app_server(void *);
 void reply_udp_payload(tw_rx_t *, tw_buf_t *);
 void reply_ether_payload(tw_rx_t *, tw_buf_t *);
 void pkt_rx(tw_rx_t *, tw_buf_t *);
 void pkt_tx(tw_tx_t *);
-void tw_udp_connect();
+void tw_udp_connect(tw_timer_t * timer_handle);
 
 void sig_handler(int signo) /*On presseing Ctrl-C*/
 {
@@ -225,8 +225,8 @@ void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer) {
     return;
 }
 /*print the test stats, registerd as timer callback (1 second) at udp_app_client event loop, called every second*/
-void print_perf_stats(){
-
+void print_perf_stats(tw_timer_t * timer_handle){
+    tw_calc_global_stats();
     test_stats.interval_window = test_stats.interval_window + 1.0;
     uint64_t bytes = (   (  (tw_stats.rx_pps + tw_stats.tx_pps )*(test.packet_size)  ) /1000   ); //KBytes
     float bandwidth = (bytes *8*1000 )/ (float)(1048576.0) ; // Mbit / sec 
@@ -275,14 +275,15 @@ int udp_app_client(__attribute__((unused)) void * app_params) {
         printf("Error in receive startn");
         exit(1);
     }
-    timer_handle = tw_timer_init(tw_loop); //registering timer callback i.e., void tw_udp_connect() 
+    timer_handle = tw_timer_init(tw_loop); //registering timer callback i.e., void tw_udp_connect()
+    timer_handle->sock_fd=25; 
     tw_timer_start(timer_handle, tw_udp_connect, 1000);
     tw_run(tw_loop); //start the event-loop
     return 0;
 }
 /*tw_udp_connect is called every second by udp_app_client event loop untill the Address of server is reloved. After that 
 this callback is unregisterd and pkt_tx function is registerd as transmitt packets. */
-void tw_udp_connect(){ 
+void tw_udp_connect( tw_timer_t * timer_handle_this ){ 
     static arpCount=0;
     struct arp_table* temp_arp_entry=NULL;
     if (arpCount < 4){
@@ -299,8 +300,8 @@ void tw_udp_connect(){
              struct in_addr client_ip; client_ip.s_addr = test.client_ip;
              printf("local %s, port %u ", inet_ntoa(client_ip), test.client_port);
              printf("connected to %s port %u\n", inet_ntoa(server_ip), test.server_port);
-             tw_loop->timer_handle_queue=NULL; //TODO write unregister the tw_udp_connect() callback function.
-             tw_loop->active_handles--;
+             twiprintf(&test, stats_head);
+
              tw_tx_t * tx_handle = tw_tx_init(tw_loop); //registering the tx event for client, ready to send packets
              if (tx_handle == NULL) {
                  printf("Error in TX initn");
@@ -311,10 +312,13 @@ void tw_udp_connect(){
                   printf("Error in transmit startn");
                   exit(1);
              }
-             tw_timer_t * timer_handle;
-             timer_handle = tw_timer_init(tw_loop);
-             tw_timer_start(timer_handle, print_perf_stats, 1000);
-             twiprintf(&test, stats_head);
+             
+             tw_timer_unregister(timer_handle_this, tw_loop); // unregistering the timer handler callback for this function (tw_udp_connect())
+             
+             tw_timer_t * timer_perf_stats;
+             timer_perf_stats = tw_timer_init(tw_loop); // registering a new timer handler for stats printing,
+             tw_timer_start(timer_perf_stats, print_perf_stats, 1000);
+             
         }
     }
     else if (arpCount>=4 && temp_arp_entry == NULL ){
