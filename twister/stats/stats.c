@@ -33,15 +33,14 @@ void tw_print_global_stats(void) {
 	//int proc_engine_id = rte_lcore_id();
 	tw_clear_scr();
 	printf("****Global Stats****\n");
-	printf("Secs Passed %llu\nRX PPS %llu\nTX PPS %llu\nPkts RX %llu\nPkts TX %llu\n", tw_stats.secs_passed, tw_stats.rx_pps, tw_stats.tx_pps, tw_stats.pkts_rx, tw_stats.pkts_tx);
+	printf("Secs Passed %"PRIu64"\nRX PPS %"PRIu64"\nTX PPS %"PRIu64"\nPkts RX %"PRIu64"\nPkts TX %"PRIu64"\n", tw_stats.secs_passed, tw_stats.rx_pps, tw_stats.tx_pps, tw_stats.pkts_rx, tw_stats.pkts_tx);
 
 }
 
 void tw_calc_average_rtt(uint64_t time_clk)  //TODO multi core verification
-{			
+{
 	struct average_filter *average_entry = (struct average_filter *) rte_malloc("struct average_filter *", sizeof(struct average_filter), 64);
 	float curr_pkt_rtt = (float)time_clk/(float)average_filter_len;
-		
 	average_entry->timestamp = curr_pkt_rtt;
 	average_entry->next = NULL;
 	//printf("curr_pkt_rtt %u\n", curr_pkt_rtt);
