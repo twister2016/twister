@@ -58,7 +58,7 @@ IPERF: twiperf.c
 
 
 
-install: build
+install: 
 	cp ./build/* /usr/bin/
 	
 clean:  

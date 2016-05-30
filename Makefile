@@ -9,7 +9,9 @@ DEB_DEPENDS  = make gcc
 .PHONY: help bootstrap build clean all install install-lib uninstall rebuild-lib \
 	applications
 
-build: all
+build: clean bootstrap build-local copy build-application
+
+copy: 
 	cp $(SUBDIR2)/build/libtwister.a /home/twister/.
 	cp $(SUBDIR1)/$(RTE_TARGET)/lib/* /home/twister/
 	echo 'install all twister headers'
@@ -25,6 +27,9 @@ build-local:  bootstrap
 	$(MAKE) -C $(SUBDIR1);
 	cp -R $(SUBDIR1)/build $(SUBDIR1)/$(RTE_TARGET);
 	$(MAKE) -C $(SUBDIR2);
+
+build-application: copy
+	$(MAKE) -C $(SUBDIR3);
 
 help:
 	@echo "Make Targets:"
@@ -67,7 +72,7 @@ clean:
 all: clean bootstrap build
 
 
-install:
+install: copy
 	$(MAKE) install -C $(SUBDIR3);
 
 uninstall: clean 
