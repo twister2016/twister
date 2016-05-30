@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <arpa/inet.h>
 #include <getopt.h>
 #include <tw_common.h>
 #include <tw_api.h>
@@ -73,7 +74,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*pa
 	udp_flag = 1;
     test->protocol_id = 2;
 
-    while ((flag = getopt_long(argc, argv, "n:p:ue:cs:h:", longopts, NULL)) != -1) {
+    while ((flag = getopt_long(argc, argv, "n:p:ue:c:h:s", longopts, NULL)) != -1) {
         switch (flag) {
             case 'p':
                 test->server_port = atoi(optarg);
