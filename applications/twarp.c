@@ -30,29 +30,6 @@ bool isValidIpAddress(char *ipAddress) {
     return result != 0;
 }
 void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
-    struct ether_addr * dst_eth_addr;
-    struct ether_hdr * eth = buffer->data;
-    struct arp_hdr * arp_pkt =buffer->data + sizeof(struct ether_hdr);
-
-    switch (tw_be_to_cpu_16(eth->ether_type)) {
-        case ETHER_TYPE_ARP:
-            if (arp_flag == 1) {
-                tw_arp_parser(buffer, "tw0");
-                struct ether_addr * mac_addr = tw_search_arp_entry(ip);
-                if (mac_addr != NULL) {
-                    dst_eth_addr =  mac_addr;
-                    printf("MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n",
-                            dst_eth_addr->addr_bytes[0],
-                            dst_eth_addr->addr_bytes[1],
-                            dst_eth_addr->addr_bytes[2],
-                            dst_eth_addr->addr_bytes[3],
-                            dst_eth_addr->addr_bytes[4],
-                            dst_eth_addr->addr_bytes[5]);
-                    arp_flag = -1;
-                    exit(0);
-                }
-            }
-    }
     tw_free_pkt(buffer);
 
 }
