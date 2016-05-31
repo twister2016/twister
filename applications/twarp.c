@@ -58,10 +58,25 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
 }
 
 void check_arp() {
+    struct ether_addr * dst_eth_addr=NULL;
     static arp_resolv_count = 0;    
-    arp_resolv_count++;
-    tw_send_arp_request(tw_convert_ip_str_to_dec(ip), "tw0");
-    if ( arp_flag == 1 && arp_resolv_count > 4 ) {
+    dst_eth_addr = tw_search_arp_entry(ip);//checks if address exist in arp table against this IP. 
+    if(dst_eth_addr == NULL )  {
+        tw_send_arp_request(tw_convert_ip_str_to_dec(ip), "tw0");                                                                    
+        arp_resolv_count++;
+    }
+    else{
+	printf("MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n",
+                            dst_eth_addr->addr_bytes[0],
+                            dst_eth_addr->addr_bytes[1],
+                            dst_eth_addr->addr_bytes[2],
+                            dst_eth_addr->addr_bytes[3],
+                            dst_eth_addr->addr_bytes[4],
+                            dst_eth_addr->addr_bytes[5]);
+       exit(0);
+
+    }
+    if ( arp_flag == 1 && arp_resolv_count > 5 ) {
         printf("arp not resolved.\n");
         exit(1);
     }    
