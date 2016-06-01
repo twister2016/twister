@@ -20,7 +20,6 @@ copy:
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/generic/*.h /home/twister/include/generic/
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/exec-env/*.h /home/twister/include/exec-env/
 	cp $(SUBDIR1)/$(RTE_TARGET)/kmod/igb_uio.ko /home/twister/driver/igb_uio.ko
-	python /home/twister/config/tw_config.py
 
 
 build-local:  bootstrap
@@ -74,8 +73,9 @@ all: clean bootstrap build
 
 install: copy
 	$(MAKE) install -C $(SUBDIR3);
+	ln -s /home/twister/config/tw_config.py /usr/bin/twister-config
 
 uninstall: clean 
 	$(MAKE) clean -C $(SUBDIR3);
 	rm -rf /home/twister/*
-        
+	rm /usr/bin/twister-config
