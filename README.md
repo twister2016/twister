@@ -59,15 +59,7 @@ This script will apply the configurations defined in `/home/twister/config/twist
 - [UDP Echo](https://github.com/twister2016/twister/tree/master/examples/example_udp_echo) This application  is an example of packet processing built on Twister API to echo back the UDP traffic.
 - [ICMP Echo](https://github.com/twister2016/twister/blob/master/documentation/TW_ICMPECHO.adoc) This application responds for the ICMP(Ping) packets.
 - [Reverse ARP Application](https://github.com/twister2016/twister/blob/master/documentation/TW_REVERSE.adoc) This application implements the reverse address resolution protocol. It sends the RARP request and displays the IP resolved from RARP response.
-
-### How to Compile:
-To compile any applications, from the root directory of the Twister repository execute the following commands:
-```
-cd applications
-sudo make clean
-sudo make 
-sudo make install
-```
+- [IPERF Application](https://github.com/twister2016/twister/blob/master/documentation/TW_IPERF.md) This application provides functioanlity to measure maximum achievable bandwidth on IP conncection.
 
 
 
