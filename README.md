@@ -16,7 +16,9 @@ The Twister source can be clone using the following command:
 The Twister package can be installed using the following commands:
 
 ```
-  sudo make install
+cd twister
+make
+sudo make install
 ```
 
 ## Applications
