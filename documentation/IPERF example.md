@@ -51,7 +51,7 @@ Run `twister-config`  to apply the changes.
 twister-config
 ```
 
-This script will apply the configurations defined in '/home/twister/config/twister.conf' and generate a json file `/home/twister/config/twister_api.json` which will be used by Twister API.
+This script will apply the configurations defined in `/home/twister/config/twister.conf` and generate a json file `/home/twister/config/twister_api.json` which will be used by Twister API.
 
 ## Run Twiperf (Twister Application)
 go to twister repository folder and compile twister applications in `twister/applications` folders
