@@ -73,7 +73,7 @@ all: clean bootstrap build
 
 install: copy
 	$(MAKE) install -C $(SUBDIR3);
-	ln -s /home/twister/config/tw_config.py /usr/bin/twister-config
+	ln -s -f /home/twister/config/tw_config.py /usr/bin/twister-config
 
 uninstall: clean 
 	$(MAKE) clean -C $(SUBDIR3);
