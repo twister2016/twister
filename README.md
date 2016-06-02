@@ -20,6 +20,32 @@ cd twister
 make
 sudo make install
 ```
+### Configure Twister and ports configurations
+
+Edit  twister configurations in `/home/twister/config/twister.conf` file. 
+
+Append comma separated names of interfaces to be used by Linux in blacklist.
+Similarly append comma separated names of interfaces to be used by Twister in whitelist.
+Provide number of cores to be used by Twister. 
+
+For example, final configuration file may look like below:
+```
+[DEFAULT]
+
+blacklist=eth0
+whitelist=eth1
+cores=1
+```
+Edit port configurations in `/home/twister/config/config.json`. Provide the network configurations for the NIC to be used as twister port.
+For example, final configuration in `/home/twister/config/config.json` file may look like below:
+```
+[{"ip_addrs": [{ "ip_address": "10.0.2.129", "gateway_ip": "10.10.2.1", "subnet_mask": "255.255.255.0"}], "port_name": "tw0"}]
+```
+Run `twister-config`  to apply the changes.
+```
+twister-config
+```
+This script will apply the configurations defined in `/home/twister/config/twister.conf` and generate a json file `/home/twister/config/twister_api.json` which will be used by Twister API.
 
 ## Applications
 - [Ethernet Echo Application](https://github.com/twister2016/twister/blob/master/documentation/TW_ETHERNET.adoc) This application performs Layer-2 forwarding for each packet that is received on the port. All the other fields in the packets remain the same - only the MAC addresses are affected.
