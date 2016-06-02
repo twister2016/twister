@@ -1,6 +1,3 @@
-#ifndef _PORTCONF_C_
-#define _PORTCONF_C_
-
 #include <portconf.h>
 
 
@@ -145,5 +142,3 @@ void tw_check_all_ports_link(void) {
 		rte_panic("Some NIC ports are DOWN\n");
 	return;
 }
-
-#endif

@@ -56,13 +56,15 @@ GATEWAY: twgateway.c
 IPERF: twiperf.c
 	$(CC) twiperf.c $(TWFLAGS) -o build/twiperf
 
-
-
 install: 
 	cp ./build/* /usr/bin/
-	
-clean:  
 
+clean:
+	if [ -d "build" ] ; then \
+	  rm -rf build ; \
+	fi ; 
+
+uninstall:  
 	if [ -d "build" ] ; then \
   	  for i in $$( cd build && ls )  ; do  \
 	    echo $$i ; \

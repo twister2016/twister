@@ -1,4 +1,3 @@
-
 #include <timerdefs.h>
 
 uint64_t one_sec = 0, one_msec = 0, one_usec = 0, one_nsec = 0;

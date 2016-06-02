@@ -1,6 +1,3 @@
-#ifndef _QUEUED_PKTS_C_
-#define _QUEUED_PKTS_C_
-
 #include <queued_pkts.h>
 
 uint64_t queued_pkt_time_limit = 10;  //keep a pkt in queue for queued_pkt_time_limit sec
@@ -96,5 +93,3 @@ void tw_print_queued_pkts(void) {
 	}
 	printf("\n");
 }
-
-#endif

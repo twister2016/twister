@@ -1,6 +1,3 @@
-#ifndef _PERIODIC_TIMERS_C_
-#define _PERIODIC_TIMERS_C_
-
 /* The timers created will be periodic. They will be mainly used for printing and exporting stats, updating ARP table
  * This file will include following funcs
  * create timer with a periodic interval
@@ -43,5 +40,3 @@ int tw_stats_callback_timer_init(void) {
         
     return 0;
 }
-
-#endif

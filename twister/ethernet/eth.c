@@ -1,6 +1,3 @@
-#ifndef _ETHERNET_C_
-#define _ETHERNET_C_
-
 #include <rte_ether.h>
 #include <portconf.h>
 #include <eth.h>
@@ -95,5 +92,3 @@ int tw_eth_pkt_parser(struct rte_mbuf * pkt, uint8_t port_id) {
 		rte_pktmbuf_free(pkt);
 	return 0;
 }
-
-#endif

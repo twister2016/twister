@@ -1,6 +1,3 @@
-#ifndef _JSONPARSER_C_
-#define _JSONPARSER_C_
-
 #include <jsonparser.h>
 #include <initfuncs.h>
 
@@ -86,5 +83,3 @@ int tw_get_port_conf_json_vals(const char * file_name) {
     }
 	return 0;
 }
-
-#endif

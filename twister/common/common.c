@@ -1,6 +1,6 @@
-
 #include <common.h>
 #include <rte_cycles.h>
+
 uint8_t tw_convert_str_to_iparr(const char *value, uint8_t *ipVar) {
     int ip[5];
     ip[0] = -1;

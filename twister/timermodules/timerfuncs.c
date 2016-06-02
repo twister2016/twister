@@ -1,6 +1,3 @@
-#ifndef _TIMERFUNCS_C_
-#define _TIMERFUNCS_C_
-
 #include <timerfuncs.h>
 
 inline uint64_t tw_get_time_diff(uint64_t curr_timer_freq, uint64_t prev_timer_freq, uint64_t timer_resolution) {
@@ -50,5 +47,3 @@ inline void tw_sleep_nsec(unsigned nsec) {
 		curr_sleep = rte_get_tsc_cycles()/one_nsec;
 	return;
 }
-
-#endif

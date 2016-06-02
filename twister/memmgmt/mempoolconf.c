@@ -1,6 +1,3 @@
-#ifndef _MEMMGMT_C_
-#define _MEMMGMT_C_
-
 #include <mempoolconf.h>
 #include <tw_api.h>
 
@@ -75,4 +72,3 @@ void * tw_malloc(char *type, uint32_t size)
 	return 0;
 }
 */
-#endif

@@ -1,6 +1,3 @@
-#ifndef _ENGINE_C_
-#define _ENGINE_C_
-
 #include <tw_api.h>
 
 void tw_launch_engine(void * func, void * arg, char* engine_name) {
@@ -25,5 +22,3 @@ void tw_launch_engine(void * func, void * arg, char* engine_name) {
 unsigned tw_current_engine(void) {
 	return rte_lcore_id();
 }
-
-#endif
