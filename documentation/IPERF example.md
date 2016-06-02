@@ -24,7 +24,8 @@ compile and install Twister
 
 ```
 cd twister
-make install
+make
+sudo make install
 ```
 Edit  twister configurations in `/home/twister/config/twister.conf` file. 
 
@@ -45,9 +46,9 @@ For example, in 'Twiiperf Server', final configuration in `/home/twister/config/
 ```
 [{"ip_addrs": [{ "ip_address": "10.0.2.129", "gateway_ip": "10.10.2.1", "subnet_mask": "255.255.255.0"}], "port_name": "tw0"}]
 ```
-Run tw_config script to apply the changes.
+Run `twister-config`  to apply the changes.
 ```
-/home/twister/config/tw_config.py
+twister-config
 ```
 
 This script will apply the configurations defined in '/home/twister/config/twister.conf' and generate a json file `/home/twister/config/twister_api.json` which will be used by Twister API.
@@ -57,11 +58,11 @@ go to twister repository folder and compile twister applications in `twister/app
 
 ```
 cd twister/applications
-make install 
+sudo make install 
 ```
 Run iperf server in 'Twiperf Server' instance with udp traffic.
 ```
-sudo twiperf -u -S
+sudo twiperf -u -s
 ```
 Run iperf server in 'Twiperf client' instance. Connect with IP address of iperf server configured in 'Twipef server' VM.
 ```
