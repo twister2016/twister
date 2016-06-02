@@ -4,6 +4,11 @@
 [![Build Status](https://travis-ci.org/twister2016/twister.png)](https://travis-ci.org/twister2016/twister)
 
 ## How To:
+### Create AWS instances for Twister
+
+To create required AWS instances for twister please follow [this guide](/documentation/Twister_AWS.md).
+
+Also ensure to connect one extra NIC for use by Twister Application. The VMs will automatically reboot one time to apply updates required for Twister.
 
 ### Clone
 The Twister source can be clone using the following command:
