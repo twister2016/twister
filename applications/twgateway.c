@@ -20,15 +20,17 @@ void reply_payload(tw_rx_t *, tw_buf_t *);
 
 struct icmp_echo* ICMP;
 
-struct route_table {
+struct route_table
+{
     uint32_t net_addr;
     uint32_t gateway;
     uint32_t net_mask;
     char port_name[3];
     struct route_table * next;
-} __attribute__((__packed__));
+}__attribute__((__packed__));
 
-struct sq_pkt {
+struct sq_pkt
+{
     tw_buf_t *pkt[MAX_QUEUE_PACKETS];
     uint32_t n_pkts;
 };
@@ -38,32 +40,39 @@ struct sq_pkt sq_pkt_q;
 struct route_table * route_table_root = NULL;
 uint32_t route_table_size = 0;
 
-int tw_sq_push(struct sq_pkt * q_list, tw_buf_t * pkt) {
-    if (q_list->n_pkts >= 1000)
+int tw_sq_push(struct sq_pkt * q_list, tw_buf_t * pkt)
+{
+    if(q_list->n_pkts >= 1000)
         return 0;
     q_list->pkt[q_list->n_pkts] = pkt;
     q_list->n_pkts++;
     return 1;
 }
 
-int tw_n_queue(struct sq_pkt* q_list) {
-    if (q_list->n_pkts < 1)
+int tw_n_queue(struct sq_pkt* q_list)
+{
+    if(q_list->n_pkts < 1)
         return 0;
     return q_list->n_pkts;
 }
 
-int tw_add_route_entry(uint32_t net_to_add, uint32_t netmask_to_add, uint32_t gateway_to_add, char * port_id) {
+int tw_add_route_entry(uint32_t net_to_add, uint32_t netmask_to_add, uint32_t gateway_to_add,
+                       char * port_id)
+{
     struct route_table * route_table_ptr = route_table_root;
-    if (route_table_ptr == NULL) {
-        route_table_ptr = tw_malloc("struct route_table", sizeof (struct route_table));
+    if(route_table_ptr == NULL)
+    {
+        route_table_ptr = tw_malloc("struct route_table", sizeof(struct route_table));
         route_table_root = route_table_ptr;
-    } else {
+    }
+    else
+    {
         while (route_table_ptr->next != NULL)
             route_table_ptr = route_table_ptr->next;
-        route_table_ptr->next = tw_malloc("struct route_table", sizeof (struct route_table));
+        route_table_ptr->next = tw_malloc("struct route_table", sizeof(struct route_table));
         route_table_ptr = route_table_ptr->next;
     }
-    if (route_table_ptr == NULL)
+    if(route_table_ptr == NULL)
         exit(0);
 
     route_table_ptr->net_addr = tw_be_to_cpu_32(net_to_add);
@@ -76,12 +85,14 @@ int tw_add_route_entry(uint32_t net_to_add, uint32_t netmask_to_add, uint32_t ga
     return 0;
 }
 
-void tw_print_route_table(void) {
+void tw_print_route_table(void)
+{
     printf("\nTwister Routing table\n");
     printf("\n|------Network----||---Destination---||-----NetMask----||----iface----|\n");
     struct in_addr ip_addr;
     struct route_table * temp_route_entry = route_table_root;
-    while (temp_route_entry != NULL) {
+    while (temp_route_entry != NULL)
+    {
         ip_addr.s_addr = temp_route_entry->net_addr;
         printf("|    %s ", inet_ntoa(ip_addr));
         ip_addr.s_addr = temp_route_entry->gateway;
@@ -97,24 +108,28 @@ void tw_print_route_table(void) {
 
 }
 
-struct route_table* tw_search_route(uint32_t ip_to_search) {
+struct route_table* tw_search_route(uint32_t ip_to_search)
+{
     struct route_table * temp_route_entry = route_table_root;
     uint32_t temp_ip;
-    while (temp_route_entry != NULL) {
-        temp_ip = temp_route_entry ->net_mask & ip_to_search;
-        if (temp_ip == temp_route_entry->net_addr)
+    while (temp_route_entry != NULL)
+    {
+        temp_ip = temp_route_entry->net_mask & ip_to_search;
+        if(temp_ip == temp_route_entry->net_addr)
             return temp_route_entry;
         else
             temp_route_entry = temp_route_entry->next;
     }
-    return NULL;
 
+    return NULL;
 }
 
-int parse_user_params(char * file_name) {
+int parse_user_params(char * file_name)
+{
     uint8_t i;
     cJSON * json_file = tw_parse_json_file(file_name);
-    if (!json_file) {
+    if(!json_file)
+    {
         printf("Error before: [%s]\n", cJSON_GetErrorPtr());
         return -1;
     }
@@ -123,11 +138,15 @@ int parse_user_params(char * file_name) {
     uint32_t net_mask_tmp;
     char* port_name_tmp;
 
-    for (i = 0; i < cJSON_GetArraySize(json_file); i++) {
+    for(i = 0; i < cJSON_GetArraySize(json_file); i++)
+    {
         cJSON * subitem = cJSON_GetArrayItem(json_file, i);
-        net_addr_tmp = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "net_addr")->valuestring);
-        gateway_tmp = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "gateway")->valuestring);
-        net_mask_tmp = tw_convert_ip_str_to_dec(cJSON_GetObjectItem(subitem, "net_mask")->valuestring);
+        net_addr_tmp = tw_convert_ip_str_to_dec(
+                cJSON_GetObjectItem(subitem, "net_addr")->valuestring);
+        gateway_tmp = tw_convert_ip_str_to_dec(
+                cJSON_GetObjectItem(subitem, "gateway")->valuestring);
+        net_mask_tmp = tw_convert_ip_str_to_dec(
+                cJSON_GetObjectItem(subitem, "net_mask")->valuestring);
         port_name_tmp = (cJSON_GetObjectItem(subitem, "port_name")->valuestring);
         tw_add_route_entry(net_addr_tmp, net_mask_tmp, gateway_tmp, port_name_tmp);
     }
@@ -135,25 +154,29 @@ int parse_user_params(char * file_name) {
 }
 int check_gateway_ping(tw_buf_t* buffer);
 
-int check_gateway_ping(tw_buf_t* buffer) {
+int check_gateway_ping(tw_buf_t* buffer)
+{
 
     struct route_table * temp_route_entry = route_table_root;
     uint32_t temp_ip;
     struct ipv4_hdr * iphdr;
-    while (temp_route_entry != NULL) {
+    while (temp_route_entry != NULL)
+    {
 
-        iphdr = buffer->data + sizeof (struct ether_hdr);
+        iphdr = buffer->data + sizeof(struct ether_hdr);
         temp_ip = tw_get_ip_addr(temp_route_entry->port_name);
-        if (temp_ip == tw_be_to_cpu_32(iphdr->dst_addr)) {
+        if(temp_ip == tw_be_to_cpu_32(iphdr->dst_addr))
+        {
             struct in_addr ip_addr;
             ip_addr.s_addr = temp_ip;
             ip_addr.s_addr = iphdr->src_addr;
 
-            if (iphdr->next_proto_id == ICMP_PROTO_ID) {
-                ICMP = buffer->data + sizeof (struct ether_hdr) + sizeof (struct ipv4_hdr);
+            if(iphdr->next_proto_id == ICMP_PROTO_ID)
+            {
+                ICMP = buffer->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
                 ICMP->type = 0; //for icmp reply type is zero
                 ICMP->checksum = 0;
-                ICMP->checksum = tw_calcsum((unsigned short*) ICMP, sizeof (struct icmp_echo));
+                ICMP->checksum = tw_calcsum((unsigned short*) ICMP, sizeof(struct icmp_echo));
             }
             dst_ip = (iphdr->dst_addr);
             src_ip = (iphdr->src_addr);
@@ -167,41 +190,51 @@ int check_gateway_ping(tw_buf_t* buffer) {
 
             return 0;
 
-        } else
+        }
+        else
             temp_route_entry = temp_route_entry->next;
     }
     return 1;
 }
 
-void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
+void reply_payload(tw_rx_t * handle, tw_buf_t * buffer)
+{
     eth = buffer->data;
     eth_type = tw_be_to_cpu_16(eth->ether_type);
-    switch (eth_type) {
+    switch (eth_type)
+    {
         case ETHER_TYPE_ARP:
             tw_arp_parser(buffer, buffer->port_name);
             break;
         case ETHER_TYPE_IPv4:
-            ipHdr_d = buffer->data + sizeof (struct ether_hdr);
-            int gateway_ping = check_gateway_ping(buffer);//check if gateway pinged or not
-            if (gateway_ping) { //gateway not pinged, lets route the packet.
+            ipHdr_d = buffer->data + sizeof(struct ether_hdr);
+            int gateway_ping = check_gateway_ping(buffer); //check if gateway pinged or not
+            if(gateway_ping)
+            { //gateway not pinged, lets route the packet.
                 struct route_table * temp_route_ptr = tw_search_route(ipHdr_d->dst_addr);
-                if (temp_route_ptr == NULL) {
+                if(temp_route_ptr == NULL)
+                {
                     tw_free_pkt(buffer);
                     return;
                 }
                 struct arp_table * temp_arp_entry = tw_search_arp_table(ipHdr_d->dst_addr);
-                if (temp_arp_entry == NULL) {
+                if(temp_arp_entry == NULL)
+                {
                     tw_send_arp_request(ipHdr_d->dst_addr, temp_route_ptr->port_name);
                     tw_sq_push(&sq_pkt_q, buffer);
                     return;
-                } else {
+                }
+                else
+                {
                     dst_eth_addr = &temp_arp_entry->eth_mac;
                     tw_copy_ether_addr(dst_eth_addr, &(eth->d_addr));
-                    if (strcmp(temp_route_ptr->port_name, "tw0") == 0) {
+                    if(strcmp(temp_route_ptr->port_name, "tw0") == 0)
+                    {
                         tw_copy_ether_addr(dst_eth0, &(eth->s_addr));
                         tw_send_pkt(buffer, "tw0");
                     }
-                    if (strcmp(temp_route_ptr->port_name, "tw1") == 0) {
+                    if(strcmp(temp_route_ptr->port_name, "tw1") == 0)
+                    {
                         tw_copy_ether_addr(dst_eth1, &(eth->s_addr));
                         tw_send_pkt(buffer, "tw1");
 
@@ -212,13 +245,16 @@ void reply_payload(tw_rx_t * handle, tw_buf_t * buffer) {
     }
 }
 
-void update_queue() {
+void update_queue()
+{
     int i;
     int num = tw_n_queue(&sq_pkt_q);
-    if (num < 1)
+    if(num < 1)
         return;
-    for (i = 0; i < 1000; i++) {
-        if (sq_pkt_q.pkt[i] != NULL) {
+    for(i = 0; i < 1000; i++)
+    {
+        if(sq_pkt_q.pkt[i] != NULL)
+        {
             reply_payload(NULL, sq_pkt_q.pkt[i]);
             sq_pkt_q.pkt[i] = NULL;
             sq_pkt_q.n_pkts--;
@@ -226,10 +262,10 @@ void update_queue() {
 
     }
 
-
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     const char *temp0, *temp1, *temp2, *temp3, *temp4, *temp5, *temp6, *temp7, *temp8;
     temp0 = "-c";
     temp1 = "0x0C";
@@ -240,15 +276,15 @@ int main(int argc, char **argv) {
     temp6 = "--";
     temp7 = "-p";
     temp8 = "0x3";
-    argv[1] = (char *) malloc(3 * sizeof (char));
-    argv[2] = (char *) malloc(5 * sizeof (char));
-    argv[3] = (char *) malloc(3 * sizeof (char));
-    argv[4] = (char *) malloc(2 * sizeof (char));
-    argv[5] = (char *) malloc(3 * sizeof (char));
-    argv[6] = (char *) malloc(8 * sizeof (char));
-    argv[7] = (char *) malloc(3 * sizeof (char));
-    argv[8] = (char *) malloc(3 * sizeof (char));
-    argv[9] = (char *) malloc(4 * sizeof (char));
+    argv[1] = (char *) malloc(3 * sizeof(char));
+    argv[2] = (char *) malloc(5 * sizeof(char));
+    argv[3] = (char *) malloc(3 * sizeof(char));
+    argv[4] = (char *) malloc(2 * sizeof(char));
+    argv[5] = (char *) malloc(3 * sizeof(char));
+    argv[6] = (char *) malloc(8 * sizeof(char));
+    argv[7] = (char *) malloc(3 * sizeof(char));
+    argv[8] = (char *) malloc(3 * sizeof(char));
+    argv[9] = (char *) malloc(4 * sizeof(char));
     strcpy(argv[1], temp0);
     strcpy(argv[2], temp1);
     strcpy(argv[3], temp2);
@@ -268,7 +304,8 @@ int main(int argc, char **argv) {
     parse_user_params("gw_conf");
     tw_print_route_table();
     int i = 0;
-    for (i = 0; i < 1000; i++) {
+    for(i = 0; i < 1000; i++)
+    {
         sq_pkt_q.pkt[i] = NULL;
 
     }
@@ -276,7 +313,8 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-int user_app_main(__attribute__((unused)) void * app_params) {
+int user_app_main(__attribute__((unused)) void * app_params)
+{
 
     tw_rx_t * server;
     tw_timer_t * timer_handle;
@@ -284,13 +322,15 @@ int user_app_main(__attribute__((unused)) void * app_params) {
     tw_loop_t * tw_loop = tw_default_loop(INFINITE_LOOP);
 
     server = tw_rx_init(tw_loop);
-    if (server == NULL) {
+    if(server == NULL)
+    {
         printf("Error in RX init\n");
         exit(1);
     }
 
     status = tw_rx_start(server, reply_payload);
-    if (status) {
+    if(status)
+    {
         printf("Error in receive start\n");
         exit(1);
     }

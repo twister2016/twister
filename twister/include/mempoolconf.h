@@ -14,16 +14,17 @@
 #define MAX_RX_PKT_BURST 32
 #define MAX_TX_PKT_BURST 32
 
-struct tw_buf_s {
-	struct rte_mbuf * pkt;
-	void * data;
+struct tw_buf_s
+{
+        struct rte_mbuf * pkt;
+        void * data;
         uint16_t size;
         char * port_name;
 };
 
 typedef struct tw_buf_s tw_buf_t;
 
-uint8_t num_numa_sockets ;
+uint8_t num_numa_sockets;
 struct rte_mempool * rx_mempool[MAX_NUMA_SOCKETS];
 struct rte_mempool * tx_mempool[MAX_NUMA_SOCKETS];
 struct rte_mempool * queued_pkts_mempool[MAX_NUMA_SOCKETS];

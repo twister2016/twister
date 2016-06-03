@@ -30,39 +30,41 @@ uint64_t global_pps_limit;
 uint64_t global_pps_delay;
 
 struct average_filter
-{	float   timestamp;
-	struct average_filter* next;
-} __attribute__ ((__packed__));
-struct stats_option {
-	uint64_t secs_passed;
+{
+        float timestamp;
+        struct average_filter* next;
+}__attribute__ ((__packed__));
+struct stats_option
+{
+        uint64_t secs_passed;
         uint64_t payload_size;
-	uint64_t timestamp;
-	uint64_t rx_pps;
-	uint64_t tx_pps;
-	uint64_t pkts_rx;
-	uint64_t pkts_tx;
-	uint64_t pkts_dropped;
-	uint64_t rtt;
-} __attribute__ ((__packed__));
-struct average_filter *root_rtt_average ;
-struct average_filter *end_rtt_average ;
-const uint8_t average_filter_len ;
+        uint64_t timestamp;
+        uint64_t rx_pps;
+        uint64_t tx_pps;
+        uint64_t pkts_rx;
+        uint64_t pkts_tx;
+        uint64_t pkts_dropped;
+        uint64_t rtt;
+}__attribute__ ((__packed__));
+struct average_filter *root_rtt_average;
+struct average_filter *end_rtt_average;
+const uint8_t average_filter_len;
 
 uint8_t average_list_size;
 struct stats_option tw_stats;
 extern uint64_t prev_pkts_rx, prev_pkts_tx;
 
 void tw_clear_scr(void);
-int tw_init_stats (uint8_t, uint32_t );
+int tw_init_stats(uint8_t, uint32_t);
 void tw_print_global_stats(void);
 void tw_calc_average_rtt(uint64_t);
 int tw_calc_global_stats(void);
 
-float   average_rtt; 
+float average_rtt;
 uint64_t data_pkt_recvd;
 uint64_t data_pkt_sent;
-uint32_t seconds_passed;   
+uint32_t seconds_passed;
 
-uint32_t test_runtime ;
+uint32_t test_runtime;
 
 #endif

@@ -12,13 +12,14 @@
 uint64_t queued_pkt_time_limit;		//--!TODO get the value from user
 uint64_t queue_update_limit;
 
-struct queued_pkt {
-	struct rte_mbuf * pkt;
-	uint64_t timercycle;
-	uint32_t arp_ip;	//IP for which ARP is needed
-	uint16_t port_id;
-	struct queued_pkt * next;
-} __attribute__((__packed__));
+struct queued_pkt
+{
+        struct rte_mbuf * pkt;
+        uint64_t timercycle;
+        uint32_t arp_ip;	//IP for which ARP is needed
+        uint16_t port_id;
+        struct queued_pkt * next;
+}__attribute__((__packed__));
 
 struct queued_pkt * root_queued_pkt;
 

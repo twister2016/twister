@@ -8,8 +8,8 @@
 #define MILLION 1000000UL
 #define BURST_TX_DRAIN_US 200
 
-uint64_t one_sec, one_msec , one_usec , one_nsec ;
-uint64_t prev_tsc, cur_tsc , timer_tsc , diff_tsc ;
+uint64_t one_sec, one_msec, one_usec, one_nsec;
+uint64_t prev_tsc, cur_tsc, timer_tsc, diff_tsc;
 
 inline void tw_sleep_msec(unsigned msec);
 inline void tw_sleep_usec(unsigned sec);
