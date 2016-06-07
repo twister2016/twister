@@ -1,4 +1,4 @@
-include twister.mk
+include ../twister/mk/tw_sdk.mk
 
 CC=gcc
 
