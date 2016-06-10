@@ -62,7 +62,7 @@ int tw_init_eal_env(int argc, char **argv)
     //rte_set_log_level(RTE_LOG_ERR);
     //rte_set_log_type(RTE_LOGTYPE_EAL,0);
     //rte_set_log_type(RTE_LOGTYPE_PMD,0); 
-    tw_parse_conf("/home/twister/config/twister_api.json");
+    tw_parse_conf("/etc/twister/twister_api.json");
     argv[0] = (char *) malloc(3 * sizeof(char));
     argv[1] = (char *) malloc(3 * sizeof(char));
     argv[2] = (char *) malloc(5 * sizeof(char));
@@ -155,7 +155,7 @@ int tw_init_global(void)
 }
 int tw_init_user_given_vals(void)
 {
-    tw_get_port_conf_json_vals("/home/twister/config/config.json");
+    tw_get_port_conf_json_vals("/etc/twister/config.json");
     queued_pkt_time_limit = 10;			//--!TODO use file values parsed by jSON
     return 0;				//--!JSON...port ips...num of rx/tx queues...flags...vlan tag
 }
