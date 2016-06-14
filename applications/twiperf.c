@@ -41,7 +41,7 @@ void sig_handler(int signo) /*On presseing Ctrl-C*/
         twiprintf(&test, summary_head);
         twiprintf(&test, summary_stats_number, 0.0, test_stats.interval_window,
                   test_stats.total_transfered_bytes, test_stats.bandwidth,
-                  test_stats.datagrams_sent);
+                  test_stats.datagrams_sent,test_stats.datagrams_recv);
         printf("\n\n");
         exit(1);
     }
@@ -136,6 +136,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*pa
 /* reply_udp_payload acts as udp server; switches the IP and ports, mac addresses and echoes back the packet to sender*/
 void reply_udp_payload(tw_rx_t * handle, tw_buf_t * buffer)
 {
+    test_stats.datagrams_recv++;
     eth = buffer->data;
     eth_type = tw_be_to_cpu_16(eth->ether_type);
     ipHdr_d = buffer->data + sizeof(struct ether_hdr);
@@ -152,8 +153,8 @@ void reply_udp_payload(tw_rx_t * handle, tw_buf_t * buffer)
     udp_hdr_d->dgram_cksum = 0;
     tw_copy_ether_addr(&(eth->s_addr), &(eth->d_addr));
     tw_copy_ether_addr(test.server_mac, &(eth->s_addr));
-    test_stats.datagrams_recv++;
     tw_send_pkt(buffer, "tw0");
+    test_stats.datagrams_sent++;
 }
 
 /*initializing the udp app server with event loops and packet processing functions */
@@ -239,7 +240,7 @@ void print_perf_stats(tw_timer_t * timer_handle)
     uint64_t bytes = (((tw_stats.rx_pps + tw_stats.tx_pps) * (test.packet_size)) / 1000); //KBytes
     float bandwidth = (bytes * 8 * 1000) / (float) (1048576.0); // Mbit / sec
     twiprintf(&test, stats_number, test_stats.interval_window - 1.0, test_stats.interval_window,
-              tw_stats.rx_pps, tw_stats.tx_pps, bytes, bandwidth, test_stats.datagrams_sent,
+              tw_stats.rx_pps, tw_stats.tx_pps, bytes, bandwidth,test_stats.datagrams_sent,
               test_stats.datagrams_recv);
 
     test_stats.total_transfered_bytes += bytes;
@@ -255,7 +256,7 @@ void pkt_tx(tw_tx_t * handle)
     test.udp->src_port = tw_cpu_to_be_16(test.client_port);
     test.udp->dst_port = tw_cpu_to_be_16(test.server_port);
     test.udp->dgram_len = tw_cpu_to_be_16(
-            test.tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
+    test.tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
     test.udp->dgram_cksum = 0;
     test.ip->total_length = tw_cpu_to_be_16(test.tx_buf->size - sizeof(struct ether_hdr));
     test.ip->next_proto_id = UDP_PROTO_ID;
