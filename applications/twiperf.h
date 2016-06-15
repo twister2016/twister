@@ -13,7 +13,7 @@
 const
 
 const char stats_head[] =
-"\n   Interval                  RX            TX          Transfer      Bandwidth        Datagrams Send       Datagrams Recv";
+"\n   Interval               RX pkts/s  TX pkts/s       Transfer      Bandwidth        Datagrams Send       Datagrams Recv";
 const char summary_head[]=
 "\n   Interval               Transfer         Bandwidth        Total Datagrams Send        Total Datagrams Recv";
 const char stats_number[]=
@@ -67,7 +67,8 @@ const char usage_longstr[] = "Usage: twiperf [-s|-c host] [options]\n"
         "Server specific:\n"
         "  -s, --server              run in server mode\n"
         "Client specific:\n"
-        "  -c, --client    <host>    run in client mode, connecting to <host>\n";
+        "  -c, --client    <host>    run in client mode, connecting to <host>\n"
+        "  -n, --bytes     <size>    Packet size in bytes. Default is 1470 bytes \n";
 
 char * iperf_strerror(int i_errno)
 {
@@ -100,7 +101,7 @@ void iperf_err(struct iperf_test *test, const char *format, ...)
     char str[1000];
     va_start(argp, format);
     vsnprintf(str, sizeof(str), format, argp);
-    fprintf(stderr, "iperf3: %s\n", str);
+    fprintf(stderr, "twiperf: %s\n", str);
     va_end(argp);
 }
 
