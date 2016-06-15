@@ -61,11 +61,8 @@ struct iperf_stats
         float interval_window;
 };
 /* display usage */
-const char usage_longstr[] = "Usage: iperf [-s|-c host] [options]\n"
-        "       iperf [-h|--help] [-v|--version]\n\n"
-        "Server or Client:\n"
-        "  -p, --port      #         server port to listen on/connect to\n"
-        "  -B, --bind      <host>    bind to a specific interface\n"
+const char usage_longstr[] = "Usage: twiperf [-s|-c host] [options]\n"
+        "       twiperf [-h|--help]\n\n"
         "  -h, --help                show this message and quit\n"
         "Server specific:\n"
         "  -s, --server              run in server mode\n"
