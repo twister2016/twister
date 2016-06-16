@@ -5,6 +5,9 @@ import json
 import ConfigParser
 import dpdk_nic_bind as lib_dpdk
 import shlex
+import os
+
+kernel=str(os.popen("uname -r").read().rstrip())
 
 dpdk_drivers = ["igb_uio", "vfio-pci", "uio_pci_generic"]
 
@@ -96,16 +99,16 @@ def bind_all_to_linux(cmd, devices):
 def load_dpdk_module(dpdk_kernel_module):
     "Load DPDK kernel Modules to whom DPDK ports will be bind"
 
-    subprocess.Popen(['sudo','/home/twister/config/insert_module.sh'],
+    subprocess.Popen(['sudo','/usr/lib/twister/scripts/insert_module.sh'],
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
 
 def main():
-    cmd = "/home/twister/config/dpdk_nic_bind.py"
-    twister_conf = "/home/twister/config/twister.conf"
-    twister_api = "/home/twister/config/twister_api.json"
+    cmd = "/usr/lib/twister/scripts/dpdk_nic_bind.py"
+    twister_conf = "/etc/twister/twister.conf"
+    twister_api = "/etc/twister/twister_api.json"
     dpdk_drv = "igb_uio"
-    dpdk_kernel_module = "/home/twister/driver/igb_uio.ko"
+    dpdk_kernel_module = "/lib/modules/"+kernel+"/extras/igb_uio.ko"
 
     load_dpdk_module(dpdk_kernel_module)
     lib_dpdk.check_modules()

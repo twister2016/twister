@@ -1,18 +1,6 @@
 #!/bin/sh
-sudo mkdir -p /home/twister
-sudo chmod 777 -R /home/twister
-mkdir -p /home/twister/config/.
-mkdir -p /home/twister/include/.
-mkdir -p /home/twister/include/generic/.
-mkdir -p /home/twister/include/exec-env/.
-mkdir -p /home/twister/driver/.
-cp ./twister/mk/tw_config.py /home/twister/config/tw_config.py
-cp ./twister/mk/insert_module.sh /home/twister/config/insert_module.sh
-cp -n ./twister/mk/twister.conf /home/twister/config/twister.conf
-cp -n ./twister/mk/config.json /home/twister/config/config.json
-cp -n ./twister/mk/twister_api.json /home/twister/config/twister_api.json
+
 sudo cp ./twister/mk/twister.mk /usr/include
-cp ./dpdk/tools/dpdk_nic_bind.py /home/twister/config/dpdk_nic_bind.py
 cd dpdk
 make config T=x86_64-native-linuxapp-gcc
 cd ../

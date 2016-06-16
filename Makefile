@@ -6,20 +6,43 @@ RTE_TARGET = x86_64-native-linuxapp-gcc
 
 DEB_DEPENDS  = make gcc
 
+INSTALLED_DIR = /usr/lib/twister
+INSTALLED_LIB = /usr/include/twister
+CONFIGURATION_FILES = /etc/twister
+KERNEL = $(shell uname -r)
+MKDIR = mkdir -p
+
 .PHONY: help bootstrap build clean all install install-lib uninstall rebuild-lib \
 	applications
 
-build: clean bootstrap build-local copy build-application
+build: clean bootstrap build-local  build-application
 
-copy: 
-	cp $(SUBDIR2)/build/libtwister.a /home/twister/.
-	cp $(SUBDIR1)/$(RTE_TARGET)/lib/* /home/twister/
+mk_dir:
+	$(MKDIR) $(INSTALLED_DIR)
+	$(MKDIR) $(INSTALLED_DIR)/scripts
+	$(MKDIR) $(INSTALLED_LIB)
+	$(MKDIR) $(INSTALLED_LIB)/generic
+	$(MKDIR) $(INSTALLED_LIB)/exec-env
+	$(MKDIR) $(CONFIGURATION_FILES)
+
+
+copy: mk_dir  
+	echo 'Copying configuration files'
+	cp $(SUBDIR2)/mk/tw_config.py $(INSTALLED_DIR)/scripts/tw_config.py
+	cp $(SUBDIR2)/mk/insert_module.sh $(INSTALLED_DIR)/scripts/insert_module.sh
+	cp $(SUBDIR1)/tools/dpdk_nic_bind.py $(INSTALLED_DIR)/scripts/dpdk_nic_bind.py
+	cp $(SUBDIR2)/mk/twister.conf $(CONFIGURATION_FILES)/twister.conf
+	cp $(SUBDIR2)/mk/config.json $(CONFIGURATION_FILES)/config.json
+	cp $(SUBDIR2)/mk/twister_api.json $(CONFIGURATION_FILES)/twister_api.json
+	echo 'Installing twister library files'
+	cp $(SUBDIR2)/build/libtwister.a $(INSTALLED_DIR)/.
+	cp $(SUBDIR1)/$(RTE_TARGET)/lib/* $(INSTALLED_DIR)
 	echo 'install all twister headers'
-	cp $(SUBDIR2)/include/*.h /home/twister/include
-	cp $(SUBDIR1)/$(RTE_TARGET)/include/*.h /home/twister/include
-	cp $(SUBDIR1)/$(RTE_TARGET)/include/generic/*.h /home/twister/include/generic/
-	cp $(SUBDIR1)/$(RTE_TARGET)/include/exec-env/*.h /home/twister/include/exec-env/
-	cp $(SUBDIR1)/$(RTE_TARGET)/kmod/igb_uio.ko /home/twister/driver/igb_uio.ko
+	cp $(SUBDIR2)/include/*.h $(INSTALLED_LIB)
+	cp $(SUBDIR1)/$(RTE_TARGET)/include/*.h $(INSTALLED_LIB)
+	cp $(SUBDIR1)/$(RTE_TARGET)/include/generic/*.h $(INSTALLED_LIB)/generic/
+	cp $(SUBDIR1)/$(RTE_TARGET)/include/exec-env/*.h $(INSTALLED_LIB)/exec-env/
+	cp -n $(SUBDIR1)/$(RTE_TARGET)/kmod/igb_uio.ko /lib/modules/$(KERNEL)/igb_uio.ko
 
 
 build-local:  bootstrap
@@ -27,7 +50,7 @@ build-local:  bootstrap
 	cp -R $(SUBDIR1)/build $(SUBDIR1)/$(RTE_TARGET);
 	$(MAKE) -C $(SUBDIR2);
 
-build-application: copy
+build-application:
 	$(MAKE) -C $(SUBDIR3);
 
 help:
@@ -60,9 +83,9 @@ rebuild-lib:
 all: clean build-local
 
 install-lib: rebuild-lib
-	cp $(SUBDIR2)/build/libtwister.a /home/twister/.
+	cp $(SUBDIR2)/build/libtwister.a $(INSTALLED_DIR).
 	echo 'install all twister headers'
-	cp $(SUBDIR2)/include/*.h /home/twister/include
+	cp $(SUBDIR2)/include/*.h $(INSTALLED_LIB)
 	
 clean:
 	rm -rf $(SUBDIR2)/build;
@@ -73,9 +96,12 @@ all: clean bootstrap build
 
 install: copy
 	$(MAKE) install -C $(SUBDIR3);
-	ln -s -f /home/twister/config/tw_config.py /usr/bin/twister-config
+	ln -s -f $(INSTALLED_DIR)/scripts/tw_config.py /usr/bin/twister-config	
 
 uninstall: clean 
-	$(MAKE) clean -C $(SUBDIR3);
-	rm -rf /home/twister/*
-	rm /usr/bin/twister-config
+	$(MAKE) uninstall -C $(SUBDIR3);
+	rm -rf $(INSTALLED_LIB)
+	rm -rf $(INSTALLED_DIR)
+	rm -rf $(CONFIGURATION_FILES)
+	rm -rf /lib/modules/$(KERNEL)/igb_uio.ko
+       

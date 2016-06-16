@@ -13,13 +13,13 @@
 const
 
 const char stats_head[] =
-"\n Interval                RX              TX        Transfer         Bandwidth        Total Datagrams       Datagrams Recv";
+"\n   Interval               RX pkts/s  TX pkts/s       Transfer      Bandwidth        Datagrams Send       Datagrams Recv";
 const char summary_head[]=
-"\n   Interval               Transfer         Bandwidth        Total Datagrams";
+"\n   Interval               Transfer         Bandwidth        Total Datagrams Send        Total Datagrams Recv";
 const char stats_number[]=
 "\n %6.2f-%-6.2f  sec     %7llu       %7llu      %5llu KBytes   %7.2f Mbits/sec     %7llu         %7llu" ;
 const char summary_stats_number[]=
-"\n %6.2f-%-6.2f  sec     %5llu KBytes   %7.2f Mbits/sec     %5llu" ;
+"\n %6.2f-%-6.2f  sec     %5llu KBytes   %7.2f Mbits/sec     %9llu      %20llu" ;
 const char on_host_conn[]=
 "Connecting to host %s, port %u\n";
 const char summary_dot_line[]=
@@ -61,16 +61,14 @@ struct iperf_stats
         float interval_window;
 };
 /* display usage */
-const char usage_longstr[] = "Usage: iperf [-s|-c host] [options]\n"
-        "       iperf [-h|--help] [-v|--version]\n\n"
-        "Server or Client:\n"
-        "  -p, --port      #         server port to listen on/connect to\n"
-        "  -B, --bind      <host>    bind to a specific interface\n"
+const char usage_longstr[] = "Usage: twiperf [-s|-c host] [options]\n"
+        "       twiperf [-h|--help]\n\n"
         "  -h, --help                show this message and quit\n"
         "Server specific:\n"
         "  -s, --server              run in server mode\n"
         "Client specific:\n"
-        "  -c, --client    <host>    run in client mode, connecting to <host>\n";
+        "  -c, --client    <host>    run in client mode, connecting to <host>\n"
+        "  -n, --bytes     <size>    Packet size in bytes. Default is 1470 bytes \n";
 
 char * iperf_strerror(int i_errno)
 {
@@ -103,7 +101,7 @@ void iperf_err(struct iperf_test *test, const char *format, ...)
     char str[1000];
     va_start(argp, format);
     vsnprintf(str, sizeof(str), format, argp);
-    fprintf(stderr, "iperf3: %s\n", str);
+    fprintf(stderr, "twiperf: %s\n", str);
     va_end(argp);
 }
 

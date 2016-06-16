@@ -1,4 +1,4 @@
-# Twister ICMP Echo Application
+# Twister PING Application
 
 This application sends the ICMP packets (ping), it takes ip from console, and sends the ICMP packets to this machine. When it gets the ICMP reply packet, it displays the ICMP parameters to user, like TTL, RTT, sequence number etc.
 
