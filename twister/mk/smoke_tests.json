@@ -1,0 +1,3 @@
+ [{ "Name": "Environment Test", "Description": "Tests the environment initialization", "executable": "tw_env_smoke"},
+{ "Name": "Event Loop Test", "Description": "Tests the event loop and different call backs", "executable": "tw_eventloop_smoke"},
+{ "Name": "Twister Configuration tests", "Description": "Tests the configuration procedure of API", "executable": "python tw_config_smoke.py"}]

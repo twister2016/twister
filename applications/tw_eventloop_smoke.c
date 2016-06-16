@@ -46,9 +46,7 @@ int user_app_main(__attribute__((unused)) void * app_params)
     tw_tx_t     * tx_handle;
     tw_rx_t     * rx_handle;
     tw_timer_t  * timer_handle;
-    printf("1");
     tw_loop = tw_default_loop(INFINITE_LOOP);
-    printf("2");
     rx_handle = tw_rx_init(tw_loop);
 
     if(rx_handle == NULL)
