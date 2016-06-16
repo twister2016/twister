@@ -146,7 +146,7 @@ int tw_smoke_init_eal_env(int argc, char **argv)
     //rte_set_log_level(RTE_LOG_ERR);
     //rte_set_log_type(RTE_LOGTYPE_EAL,0);
     //rte_set_log_type(RTE_LOGTYPE_PMD,0);
-    tw_parse_conf("/home/twister/config/twister_api.json");
+    tw_parse_conf("/etc/twister/twister_api.json");
 
     argv[0] = (char *) malloc(3 * sizeof(char));
     argv[1] = (char *) malloc(3 * sizeof(char));
