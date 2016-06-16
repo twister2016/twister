@@ -6,7 +6,7 @@ DEB_DEPENDS  = make gcc
 
 .PHONY: help build clean install
 
-build: clean bootstrap ARP PING ICMPECHO ETHERECHO UDPECHO UDPSEND REVERSEARP MULTIETHERECHO GATEWAY IPERF
+build: clean bootstrap ARP PING ICMPECHO ETHERECHO UDPECHO UDPSEND REVERSEARP MULTIETHERECHO GATEWAY IPERF SMOKE
 
 help:
 	@echo "Make Targets:"
@@ -24,7 +24,10 @@ ifeq ("$(shell lsb_release -si)", "Ubuntu")
 	exit 0
 endif
 	mkdir build
-	
+
+SMOKE: tw_env_smoke.c tw_eventloop_smoke.c
+	$(CC) tw_env_smoke.c $(TWFLAGS) -o build/tw_env_smoke
+	$(CC) tw_eventloop_smoke.c $(TWFLAGS) -o build/tw_eventloop_smoke
 
 ARP: twarp.c
 	$(CC) twarp.c $(TWFLAGS) -o build/twarp
