@@ -20,6 +20,7 @@ build: clean bootstrap build-local  build-application
 mk_dir:
 	$(MKDIR) $(INSTALLED_DIR)
 	$(MKDIR) $(INSTALLED_DIR)/scripts
+	$(MKDIR) $(INSTALLED_DIR)/modules
 	$(MKDIR) $(INSTALLED_LIB)
 	$(MKDIR) $(INSTALLED_LIB)/generic
 	$(MKDIR) $(INSTALLED_LIB)/exec-env
@@ -42,7 +43,7 @@ copy: mk_dir
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/*.h $(INSTALLED_LIB)
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/generic/*.h $(INSTALLED_LIB)/generic/
 	cp $(SUBDIR1)/$(RTE_TARGET)/include/exec-env/*.h $(INSTALLED_LIB)/exec-env/
-	cp -n $(SUBDIR1)/$(RTE_TARGET)/kmod/igb_uio.ko /lib/modules/$(KERNEL)/igb_uio.ko
+	cp -n $(SUBDIR1)/$(RTE_TARGET)/kmod/igb_uio.ko $(INSTALLED_DIR)/modules/igb_uio.ko
 
 
 build-local:  bootstrap
