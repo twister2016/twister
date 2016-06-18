@@ -35,8 +35,21 @@ int main(int argc, char **argv)
         exit(0);
     }
 
+	//redirecting stdout
+    int stdout_dupfd;
+    FILE *temp_out;
+    stdout_dupfd = dup(1);
+    temp_out = fopen("/dev/null", "w");
+    dup2(fileno(temp_out), 1);
+
     tw_init_global();
     tw_map_port_to_engine("tw0", "engine0");
+
+	//restoring stdout
+    fflush(stdout);
+    fclose(temp_out);
+    dup2(stdout_dupfd, 1);
+    close(stdout_dupfd);
 
     return user_app_main(NULL);
 }
