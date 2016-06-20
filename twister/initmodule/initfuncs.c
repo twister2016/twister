@@ -143,10 +143,12 @@ int tw_parse_twister_args(int argc, char **argv)
 
 int tw_smoke_init_eal_env(int argc, char **argv)
 {
-    //rte_set_log_level(RTE_LOG_ERR);
-    //rte_set_log_type(RTE_LOGTYPE_EAL,0);
-    //rte_set_log_type(RTE_LOGTYPE_PMD,0);
+    rte_set_log_level(RTE_LOG_ERR);
+    rte_set_log_type(RTE_LOGTYPE_EAL,0);
+    rte_set_log_type(RTE_LOGTYPE_PMD,0);
+
     tw_parse_conf("/etc/twister/twister_api.json");
+    //tw_parse_conf("/home/twister/config/twister_api.json");
 
     argv[0] = (char *) malloc(3 * sizeof(char));
     argv[1] = (char *) malloc(3 * sizeof(char));
@@ -173,7 +175,7 @@ int tw_smoke_init_eal_env(int argc, char **argv)
     int ret = rte_eal_init(argc, argv);
     if(ret < 0)
     {
-        printf("%s", "Twister:  Failed to initialize EAL - Invalid EAL arguments\n");
+        printf("%s", "Twister:    Failed to initialize EAL - Invalid EAL arguments\n");
         //rte_exit(EXIT_FAILURE, "Invalid EAL arguments\n");
         return -1;
     }
@@ -183,58 +185,9 @@ int tw_smoke_init_eal_env(int argc, char **argv)
     ret = tw_parse_twister_args(argc, argv);
     if(ret < 0)
     {
-        printf("%s", "Twister:  Failed to initialize EAL - Invalid commandline arguments\n");
+        printf("%s", "Twister:    Failed to initialize EAL - Invalid commandline arguments\n");
         //rte_exit(EXIT_FAILURE, "Invalid commandline arguments\n");
         return -1;
-    }
-
-    return 0;
-}
-
-int tw_run_smoke(void)
-{
-    if(tw_smoke_init_eal_env(argc1, argv1) != 0)
-    {
-        printf("%s", "Twister:  Initialize EAL - FAIL\n");
-        return -1;
-    }
-
-    else
-    {
-        printf("Twister:  Initialize EAL - PASS\n");
-    }
-
-    if(tw_smoke_create_rx_tx_mempools() != 0)
-    {
-        printf("%s", "Twister:  Create rx tx mempools - FAIL\n");
-        return -1;
-    }
-
-    else
-    {
-        printf("%s", "Twister:  Create rx tx mempools - PASS\n");
-    }
-
-    if(tw_lcore_conf_init() != 0)
-    {
-        printf("%s", "Twister:  Init lcore conf - FAIL\n");
-        return -1;
-    }
-
-    else
-    {
-        printf("%s", "Twister:  Init lcore conf - PASS\n");
-    }
-
-    if(tw_smoke_eth_port_init() != 0)
-    {
-        printf("%s", "Twister:  Init Ethernet ports - FAIL\n");
-        return -1;
-    }
-
-    else
-    {
-        printf("%s", "Twister:  Init Ethernet ports - PASS\n");
     }
 
     return 0;

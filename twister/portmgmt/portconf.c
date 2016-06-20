@@ -91,7 +91,7 @@ int tw_smoke_eth_port_init(void)
         if(ret < 0)
         {
             //rte_exit(EXIT_FAILURE, "Cannot configure device: err=%d, port=%u\n", ret, (unsigned) port_id);
-            printf("Twister:  Cannot configure device: err=%d, port=%u\n", ret, (unsigned) port_id);
+            printf("Twister:    Cannot configure device: err=%d, port=%u\n", ret, (unsigned) port_id);
             return -1;
         }
 
@@ -122,7 +122,7 @@ int tw_smoke_eth_port_init(void)
             if(ret < 0)
             {
                 //rte_exit(EXIT_FAILURE, "rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
-                printf("Twister:  rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
+                printf("Twister:    rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
                 return -1;
             }
         }
@@ -133,7 +133,7 @@ int tw_smoke_eth_port_init(void)
             if(ret < 0)
             {
                 //rte_exit(EXIT_FAILURE, "rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
-                printf("Twister:  rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
+                printf("Twister:    rte_eth_rx_queue_setup:err=%d, port=%u\n", ret, (unsigned) port_id);
                 return -1;
             }
         }
@@ -142,7 +142,7 @@ int tw_smoke_eth_port_init(void)
         if(ret < 0)
         {
             //rte_panic("Cannot start port %u (%d)\n", port_id, ret);
-            printf("Twister:  Cannot start port %u (%d)\n", port_id, ret);
+            printf("Twister:    Cannot start port %u (%d)\n", port_id, ret);
             return -1;
         }
     }

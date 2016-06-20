@@ -4,8 +4,27 @@
 #include <tw_common.h>
 
 #define INFINITE_LOOP 0
+#define KGRN  "\x1B[32m"
+#define KRED  "\x1B[31m"
+#define KNRM  "\x1B[0m"
 
 tw_loop_t * tw_loop;
+
+void print_pass(char * msg)
+{
+    printf("%s", msg);
+    printf(KGRN);
+    printf("%s", "PASS\n");
+    printf(KNRM);
+}
+
+void print_fail(char * msg)
+{
+    printf("%s", msg);
+    printf(KRED);
+    printf("%s", "FAIL\n");
+    printf(KNRM);
+}
 
 void tx_cb(tw_tx_t * handle, tw_buf_t * buffer)
 {
@@ -65,7 +84,8 @@ int user_app_main(__attribute__((unused)) void * app_params)
     if(rx_handle == NULL)
     {
         printf("Twister:    Error in rx init\n");
-        printf("Twister:    Initialize rx - FAIL\n");
+        //printf("Twister:    Initialize rx - FAIL\n");
+        print_fail("Twister:    Initialize rx - ");
 
         return -1;
         //exit(1);
@@ -73,14 +93,16 @@ int user_app_main(__attribute__((unused)) void * app_params)
 
     else
     {
-        printf("Twister:    Initialize rx - PASS\n");
+        //printf("Twister:    Initialize rx - PASS\n");
+        print_pass("Twister:    Initialize rx - ");
     }
 
     int rx_status = tw_rx_start(rx_handle, rx_cb);
 
     if(rx_status)
     {
-        printf("Twister:    Register rx callback - FAIL\n");
+        //printf("Twister:    Register rx callback - FAIL\n");
+        print_fail("Twister:    Register rx callback - ");
 
         return -1;
         //exit(1);
@@ -88,14 +110,16 @@ int user_app_main(__attribute__((unused)) void * app_params)
 
     else
     {
-        printf("Twister:    Register rx callback - PASS\n");
+        //printf("Twister:    Register rx callback - PASS\n");
+        print_pass("Twister:    Register rx callback - ");
     }
 
     tx_handle = tw_tx_init(tw_loop);
 
     if(tx_handle == NULL)
     {
-        printf("Twister:    Initialize tx - FAIL\n");
+        //printf("Twister:    Initialize tx - FAIL\n");
+        print_fail("Twister:    Initialize tx - ");
 
         return -1;
         //exit(1);
@@ -103,14 +127,17 @@ int user_app_main(__attribute__((unused)) void * app_params)
 
     else
     {
-        printf("Twister:    Initialize tx - PASS\n");
+        //printf("Twister:    Initialize tx - PASS\n");
+        print_pass("Twister:    Initialize tx - ");
+
     }
 
     int tx_status = tw_tx_start(tx_handle, tx_cb);
 
     if(tx_status)
     {
-        printf("Twister:    Register tx callback - FAIL\n");
+        //printf("Twister:    Register tx callback - FAIL\n");
+        print_fail("Twister:   Register tx callback - ");
 
         return -1;
         //exit(1);
@@ -118,14 +145,16 @@ int user_app_main(__attribute__((unused)) void * app_params)
 
     else
     {
-        printf("Twister:    Register tx callback - PASS\n");
+        print_pass("Twister:    Register tx callback - ");
+        //printf("Twister:    Register tx callback - PASS\n");
     }
 
     timer_handle = tw_timer_init(tw_loop);
 
     if(timer_handle == NULL)
     {
-        printf("Twister:    Initialize timer - FAIL\n");
+        //printf("Twister:    Initialize timer - FAIL\n");
+        print_fail("Twister:    Initialize timer - ");
 
         return -1;
         //exit(1);
@@ -133,21 +162,24 @@ int user_app_main(__attribute__((unused)) void * app_params)
 
     else
     {
-        printf("Twister:    Initialize timer - PASS\n");
+        //printf("Twister:    Initialize timer - PASS\n");
+        print_pass("Twister:    Initialize timer - ");
     }
 
     int timer_status = tw_timer_start(timer_handle, timer_cb, 1000);
 
     if(timer_status)
     {
-        printf("Twister:    Register timer callback - FAIL\n");
+        //printf("Twister:    Register timer callback - FAIL\n");
+        print_fail("Twister:    Register timer callback - ");
 
         return -1;
     }
 
     else
     {
-        printf("Twister:    Register timer callback - PASS\n");
+        //printf("Twister:    Register timer callback - PASS\n");
+        print_pass("Twister:    Register timer callback - ");
     }
 
     tw_run(tw_loop);

@@ -19,7 +19,7 @@ int tw_smoke_create_rx_tx_mempools(void)
         if(rx_mempool[numa_socket] == NULL)
         {
             //rte_exit(EXIT_FAILURE, "Cannot init rx mempool on NUMA node %d\n", numa_socket);
-            printf("Twister:  Cannot init rx mempool on NUMA node %d\n", numa_socket);
+            printf("Twister:    Cannot init rx mempool on NUMA node %d\n", numa_socket);
             return -1;
         }
         //sprintf(tx_mempool_name, "tx_mempool_%u", numa_socket);
@@ -30,7 +30,7 @@ int tw_smoke_create_rx_tx_mempools(void)
         if(tx_mempool[numa_socket] == NULL)
         {
             //rte_exit(EXIT_FAILURE, "Cannot init tx mempool on NUMA node %d\n", numa_socket);
-            printf("Twister:  Cannot init tx mempool on NUMA node %d\n", numa_socket);
+            printf("Twister:    Cannot init tx mempool on NUMA node %d\n", numa_socket);
             return -1;
         }
     }
