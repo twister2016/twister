@@ -6,7 +6,7 @@ DEB_DEPENDS  = make gcc
 
 .PHONY: help build clean install
 
-build: clean bootstrap ARP PING ICMPECHO ETHERECHO UDPECHO UDPSEND REVERSEARP MULTIETHERECHO GATEWAY IPERF SMOKE
+build: clean bootstrap ARP PING ICMPECHO REVERSEARP MULTIETHERECHO GATEWAY IPERF SMOKE
 
 help:
 	@echo "Make Targets:"
