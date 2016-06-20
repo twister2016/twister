@@ -142,6 +142,7 @@ inline void tw_sleep_usec(unsigned);
 inline void tw_sleep_nsec(unsigned);
 
 int tw_eth_port_init(void); /**< initialize and configure the all available ethernet ports */
+int tw_smoke_eth_port_init(void);
 uint8_t tw_convert_str_to_iparr(const char *, uint8_t *);
 void tw_ip_dec_to_arr(uint32_t ip, uint8_t *arr);
 uint64_t tw_convert_str_to_int(const char *str, uint8_t n);

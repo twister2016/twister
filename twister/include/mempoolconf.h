@@ -29,6 +29,7 @@ struct rte_mempool * rx_mempool[MAX_NUMA_SOCKETS];
 struct rte_mempool * tx_mempool[MAX_NUMA_SOCKETS];
 struct rte_mempool * queued_pkts_mempool[MAX_NUMA_SOCKETS];
 
+int tw_smoke_create_rx_tx_mempools(void);
 int tw_create_rx_tx_mempools(void);
 int tw_create_queued_pkts_mempools(void);
 inline void tw_free_buffer(tw_buf_t *);
