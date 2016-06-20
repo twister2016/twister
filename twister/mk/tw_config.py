@@ -142,8 +142,6 @@ def main():
     with open(twister_api, 'w') as outfile:
         json.dump(twister_json, outfile)
 
-    print twister_json
-
 
 if __name__ == '__main__':
 
