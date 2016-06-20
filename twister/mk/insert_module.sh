@@ -6,5 +6,5 @@ then
     echo "Module already inserted"
 else
     echo "Inserting Modules in kernel"
-    sudo insmod /lib/modules/$(uname -r)/igb_uio.ko
+    sudo insmod /usr/lib/twister/modules/igb_uio.ko
 fi

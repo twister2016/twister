@@ -108,7 +108,7 @@ def main():
     twister_conf = "/etc/twister/twister.conf"
     twister_api = "/etc/twister/twister_api.json"
     dpdk_drv = "igb_uio"
-    dpdk_kernel_module = "/lib/modules/"+kernel+"/extras/igb_uio.ko"
+    dpdk_kernel_module = "/usr/lib/twister/modules/igb_uio.ko"
 
     load_dpdk_module(dpdk_kernel_module)
     lib_dpdk.check_modules()
@@ -141,8 +141,6 @@ def main():
                     "blacklist": blacklist}
     with open(twister_api, 'w') as outfile:
         json.dump(twister_json, outfile)
-
-    print twister_json
 
 
 if __name__ == '__main__':

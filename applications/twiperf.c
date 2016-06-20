@@ -38,6 +38,8 @@ void sig_handler(int signo) /*On presseing Ctrl-C*/
     if(signo == SIGINT)
     {
         twiprintf(&test, summary_dot_line);
+        printf("\nPacket Size: %d bytes\n",test.packet_size);
+        printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
         twiprintf(&test, summary_head);
         twiprintf(&test, summary_stats_number, 0.0, test_stats.interval_window,
                   test_stats.total_transfered_bytes, test_stats.bandwidth,
@@ -57,7 +59,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*pa
     NULL, 0 } };
     int flag;
     server_flag = client_flag = udp_flag = ethernet_flag = 0;
-    test->packet_size = 64; //initialized to default value of 64 bytes pcket size
+    test->packet_size = 1500; //initialized to default value of 64 bytes pcket size
     test->server_port = 5001;  //initialized to default port of 5001
     test->client_port = 7777;  //initialized to default port of 5001
     test->test_runtime = 0;  //initialized to default infinite runtime
@@ -321,7 +323,10 @@ void tw_udp_connect(tw_timer_t * timer_handle_this)
             struct in_addr client_ip;
             client_ip.s_addr = test.client_ip;
             printf("local %s, port %u ", inet_ntoa(client_ip), test.client_port);
-            printf("connected to %s port %u\n", inet_ntoa(server_ip), test.server_port);
+            printf("\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+            printf("Connected to %s port %u\n", inet_ntoa(server_ip), test.server_port);
+            printf("Packet Size: %d bytes\n",test.packet_size);
+            printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
             twiprintf(&test, stats_head);
 
             tw_tx_t * tx_handle = tw_tx_init(tw_loop); //registering the tx event for client, ready to send packets

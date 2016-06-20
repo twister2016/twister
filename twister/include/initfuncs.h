@@ -66,6 +66,7 @@ struct tw_conf
 
 struct app_params app;
 
+int tw_smoke_init_eal_env(int , char **);
 int tw_init_eal_env(int, char **);
 int tw_parse_twister_args(int argc, char **argv);
 int tw_parse_conf(const char * tw_conf_path);

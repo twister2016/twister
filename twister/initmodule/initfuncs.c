@@ -141,6 +141,58 @@ int tw_parse_twister_args(int argc, char **argv)
     return ret;
 }
 
+int tw_smoke_init_eal_env(int argc, char **argv)
+{
+    rte_set_log_level(RTE_LOG_ERR);
+    rte_set_log_type(RTE_LOGTYPE_EAL,0);
+    rte_set_log_type(RTE_LOGTYPE_PMD,0);
+
+    tw_parse_conf("/etc/twister/twister_api.json");
+    //tw_parse_conf("/home/twister/config/twister_api.json");
+
+    argv[0] = (char *) malloc(3 * sizeof(char));
+    argv[1] = (char *) malloc(3 * sizeof(char));
+    argv[2] = (char *) malloc(5 * sizeof(char));
+    argv[3] = (char *) malloc(3 * sizeof(char));
+    argv[4] = (char *) malloc(2 * sizeof(char));
+    argv[5] = (char *) malloc(3 * sizeof(char));
+    argv[6] = (char *) malloc(12 * sizeof(char));
+    argv[7] = (char *) malloc(3 * sizeof(char));
+    argv[8] = (char *) malloc(3 * sizeof(char));
+    argv[9] = (char *) malloc(4 * sizeof(char));
+    strcpy(argv[0], "ab");
+    strcpy(argv[1], "-c");
+    strcpy(argv[2], twister_config.coremask);
+    strcpy(argv[3], "-n");
+    strcpy(argv[4], "4");
+    strcpy(argv[5], "-b");
+    strcpy(argv[6], twister_config.blacklist[0]);   // TODO update argv[6] to store all PCI ids
+    strcpy(argv[7], "--");
+    strcpy(argv[8], "-p");
+    strcpy(argv[9], twister_config.portmask);
+    argc = 10;
+
+    int ret = rte_eal_init(argc, argv);
+    if(ret < 0)
+    {
+        printf("%s", "Twister:    Failed to initialize EAL - Invalid EAL arguments\n");
+        //rte_exit(EXIT_FAILURE, "Invalid EAL arguments\n");
+        return -1;
+    }
+
+    argc -= ret;
+    argv += ret;
+    ret = tw_parse_twister_args(argc, argv);
+    if(ret < 0)
+    {
+        printf("%s", "Twister:    Failed to initialize EAL - Invalid commandline arguments\n");
+        //rte_exit(EXIT_FAILURE, "Invalid commandline arguments\n");
+        return -1;
+    }
+
+    return 0;
+}
+
 int tw_init_global(void)
 {
     tw_init_eal_env(argc1, argv1);
