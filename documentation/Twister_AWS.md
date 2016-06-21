@@ -2,14 +2,14 @@ Run Twister on AWS
 ==================
 
 This guide describes the process to run Twister on Amazon EC2 virtual machine. Please go through following steps to run Twister on AWS.
-
+```
 1.	Create VPC and Networks
 2.	Creating an instance on Amazon Web Services EC2
 3.	Accessing Twister instance
 4.	Attaching interfaces to EC2 machine
 
 Each of these parts are explained in detail below
-
+```
  
 
 1. Creating VPC and Networks
@@ -124,11 +124,11 @@ Twister should work on any 64bit Amazon linux image which support hardware virtu
 * Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
 
 Following Amazon Images should work with Twister as they meet the requirements of Twister. But they have not been tested yet.
-
+```
 * Amazon Linux AMI 2016.03.1 (HVM), SSD Volume Type
 * Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
 * SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
-
+```
 Select “Ubuntu Server 14.04 LTS (HVM), SSD Volume Type” (64 bit) image from the list. 
 ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815821/03430ef0-0bc7-11e6-9ced-3321d83a97c6.jpg)
  
@@ -198,16 +198,21 @@ These commands in user-data will install the software dependecies required for t
  
 - Select Twister Data subnet (created in VPC and networks section) from drop down menu. Select security group “Twister Security Group” created in previous steps. Click on “Yes, Create” button.
 
- ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815851/1f172ddc-0bc7-11e6-8f48-e2f67ae4df31.png)
-
+![alt tag](https://cloud.githubusercontent.com/assets/3003907/16220914/3970949e-37a9-11e6-889b-51c17cfe45bc.png)
 
 - Now select the newly created interface and click on “Attach” button. Select Twister virtual machine, created in previous steps. Click on “Attach” button.
 
 ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815853/21103b9c-0bc7-11e6-849d-e9088bb0afca.png)
  
+- Note down the IP address of attached NIC. IP address is generally listed in 'Details' tab in 'Network Interfaces' panel. As shown in figure below:
 
+![alt tag](https://cloud.githubusercontent.com/assets/3003907/16221070/2c158c0e-37aa-11e6-9304-349f46920c45.png)
 
-
-
-
-
+__Note:__
+```
+* IP address, netmask and gateway would be required in next steps to configure Twister ports
+* Netmask can be calculated from the subnet address to Twister data network. 
+  For example, netmask for 10.0.2.0/24 subnet would be 255.255.255.0
+* Generally gateway of the subnet in AWS is the first address in the network.
+  For example, gateway for 10.0.2.0/24 subnet would be 10.0.2.1
+```
