@@ -43,7 +43,7 @@ void sig_handler(int signo) /*On presseing Ctrl-C*/
         twiprintf(&test, summary_head);
         twiprintf(&test, summary_stats_number, 0.0, test_stats.interval_window,
                   test_stats.total_transfered_bytes, test_stats.bandwidth,
-                  test_stats.datagrams_sent,test_stats.datagrams_recv);
+                  test_stats.datagrams_sent,test_stats.datagrams_recv,test_stats.latency);
         printf("\n\n");
         exit(1);
     }
@@ -225,10 +225,17 @@ int ether_app_server(__attribute__((unused)) void * app_params)
     return 0;
 }
 
+void calculate_latency(uint64_t latency)
+{
+	test_stats.latency = (float)((test_stats.latency * test_stats.datagrams_recv)+ latency)/(test_stats.datagrams_recv+1);
+}
+
 /*packet receive callbacks, receives the packet , increment the counter and free the buffer*/
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer)
 {
     eth = buffer->data;
+	test.app = buffer->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
+	calculate_latency(test.app->payload);
     test_stats.datagrams_recv++;
     tw_free_pkt(buffer);
     return;
@@ -243,7 +250,7 @@ void print_perf_stats(tw_timer_t * timer_handle)
     float bandwidth = (bytes * 8 * 1000) / (float) (1048576.0); // Mbit / sec
     twiprintf(&test, stats_number, test_stats.interval_window - 1.0, test_stats.interval_window,
               tw_stats.rx_pps, tw_stats.tx_pps, bytes, bandwidth,test_stats.datagrams_sent,
-              test_stats.datagrams_recv);
+              test_stats.datagrams_recv,test_stats.latency);
 
     test_stats.total_transfered_bytes += bytes;
     test_stats.bandwidth += bandwidth;
@@ -255,6 +262,8 @@ void pkt_tx(tw_tx_t * handle)
     test.eth = test.tx_buf->data;
     test.ip = (test.tx_buf->data + sizeof(struct ether_hdr));
     test.udp = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
+	test.app = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
+    test.app->payload = tw_get_current_timer_cycles();
     test.udp->src_port = tw_cpu_to_be_16(test.client_port);
     test.udp->dst_port = tw_cpu_to_be_16(test.server_port);
     test.udp->dgram_len = tw_cpu_to_be_16(

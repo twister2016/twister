@@ -32,9 +32,9 @@ copy: mk_dir
 	cp $(SUBDIR2)/mk/tw_config.py $(INSTALLED_DIR)/scripts/tw_config.py
 	cp $(SUBDIR2)/mk/insert_module.sh $(INSTALLED_DIR)/scripts/insert_module.sh
 	cp $(SUBDIR1)/tools/dpdk_nic_bind.py $(INSTALLED_DIR)/scripts/dpdk_nic_bind.py
-	cp $(SUBDIR2)/mk/twister.conf $(CONFIGURATION_FILES)/twister.conf
-	cp $(SUBDIR2)/mk/config.json $(CONFIGURATION_FILES)/config.json
-	cp $(SUBDIR2)/mk/twister_api.json $(CONFIGURATION_FILES)/twister_api.json
+	cp -n  $(SUBDIR2)/mk/twister.conf $(CONFIGURATION_FILES)/twister.conf
+	cp -n $(SUBDIR2)/mk/config.json $(CONFIGURATION_FILES)/config.json
+	cp -n $(SUBDIR2)/mk/twister_api.json $(CONFIGURATION_FILES)/twister_api.json
 	echo 'Installing twister library files'
 	cp $(SUBDIR2)/build/libtwister.a $(INSTALLED_DIR)/.
 	cp $(SUBDIR1)/$(RTE_TARGET)/lib/* $(INSTALLED_DIR)
