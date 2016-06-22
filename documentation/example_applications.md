@@ -5,14 +5,14 @@
 Twister applications can be run in three simple steps.
 
 
-1. Create AWS instances for Twister
+1. Create AWS EC2 VMs for Twister
 2. Install and configure Twister
 3. Run Twister Application
 
 
-## 1. Create AWS instances for Twister
+## 1. Create AWS EC2 VMs for Twister
 
-Create two AWS instances "twClient" and "twServer". Twister application can run in single application. Two AWS instances have been created for ease of demonstration. Please follow [this guide](/documentation/Twister_AWS.md) for creating AWS instances for Twister.
+Create two AWS EC2 VMs "twClient" and "twServer". Twister application can run in single application. Two VMs have been created for ease of demonstration. Please follow [this guide](/documentation/Twister_AWS.md) for creating AWS EC2 VMs for Twister.
 
 Also ensure to connect one additional NIC for use by Twister Application. The VMs will automatically reboot one time to apply updates required for Twister.
 
@@ -34,11 +34,11 @@ Following sample applications have been built using Twister API.
 
 `twiperf` is an iperf application built using Twister API. It currently supports sending UDP traffic and ethernet traffic (layer 2).
 
-Run iperf server in 'Twiperf Server' instance with udp traffic.
+Run twiperf (server mode) in 'twServer' VM  with udp traffic.
 ```
 sudo twiperf -u -s
 ```
-Run iperf server in 'Twiperf client' instance. Connect with IP address of iperf server configured in 'Twipef server' VM.
+Run twiperf (client mode) 'twClient' VM. Connect with IP address of twiperf server configured in 'twServer' VM.
 ```
 sudo twiperf -u -c 10.0.2.129
 ```
