@@ -208,3 +208,20 @@ uint8_t tw_parse_int_from_string(char* str)
     return val;
 
 }
+
+void enable_debug (int flag)
+{
+
+    if (flag){
+	rte_set_log_level(RTE_LOG_ERR);
+        rte_set_log_type(RTE_LOGTYPE_EAL,1);
+        rte_set_log_type(RTE_LOGTYPE_PMD,1);
+    }
+    else
+    {
+	rte_set_log_level(RTE_LOG_ERR);
+        rte_set_log_type(RTE_LOGTYPE_EAL,0);
+        rte_set_log_type(RTE_LOGTYPE_PMD,0);
+
+    }
+}

@@ -56,18 +56,18 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*pa
     no_argument, NULL, 'e' }, { "server", no_argument, NULL, 's' }, { "client",
     required_argument, NULL, 'c' }, { "help", no_argument, NULL, 'h' }, { "port",
     required_argument, NULL, 'p' }, { "bytes", required_argument, NULL, 'n' }, { NULL, 0,
-    NULL, 0 } };
+    NULL, 0 }, { "debug", no_argument, NULL, 'd' }};
     int flag;
     server_flag = client_flag = udp_flag = ethernet_flag = 0;
     test->packet_size = 1500; //initialized to default value of 64 bytes pcket size
     test->server_port = 5001;  //initialized to default port of 5001
     test->client_port = 7777;  //initialized to default port of 5001
     test->test_runtime = 0;  //initialized to default infinite runtime
-
+    int debug_flag = 0;
     udp_flag = 1;
     test->protocol_id = 2;
 
-    while ((flag = getopt_long(argc, argv, "n:p:uec:hs", longopts, NULL)) != -1)
+    while ((flag = getopt_long(argc, argv, "n:p:uec:hsd", longopts, NULL)) != -1)
     {
         switch (flag)
         {
@@ -103,12 +103,15 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*pa
                 twiperf_usage();
                 exit(1);
                 break;
+	    case 'd':
+		debug_flag = 1;
+		break;
             default:
                 twiperf_usage();
                 exit(1);
         }
     }
-
+    enable_debug (debug_flag);
     if(server_flag == 1 && client_flag == 1 || udp_flag == 1 && ethernet_flag == 1)
     {
         twiperf_usage();

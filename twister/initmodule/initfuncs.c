@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <initfuncs.h>
+#include <tw_common.h>
 
 int argc1 = 0;
 char * argv1[] = { NULL };
@@ -143,10 +144,8 @@ int tw_parse_twister_args(int argc, char **argv)
 
 int tw_smoke_init_eal_env(int argc, char **argv)
 {
-    rte_set_log_level(RTE_LOG_ERR);
-    rte_set_log_type(RTE_LOGTYPE_EAL,0);
-    rte_set_log_type(RTE_LOGTYPE_PMD,0);
 
+    enable_debug (0);
     tw_parse_conf("/etc/twister/twister_api.json");
     //tw_parse_conf("/home/twister/config/twister_api.json");
 
