@@ -52,7 +52,7 @@ sudo twiperf -e -s
 For more options checkout twiperf help with `-h` flag.
 
 ```
-sudo twipef -h
+sudo twiperf -h
 ```
 ## twping
 `twping` is a ping application built using Twister API. It works like linux `ping` application.
