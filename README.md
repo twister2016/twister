@@ -48,18 +48,15 @@ For example, final configuration in `/etc/twister/config.json` file may look lik
 ```
 Run `twister-config`  to apply the changes.
 ```
-twister-config
+sudo twister-config
 ```
 This script will apply the configurations defined in `/etc/twister/twister.conf` and generate a json file `/etc/twister/twister_api.json` which will be used by Twister API.
 
 ## Applications
-- [Ethernet Echo Application](https://github.com/twister2016/twister/blob/master/documentation/TW_ETHERNET.md) This application performs Layer-2 forwarding for each packet that is received on the port. All the other fields in the packets remain the same - only the MAC addresses are affected.
-- [Gateway Application](https://github.com/twister2016/twister/blob/master/documentation/TW_GATEWAY.md) This application plays the role of layer-3 router at smaller scale. The purpose is to harness the abstraction and functionality of Twister API to write sophisticated networking applications. This router forwards the packets received from one network to another using layer-3 forwarding. It also responds to the ARP requests as well as PING request on its both interfaces.
-- [Ping](https://github.com/twister2016/twister/blob/master/documentation/TW_PING.md) This application sends the ICMP packets (ping), it takes IP from console, and sends the ICMP packets to this machine. When it gets the ICMP reply packet, it displays the ICMP parameters to user, like TTL, RTT, sequence number etc.
-- [UDP Echo](https://github.com/twister2016/twister/blob/master/documentation/TW_UDPECHO.md) This application  is an example of packet processing built on Twister API to echo back the UDP traffic.
-- [ICMP Echo](https://github.com/twister2016/twister/blob/master/documentation/TW_ICMPECHO.md) This application responds for the ICMP(Ping) packets.
-- [Reverse ARP Application](https://github.com/twister2016/twister/blob/master/documentation/TW_REVERSE.md) This application implements the reverse address resolution protocol. It sends the RARP request and displays the IP resolved from RARP response.
-- [IPERF Application](https://github.com/twister2016/twister/blob/master/documentation/TW_IPERF.md) This application provides functioanlity to measure maximum achievable bandwidth on IP conncection.
+- [Ping](documentation/example_applications.md#twping) This application sends the ICMP packets (ping), it takes IP from console, and sends the ICMP packets to this machine. When it gets the ICMP reply packet, it displays the ICMP parameters to user, like TTL, RTT, sequence number etc.
+- [ICMP Echo](documentation/example_applications.md#twicmpecho) This application responds for the ICMP(Ping) packets.
+- [Reverse ARP Application](/documentation/example_applications.md#twrarp) This application implements the reverse address resolution protocol. It sends the RARP request and displays the IP resolved from RARP response.
+- [iperf Application](documentation/example_applications.md#twiperf) This application provides functioanlity to measure maximum achievable bandwidth on IP conncection.
 
 
 
