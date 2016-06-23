@@ -137,6 +137,8 @@ Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
 SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
 ```
 Select `Ubuntu Server 14.04 LTS (HVM), SSD Volume Type` (64 bit) image from the list. 
+
+
 ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815821/03430ef0-0bc7-11e6-9ced-3321d83a97c6.jpg)
  
 
@@ -183,7 +185,7 @@ These commands in user-data will install the software dependecies required for t
 
  ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815843/14049420-0bc7-11e6-9b03-47c1c03107b9.png)
 
-- Instance can be viewed in instances tab now. Hover over “Name” Column for newly created instance and click on the edit button to give it a more readable name.
+- Instance can be viewed in instances tab now. Hover over `Name` Column for newly created instance and click on the edit button to give it a more readable name.
 
 ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815845/166c6b52-0bc7-11e6-97a3-e6210bbe6250.png)
 
@@ -213,6 +215,8 @@ For Linux users, change permission of key pair and SSH with the using Public DNS
 ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815850/1ce14b7e-0bc7-11e6-9dab-efcf0b8ef963.png)
  
 - Select Twister Data subnet (created in VPC and networks section) from drop down menu. Select security group `Twister Security Group` created in previous steps. Click on `Yes, Create` button.
+
+```Note down the subnet address of the subnet specified. It will be later used in configuring Twister ports. ```
 
 ![alt tag](https://cloud.githubusercontent.com/assets/3003907/16220914/3970949e-37a9-11e6-889b-51c17cfe45bc.png)
 
