@@ -34,6 +34,12 @@ Following sample applications have been built using Twister API.
 
 `twiperf` is an iperf application built using Twister API. It currently supports sending UDP traffic and ethernet traffic (layer 2).
 
+twiperf can be easily tested in following topology.
+
+![alt tag](https://cloud.githubusercontent.com/assets/3003907/16301701/3ccce512-3960-11e6-9ae7-f1b7411b3854.png)
+
+twServer will listen for any connections. twClient will connect with twServer and send traffic throught `tw0` interface. Interfaces bind with Twister are generally named as 'tw0', 'tw1', 'tw2' etc.
+
 Run twiperf (server mode) in 'twServer' VM  with udp traffic.
 ```
 sudo twiperf -u -s
