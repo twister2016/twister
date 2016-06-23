@@ -33,6 +33,8 @@ void pkt_rx(tw_rx_t *, tw_buf_t *);
 void pkt_tx(tw_tx_t *);
 void tw_udp_connect(tw_timer_t * timer_handle);
 
+uint64_t clock_rate;
+
 void sig_handler(int signo) /*On presseing Ctrl-C*/
 {
     if(signo == SIGINT)
@@ -227,7 +229,10 @@ int ether_app_server(__attribute__((unused)) void * app_params)
 
 void calculate_latency(uint64_t latency)
 {
-	test_stats.latency = (float)((test_stats.latency * test_stats.datagrams_recv)+ latency)/(test_stats.datagrams_recv+1);
+    uint64_t current = tw_get_current_timer_cycles();
+    uint64_t diff = current - latency;
+
+    test_stats.latency = diff/clock_rate;
 }
 
 /*packet receive callbacks, receives the packet , increment the counter and free the buffer*/
@@ -407,6 +412,9 @@ int main(int argc, char **argv)
         struct in_addr server_ip;
         server_ip.s_addr = (test.server_ip);
         twiprintf(&test, on_host_conn, inet_ntoa(server_ip), test.server_port);
+        tw_get_timer_hz(&clock_rate);
+        clock_rate = clock_rate/1000000;
+
         udp_app_client(NULL);
     }
 

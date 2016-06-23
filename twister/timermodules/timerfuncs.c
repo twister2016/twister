@@ -16,6 +16,11 @@ inline uint8_t tw_is_timer_expired(uint64_t curr_timer_freq, uint64_t prev_timer
         return 1;
 }
 
+inline void tw_get_timer_hz(uint64_t *val)
+{
+    *val =  rte_get_tsc_hz();
+}
+
 inline uint64_t tw_get_current_timer_cycles(void)
 {
     return rte_get_timer_cycles();
