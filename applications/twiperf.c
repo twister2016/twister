@@ -5,6 +5,7 @@
 #include <tw_common.h>
 #include <tw_api.h>
 #include <stats.h>
+#include <math.h>
 #include "twiperf.h"
 #define PacketLimit 0
 #define UDP_PROTO_ID    17
@@ -262,7 +263,7 @@ void print_perf_stats(tw_timer_t * timer_handle)
     {
 
         latency = (uint64_t)(test_stats.latency/tw_stats.rx_pps);
-        jitter = (int64_t)(test_stats.jitter / (tw_stats.rx_pps - 1)) - (int64_t)(latency * (tw_stats.rx_pps/(tw_stats.rx_pps - 1)));
+        jitter = sqrt((test_stats.jitter / (tw_stats.rx_pps - 1)) - (latency * latency * (tw_stats.rx_pps/(tw_stats.rx_pps - 1))));
     }
     twiprintf(&test, stats_number, test_stats.interval_window - 1.0, test_stats.interval_window,
               tw_stats.rx_pps, tw_stats.tx_pps, bytes, bandwidth,test_stats.datagrams_sent,
