@@ -96,6 +96,7 @@ all: clean bootstrap build
 
 
 install: copy
+	cp $(SUBDIR2)/mk/twister.mk /usr/include0
 	$(MAKE) install -C $(SUBDIR3);
 	ln -s -f $(INSTALLED_DIR)/scripts/tw_config.py /usr/bin/twister-config	
 

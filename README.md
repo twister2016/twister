@@ -22,7 +22,7 @@ The Twister package can be installed using the following commands:
 
 ```
 cd twister
-sudo make
+make
 sudo make install
 ```
 ### Configure Twister and ports configurations

@@ -1,6 +1,5 @@
 #!/bin/sh
 
-sudo cp ./twister/mk/twister.mk /usr/include
 cd dpdk
 make config T=x86_64-native-linuxapp-gcc
 cd ../
