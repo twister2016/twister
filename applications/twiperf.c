@@ -229,10 +229,12 @@ int ether_app_server(__attribute__((unused)) void * app_params)
 
 void calculate_latency(uint64_t latency)
 {
-    uint64_t current = tw_get_current_timer_cycles();
-    uint64_t diff = current - latency;
-
-    test_stats.latency = diff/clock_rate;
+    //test_stats.latency = (tw_get_current_timer_cycles() - latency)/clock_rate;
+   // uint64_t current = tw_get_current_timer_cycles();
+    //uint64_t diff = current - latency;
+    uint64_t current = (tw_get_current_timer_cycles() - latency)/clock_rate;
+    test_stats.latency += current;
+    test_stats.jitter += current * current;
 }
 
 /*packet receive callbacks, receives the packet , increment the counter and free the buffer*/
@@ -253,10 +255,12 @@ void print_perf_stats(tw_timer_t * timer_handle)
     test_stats.interval_window = test_stats.interval_window + 1.0;
     uint64_t bytes = (((tw_stats.rx_pps + tw_stats.tx_pps) * (test.packet_size)) / 1000); //KBytes
     float bandwidth = (bytes * 8 * 1000) / (float) (1048576.0); // Mbit / sec
+    uint64_t latency = test_stats.latency/tw_stats.rx_pps;
+    int64_t jitter = test_stats.jitter / (tw_stats.rx_pps - 1) - latency * (tw_stats.rx_pps/(tw_stats.rx_pps - 1));
     twiprintf(&test, stats_number, test_stats.interval_window - 1.0, test_stats.interval_window,
               tw_stats.rx_pps, tw_stats.tx_pps, bytes, bandwidth,test_stats.datagrams_sent,
-              test_stats.datagrams_recv,test_stats.latency);
-
+              test_stats.datagrams_recv,latency, jitter);
+    
     test_stats.total_transfered_bytes += bytes;
     test_stats.bandwidth += bandwidth;
 }

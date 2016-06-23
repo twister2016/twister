@@ -13,11 +13,11 @@
 const
 
 const char stats_head[] =
-"\nInterval(sec)   RX pkts/s      TX pkts/s       Transfer      Bandwidth        Datagrams Send       Datagrams Recv    Latency";
+"\nInterval(sec)   RX pkts/s      TX pkts/s       Transfer      Bandwidth        Datagrams Send       Datagrams Recv    Latency    Jitter";
 const char summary_head[]=
-"\nInterval(sec)   Transfer         Bandwidth        Total Datagrams Send        Total Datagrams Recv    Latency";
+"\nInterval(sec)   Transfer         Bandwidth        Total Datagrams Send        Total Datagrams Recv     Latency    Jitter";
 const char stats_number[]=
-"\n%6.2f-%-6.2f     %7llu       %7llu      %5llu KBytes   %7.2f Mbits/sec     %7llu         %7llu %5f μs" ;
+"\n%6.2f-%-6.2f     %7llu       %7llu      %5llu KBytes   %7.2f Mbits/sec     %7llu         %7llu     %5llu μs    %5llu μs" ;
 const char summary_stats_number[]=
 "\n%6.2f-%-6.2f      %5llu KBytes   %7.2f Mbits/sec     %9llu      %20llu" ;
 const char on_host_conn[]=
@@ -64,7 +64,8 @@ struct iperf_stats
         uint64_t datagrams_recv;
         uint64_t total_transfered_bytes;
         float bandwidth;
-		float latency;
+        uint64_t latency;
+        uint64_t jitter;
         float interval_window;
 };
 /* display usage */
