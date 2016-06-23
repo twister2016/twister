@@ -36,7 +36,11 @@ Following sample applications have been built using Twister API.
 
 twiperf can be easily tested in following topology.
 
-![alt tag](https://cloud.githubusercontent.com/assets/3003907/16301701/3ccce512-3960-11e6-9ae7-f1b7411b3854.png)
+
+<div align="center">
+<img src="https://cloud.githubusercontent.com/assets/3003907/16301701/3ccce512-3960-11e6-9ae7-f1b7411b3854.png" width="600">
+</div>
+
 
 twServer will listen for any connections. twClient will connect with twServer and send traffic throught `tw0` interface. Interfaces bind with Twister are generally named as 'tw0', 'tw1', 'tw2' etc.
 
