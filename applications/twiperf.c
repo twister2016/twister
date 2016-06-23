@@ -25,7 +25,7 @@ uint16_t src_port, dst_port;
 struct iperf_test test;
 struct iperf_stats test_stats;
 
-void print_perf_stats(tw_timer_t * timer_handle);
+void print_perf_stats(void);
 int udp_app_server(void *);
 void reply_udp_payload(tw_rx_t *, tw_buf_t *);
 void reply_ether_payload(tw_rx_t *, tw_buf_t *);
@@ -47,6 +47,14 @@ void sig_handler(int signo) /*On presseing Ctrl-C*/
         printf("\n\n");
         exit(1);
     }
+}
+void tw_client_stats(void)
+{
+	while(1)
+	{
+		sleep(1);
+		print_perf_stats();
+	}
 }
 
 int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*parsing user given arguments*/
@@ -179,9 +187,10 @@ int udp_app_server(__attribute__((unused)) void * app_params)
         printf("Error in receive start\n");
         exit(1);
     }
-    tw_timer_t * timer_handle;
+	tw_launch_engine(tw_client_stats,NULL,"engine1");
+    /*tw_timer_t * timer_handle;
     timer_handle = tw_timer_init(tw_loop);
-    tw_timer_start(timer_handle, print_perf_stats, 1000);
+    tw_timer_start(timer_handle, print_perf_stats, 1000);*/
     twiprintf(&test, stats_head);
     tw_run(tw_loop);
     return 0;
@@ -217,9 +226,10 @@ int ether_app_server(__attribute__((unused)) void * app_params)
         printf("Error in receive start\n");
         exit(1);
     }
-    tw_timer_t * timer_handle;
+	tw_launch_engine(tw_client_stats,NULL,"engine1");
+	/*tw_timer_t * timer_handle;
     timer_handle = tw_timer_init(tw_loop);
-    tw_timer_start(timer_handle, print_perf_stats, 1000);
+    tw_timer_start(timer_handle, print_perf_stats, 1000);*/
     twiprintf(&test, stats_head);
     tw_run(tw_loop);
     return 0;
@@ -242,7 +252,7 @@ void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer)
 }
 
 /*print the test stats, registerd as timer callback (1 second) at udp_app_client event loop, called every second*/
-void print_perf_stats(tw_timer_t * timer_handle)
+void print_perf_stats(void)
 {
     tw_calc_global_stats();
     test_stats.interval_window = test_stats.interval_window + 1.0;
@@ -307,8 +317,10 @@ int udp_app_client(__attribute__((unused)) void * app_params)
     tw_run(tw_loop); //start the event-loop
     return 0;
 }
-/*tw_udp_connect is called every second by udp_app_client event loop untill the Address of server is reloved. After that 
- this callback is unregisterd and pkt_tx function is registerd as transmitt packets. */
+
+
+/*tw_udp_connect is called every second by udp_app_client event loop until the Address of server is resolved. After that 
+ this callback is unregistered and pkt_tx function is registered as transmit packets. */
 void tw_udp_connect(tw_timer_t * timer_handle_this)
 {
     static arpCount = 0;
@@ -352,10 +364,11 @@ void tw_udp_connect(tw_timer_t * timer_handle_this)
             }
 
             tw_timer_unregister(timer_handle_this, tw_loop); // unregistering the timer handler callback for this function (tw_udp_connect())
-
+			tw_launch_engine(tw_client_stats,NULL,"engine1");
+			/*
             tw_timer_t * timer_perf_stats;
             timer_perf_stats = tw_timer_init(tw_loop); // registering a new timer handler for stats printing,
-            tw_timer_start(timer_perf_stats, print_perf_stats, 1000);
+            tw_timer_start(timer_perf_stats, print_perf_stats, 1000);*/
         }
     }
 
@@ -382,9 +395,8 @@ int main(int argc, char **argv)
     if(signal(SIGINT, sig_handler) == SIG_ERR)
         printf("\ncan't catch SIGINT\n");
 
-    Printing_Enable = 1; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
-
+	
     if(test.protocol_id == 1 && test.role == 1)
     {
         ether_app_server(NULL);
