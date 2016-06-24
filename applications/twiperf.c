@@ -45,8 +45,9 @@ void sig_handler(int signo) /*On presseing Ctrl-C*/
         printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
         twiprintf(&test, summary_head);
         twiprintf(&test, summary_stats_number, 0.0, test_stats.interval_window,
-                  test_stats.total_transfered_bytes, test_stats.bandwidth,
-                  test_stats.datagrams_sent,test_stats.datagrams_recv,test_stats.latency);
+                  test_stats.bandwidth,
+                  test_stats.datagrams_sent,test_stats.datagrams_recv,test_stats.cum_lat/test_stats.n_samples,
+		  test_stats.cum_jitter/test_stats.n_samples);
         printf("\n\n");
         exit(1);
     }
@@ -235,7 +236,13 @@ void calculate_latency(uint64_t latency)
     //uint64_t diff = current - latency;
     uint64_t current = (uint64_t)((tw_get_current_timer_cycles() - latency)/clock_rate);
     test_stats.latency += current;
-    test_stats.jitter += current * current;
+    int64_t jitter = current - test_stats.prev_lat;
+    if (jitter < 0) 
+	test_stats.jitter -= jitter;
+    else
+    	test_stats.jitter += (uint64_t)(jitter);
+    test_stats.prev_lat = current;
+    test_stats.rx_pps ++;
 }
 
 /*packet receive callbacks, receives the packet , increment the counter and free the buffer*/
@@ -258,19 +265,23 @@ void print_perf_stats(tw_timer_t * timer_handle)
     float bandwidth = (bytes * 8 * 1000) / (float) (1048576.0); // Mbit / sec
     uint64_t latency = 0;
     uint64_t jitter = 0;
-    if (tw_stats.rx_pps > 1)
+    if (test_stats.rx_pps > 1)
     {
 
-        latency = (uint64_t)(test_stats.latency/tw_stats.rx_pps);
-        jitter = sqrt((test_stats.jitter / (tw_stats.rx_pps - 1)) - (latency * latency * (tw_stats.rx_pps/(tw_stats.rx_pps - 1))));
+        latency = (uint64_t)(test_stats.latency/test_stats.rx_pps);
+	jitter = (uint64_t)(test_stats.jitter/(test_stats.rx_pps-1));
+//        jitter = sqrt((test_stats.jitter / (tw_stats.rx_pps - 1)) - (latency * latency * (tw_stats.rx_pps/(tw_stats.rx_pps - 1))));
+ 
     }
     twiprintf(&test, stats_number, test_stats.interval_window - 1.0, test_stats.interval_window,
-              tw_stats.rx_pps, tw_stats.tx_pps, bandwidth,test_stats.datagrams_sent,
+              test_stats.rx_pps, tw_stats.tx_pps, bandwidth,test_stats.datagrams_sent,
               test_stats.datagrams_recv,latency, jitter);
-
+    test_stats.cum_lat += latency;
+    test_stats.cum_jitter += jitter;
     test_stats.latency = 0;
     test_stats.jitter = 0;
-
+    test_stats.rx_pps = 0;
+    test_stats.n_samples ++;
 
     test_stats.total_transfered_bytes += bytes;
     test_stats.bandwidth += bandwidth;
@@ -404,7 +415,7 @@ int main(int argc, char **argv)
 
     Printing_Enable = 1; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
-
+    test_stats.prev_lat = 0;
     if(test.protocol_id == 1 && test.role == 1)
     {
         ether_app_server(NULL);

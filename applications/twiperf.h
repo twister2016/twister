@@ -13,13 +13,13 @@
 const
 
 const char stats_head[] =
-"\n Interval(sec)    RX pkts/s    TX pkts/s      Bandwidth (Mbits/s)   Datagrams Sent   Datagrams Recvd        Latency      Jitter";
+"\n Interval(sec)    RX pkts/s    TX pkts/s      Bandwidth (Mbits/s)   Datagrams Sent   Datagrams Recvd        Latency      Jitter/sec";
 const char summary_head[]=
-"\n Interval(sec)         Bandwidth (Mbits/s)   Total Datagrams Sent   Total Datagrams Recvd     Latency    Jitter";
+"\n Interval(sec)         Bandwidth (Mbits/s)   Total Datagrams Sent   Total Datagrams Recvd        Latency       Jitter";
 const char stats_number[]=
 "\n%7.2f-%-7.2f   %9llu    %9llu    %11.2f             %14llu    %14llu     %7llu μs   %7llu μs" ;
 const char summary_stats_number[]=
-"\n%7.2f-%-7.2f        %9.2f             %20llu    %20llu" ;
+"\n%7.2f-%-7.2f        %9.2f             %20llu    %20llu      %7llu us     %7llu us" ;
 const char on_host_conn[]=
 "Connecting to host %s, port %u\n";
 const char summary_dot_line[]=
@@ -66,6 +66,11 @@ struct iperf_stats
         float bandwidth;
         uint64_t latency;
         uint64_t jitter;
+	uint64_t rx_pps;
+        uint64_t prev_lat;
+        uint64_t cum_lat;
+	uint64_t cum_jitter;
+	uint64_t n_samples;
         float interval_window;
 };
 /* display usage */
