@@ -17,7 +17,7 @@ const char stats_head[] =
 const char summary_head[]=
 "\n Interval(sec)         Bandwidth (Mbits/s)   Total Datagrams Sent   Total Datagrams Recvd     Latency    Jitter";
 const char stats_number[]=
-"\n%7.2f-%-7.2f   %9llu    %9llu    %11.2f             %14llu    %14llu     %7llu μs   %6llu μs" ;
+"\n%7.2f-%-7.2f   %9llu    %9llu    %11.2f             %14llu    %14llu     %7llu μs   %7llu μs" ;
 const char summary_stats_number[]=
 "\n%7.2f-%-7.2f        %9.2f             %20llu    %20llu" ;
 const char on_host_conn[]=

@@ -256,9 +256,8 @@ void print_perf_stats(tw_timer_t * timer_handle)
     test_stats.interval_window = test_stats.interval_window + 1.0;
     uint64_t bytes = (((tw_stats.rx_pps + tw_stats.tx_pps) * (test.packet_size)) / 1000); //KBytes
     float bandwidth = (bytes * 8 * 1000) / (float) (1048576.0); // Mbit / sec
-    
     uint64_t latency = 0;
-    int64_t jitter = 0;
+    uint64_t jitter = 0;
     if (tw_stats.rx_pps > 1)
     {
 
@@ -266,11 +265,13 @@ void print_perf_stats(tw_timer_t * timer_handle)
         jitter = sqrt((test_stats.jitter / (tw_stats.rx_pps - 1)) - (latency * latency * (tw_stats.rx_pps/(tw_stats.rx_pps - 1))));
     }
     twiprintf(&test, stats_number, test_stats.interval_window - 1.0, test_stats.interval_window,
-              tw_stats.rx_pps, tw_stats.tx_pps, bytes, bandwidth,test_stats.datagrams_sent,
+              tw_stats.rx_pps, tw_stats.tx_pps, bandwidth,test_stats.datagrams_sent,
               test_stats.datagrams_recv,latency, jitter);
 
     test_stats.latency = 0;
     test_stats.jitter = 0;
+
+
     test_stats.total_transfered_bytes += bytes;
     test_stats.bandwidth += bandwidth;
 }
