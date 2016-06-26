@@ -13,13 +13,13 @@
 const
 
 const char stats_head[] =
-"\n   Interval               RX pkts/s  TX pkts/s       Transfer      Bandwidth        Datagrams Send       Datagrams Recv";
+"\n Interval(sec)    RX pkts/s    TX pkts/s      Bandwidth (Mbits/s)   Datagrams Sent   Datagrams Recvd        Latency      Jitter/sec";
 const char summary_head[]=
-"\n   Interval               Transfer         Bandwidth        Total Datagrams Send        Total Datagrams Recv";
+"\n Interval(sec)         Bandwidth (Mbits/s)   Total Datagrams Sent   Total Datagrams Recvd        Latency       Jitter";
 const char stats_number[]=
-"\n %6.2f-%-6.2f  sec     %7llu       %7llu      %5llu KBytes   %7.2f Mbits/sec     %7llu         %7llu" ;
+"\n%7.2f-%-7.2f   %9llu    %9llu    %11.2f             %14llu    %14llu     %7llu μs   %7llu μs" ;
 const char summary_stats_number[]=
-"\n %6.2f-%-6.2f  sec     %5llu KBytes   %7.2f Mbits/sec     %9llu      %20llu" ;
+"\n%7.2f-%-7.2f        %9.2f             %20llu    %20llu      %7llu us     %7llu us" ;
 const char on_host_conn[]=
 "Connecting to host %s, port %u\n";
 const char summary_dot_line[]=
@@ -32,6 +32,11 @@ enum
     IEUDPBLOCKSIZE = 1, //UDP block size exceeds
     PORTNUMBERWRONG = 2,           // Iperf must either be a client (-c) or server (-s)
     IENOROLE = 3,           // Iperf must either be a client (-c) or server (-s)
+};
+
+struct app_hdr
+{
+        uint64_t payload;
 };
 
 struct iperf_test
@@ -48,6 +53,7 @@ struct iperf_test
         struct ether_hdr * eth;
         struct ipv4_hdr * ip;
         struct udp_hdr * udp;
+		struct app_hdr * app;
         uint8_t test_runtime;
         tw_buf_t * tx_buf;
 };
@@ -58,6 +64,13 @@ struct iperf_stats
         uint64_t datagrams_recv;
         uint64_t total_transfered_bytes;
         float bandwidth;
+        uint64_t latency;
+        uint64_t jitter;
+	uint64_t rx_pps;
+        uint64_t prev_lat;
+        uint64_t cum_lat;
+	uint64_t cum_jitter;
+	uint64_t n_samples;
         float interval_window;
 };
 /* display usage */

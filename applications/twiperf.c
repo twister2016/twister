@@ -5,6 +5,7 @@
 #include <tw_common.h>
 #include <tw_api.h>
 #include <stats.h>
+#include <math.h>
 #include "twiperf.h"
 #define PacketLimit 0
 #define UDP_PROTO_ID    17
@@ -33,6 +34,8 @@ void pkt_rx(tw_rx_t *, tw_buf_t *);
 void pkt_tx(tw_tx_t *);
 void tw_udp_connect(tw_timer_t * timer_handle);
 
+uint64_t clock_rate;
+
 void sig_handler(int signo) /*On presseing Ctrl-C*/
 {
     if(signo == SIGINT)
@@ -42,8 +45,9 @@ void sig_handler(int signo) /*On presseing Ctrl-C*/
         printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
         twiprintf(&test, summary_head);
         twiprintf(&test, summary_stats_number, 0.0, test_stats.interval_window,
-                  test_stats.total_transfered_bytes, test_stats.bandwidth,
-                  test_stats.datagrams_sent,test_stats.datagrams_recv);
+                  test_stats.bandwidth,
+                  test_stats.datagrams_sent,test_stats.datagrams_recv,test_stats.cum_lat/test_stats.n_samples,
+		  test_stats.cum_jitter/test_stats.n_samples);
         printf("\n\n");
         exit(1);
     }
@@ -225,10 +229,28 @@ int ether_app_server(__attribute__((unused)) void * app_params)
     return 0;
 }
 
+void calculate_latency(uint64_t latency)
+{
+    //test_stats.latency = (tw_get_current_timer_cycles() - latency)/clock_rate;
+   // uint64_t current = tw_get_current_timer_cycles();
+    //uint64_t diff = current - latency;
+    uint64_t current = (uint64_t)((tw_get_current_timer_cycles() - latency)/clock_rate);
+    test_stats.latency += current;
+    int64_t jitter = current - test_stats.prev_lat;
+    if (jitter < 0) 
+	test_stats.jitter -= jitter;
+    else
+    	test_stats.jitter += (uint64_t)(jitter);
+    test_stats.prev_lat = current;
+    test_stats.rx_pps ++;
+}
+
 /*packet receive callbacks, receives the packet , increment the counter and free the buffer*/
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer)
 {
     eth = buffer->data;
+	test.app = buffer->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
+	calculate_latency(test.app->payload);
     test_stats.datagrams_recv++;
     tw_free_pkt(buffer);
     return;
@@ -241,9 +263,25 @@ void print_perf_stats(tw_timer_t * timer_handle)
     test_stats.interval_window = test_stats.interval_window + 1.0;
     uint64_t bytes = (((tw_stats.rx_pps + tw_stats.tx_pps) * (test.packet_size)) / 1000); //KBytes
     float bandwidth = (bytes * 8 * 1000) / (float) (1048576.0); // Mbit / sec
+    uint64_t latency = 0;
+    uint64_t jitter = 0;
+    if (test_stats.rx_pps > 1)
+    {
+
+        latency = (uint64_t)(test_stats.latency/test_stats.rx_pps);
+	jitter = (uint64_t)(test_stats.jitter/(test_stats.rx_pps-1));
+//        jitter = sqrt((test_stats.jitter / (tw_stats.rx_pps - 1)) - (latency * latency * (tw_stats.rx_pps/(tw_stats.rx_pps - 1))));
+ 
+    }
     twiprintf(&test, stats_number, test_stats.interval_window - 1.0, test_stats.interval_window,
-              tw_stats.rx_pps, tw_stats.tx_pps, bytes, bandwidth,test_stats.datagrams_sent,
-              test_stats.datagrams_recv);
+              test_stats.rx_pps, tw_stats.tx_pps, bandwidth,test_stats.datagrams_sent,
+              test_stats.datagrams_recv,latency, jitter);
+    test_stats.cum_lat += latency;
+    test_stats.cum_jitter += jitter;
+    test_stats.latency = 0;
+    test_stats.jitter = 0;
+    test_stats.rx_pps = 0;
+    test_stats.n_samples ++;
 
     test_stats.total_transfered_bytes += bytes;
     test_stats.bandwidth += bandwidth;
@@ -255,6 +293,8 @@ void pkt_tx(tw_tx_t * handle)
     test.eth = test.tx_buf->data;
     test.ip = (test.tx_buf->data + sizeof(struct ether_hdr));
     test.udp = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
+	test.app = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
+    test.app->payload = tw_get_current_timer_cycles();
     test.udp->src_port = tw_cpu_to_be_16(test.client_port);
     test.udp->dst_port = tw_cpu_to_be_16(test.server_port);
     test.udp->dgram_len = tw_cpu_to_be_16(
@@ -375,7 +415,7 @@ int main(int argc, char **argv)
 
     Printing_Enable = 1; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
-
+    test_stats.prev_lat = 0;
     if(test.protocol_id == 1 && test.role == 1)
     {
         ether_app_server(NULL);
@@ -398,6 +438,9 @@ int main(int argc, char **argv)
         struct in_addr server_ip;
         server_ip.s_addr = (test.server_ip);
         twiprintf(&test, on_host_conn, inet_ntoa(server_ip), test.server_port);
+        tw_get_timer_hz(&clock_rate);
+        clock_rate = clock_rate/1000000;
+
         udp_app_client(NULL);
     }
 
