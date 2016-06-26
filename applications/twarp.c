@@ -4,8 +4,7 @@
 #include <stdbool.h>
 #include <tw_api.h>
 #include <arpa/inet.h>
-#include <stdlib.h>
-#include <getopt.h>
+
 char* ip;
 int arp_flag = -1;
 
@@ -62,40 +61,14 @@ void check_arp()
     }
 }
 
-void print_usage ()
-{
-    printf ("Usage: twarp [options] Target-IP-Address\n");
-    printf ("Options: -d, --debug \t\tPrints debug information\n");
-
-}
-
 int main(int argc, char **argv)
 {
-
-
-    int debug_flag = 0, flag;
-    static struct option longopts[] = { { "debug", no_argument, NULL, 'd' }};
-
-    while ((flag = getopt_long(argc, argv, "d", longopts, NULL)) != -1)
-    {
-        switch (flag)
-        {
-            case 'd':
-                debug_flag = 1;
-                break;
-            default:
-                print_usage();
-                exit (0);
-        }
-    }
-    enable_debug (debug_flag);
     tw_init_global();
     Printing_Enable = 0; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");
-    
-    if(optind < argc && argc >= 2)
+    if(argc == 2)
     {
-        ip = argv[argc -1];
+        ip = argv[1];
         if(isValidIpAddress(ip))
         {
             if(isSameNetwork(ip))
@@ -114,7 +87,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        print_usage();
+        printf("Please specify twarp <x.x.x.x> \n");
         exit(1);
     }
     user_app_main(NULL);

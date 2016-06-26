@@ -5,7 +5,7 @@
 #include <tw_api.h>
 #include <arpa/inet.h>
 #include <arplogic.h>
-#include <getopt.h>
+
 struct ether_addr requestmac =
 {
     .addr_bytes[1] = 0x09,
@@ -98,33 +98,8 @@ void check_arp(int* no)
     }
 }
 
-void print_usage ()
-{
-    printf ("Usage: twrarp [options] Target-IP-Address\n");
-    printf ("Options: -d, --debug \t\tPrints debug information\n");
-
-}
-
-
 int main(int argc, char **argv)
 {
-    int debug_flag = 0, flag;
-    static struct option longopts[] = { { "debug", no_argument, NULL, 'd' }};
-
-    while ((flag = getopt_long(argc, argv, "d", longopts, NULL)) != -1)
-    {
-        switch (flag)
-        {
-            case 'd':
-                debug_flag = 1;
-                break;
-            default:
-                print_usage();
-                exit (0);
-        }
-    }
-    enable_debug (debug_flag);
-
     tw_init_global();
     Printing_Enable = 0; //disable the real-time printing of Tx/Rx,
     tw_map_port_to_engine("tw0", "engine0");

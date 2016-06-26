@@ -151,7 +151,5 @@ uint32_t tw_convert_str_to_hex(char * str, uint8_t length);/**< convert string w
 extern cJSON * tw_parse_json_file(const char *); /**< parse the JSON file */
 extern int Printing_Enable;
 
-void enable_debug (int flag);
-
 #endif
 

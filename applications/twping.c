@@ -3,7 +3,6 @@
 #include <sys/types.h>
 #include <string.h>
 #include <stdint.h>
-#include <getopt.h>
 #include <tw_common.h>
 #include <tw_api.h>
 #include <unistd.h>
@@ -193,47 +192,31 @@ void pkt_tx(tw_tx_t * handle)
     }
 }
 
-void print_usage ()
-{
-    printf ("Usage: twping [options] Target-IP-Address\n");
-    printf ("Options: -d, --debug \t\tPrints debug information\n");
-
-}
-
 int main(int argc, char **argv)
 {
     argvector = argv;
     argcount = argc;
-    int debug_flag = 0, flag;
-    static struct option longopts[] = { { "debug", no_argument, NULL, 'd' }};
-  
-    while ((flag = getopt_long(argc, argv, "d", longopts, NULL)) != -1)
-    {
-        switch (flag)
-        {
-            case 'd':
-                debug_flag = 1;
-                break;
-            default:
-                print_usage();
-                exit (0);
-        }
-    }
-    enable_debug (debug_flag);
-    
     tw_init_global();
     tw_map_port_to_engine("tw0", "engine0");
 
     if(signal(SIGINT, sig_handler) == SIG_ERR)
         printf("\ncan't catch SIGINT\n");
-    if ((optind+1) > argc) {
-	print_usage();
+
+    if(argcount > 2)
+    {
+        printf("Please specify twping <x.x.x.x> \n");
         exit(1);
     }
-    else if(optind < argc && argc >= 2)
+
+    if(argcount < 2)
     {
-        printf ("ip: %s\n", argv[argc-1]);
-        char* line = argv[argc-1];
+        printf("Please specify twping <x.x.x.x> \n");
+        exit(1);
+    }
+
+    else if(argcount == 2)
+    {
+        char* line = argv[1];
         if(isValidIpAddress(line))
         {
             ping_ip = tw_convert_ip_str_to_dec(line);
@@ -246,14 +229,11 @@ int main(int argc, char **argv)
 
         else
         {
-            print_usage();
-	    exit(1);
+            printf("command not valid\n");
+            exit(1);
         }
     }
-    else{
-	print_usage ();
-        exit(1);
-    }
+
     user_app_main(NULL);
     return 0;
 }
