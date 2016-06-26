@@ -32,7 +32,7 @@ copy: mk_dir
 	cp $(SUBDIR2)/mk/tw_config.py $(INSTALLED_DIR)/scripts/tw_config.py
 	cp $(SUBDIR2)/mk/insert_module.sh $(INSTALLED_DIR)/scripts/insert_module.sh
 	cp $(SUBDIR1)/tools/dpdk_nic_bind.py $(INSTALLED_DIR)/scripts/dpdk_nic_bind.py
-	cp -n  $(SUBDIR2)/mk/twister.conf $(CONFIGURATION_FILES)/twister.conf
+	cp -n $(SUBDIR2)/mk/twister.conf $(CONFIGURATION_FILES)/twister.conf
 	cp -n $(SUBDIR2)/mk/config.json $(CONFIGURATION_FILES)/config.json
 	cp -n $(SUBDIR2)/mk/twister_api.json $(CONFIGURATION_FILES)/twister_api.json
 	echo 'Installing twister library files'
@@ -96,6 +96,7 @@ all: clean bootstrap build
 
 
 install: copy
+	cp $(SUBDIR2)/mk/twister.mk /usr/include0
 	$(MAKE) install -C $(SUBDIR3);
 	ln -s -f $(INSTALLED_DIR)/scripts/tw_config.py /usr/bin/twister-config	
 

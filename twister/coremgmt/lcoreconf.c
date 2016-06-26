@@ -73,9 +73,9 @@ int tw_map_port_to_engine(char portName[10], char coreName[10])
 
     else
     {
-        printf("there is problem in tw_map_port_to_engine\n");
-        printf("port_id_resolved = %d portName=%s\n", port_id_resolved, portName);
-        printf("engine_id_resolved = %d  engineName=%s\n", engine_id_resolved, coreName);
+ //       printf("there is problem in tw_map_port_to_engine\n");
+   //     printf("port_id_resolved = %d portName=%s\n", port_id_resolved, portName);
+     //   printf("engine_id_resolved = %d  engineName=%s\n", engine_id_resolved, coreName);
     }
     return 0;
 }

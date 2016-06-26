@@ -10,7 +10,14 @@ import os
 kernel=str(os.popen("uname -r").read().rstrip())
 
 dpdk_drivers = ["igb_uio", "vfio-pci", "uio_pci_generic"]
-
+# from dpdk.org/doc/nics
+supported_nic_drivers = ["ena", "cxgbe", "szedata2", "enic",
+                         "oce", "e1000", "e1000e", "igb",
+                         "ixgbe", "ixgbevf", "i40e", "fm10k", 
+                         "mlx4", "mlx5", "nfp", "bnx2x", 
+                         "virtio-net", "xenvirt", "vmxnet3", 
+                         "vmxnet3-usermap", "memnic"
+                         ]
 
 def get_kernel_drv(devices):
     "Returns the name of Kernel NIC driver used by Linux"
@@ -88,13 +95,35 @@ def get_coremask(config):
 
     return hex(int(coremask,2))
 
+def get_portmask(whitelist):
+    "Returns portmask usable by Twister"
+
+    portmask = ""
+    if len(whitelist) == 0:
+        portmask = "0"
+
+    for i in range(len(whitelist)):
+        portmask = portmask + "1"
+    return hex(int(portmask,2))
+
 
 def bind_all_to_linux(cmd, devices):
     "Binds all available NICs to Linux NIC drivers"
-    kernel_driver = get_kernel_drv(devices)
+    driver_dir = "/sys/bus/pci/drivers/"
+    drivers = next(os.walk(driver_dir))[1]
+    k_driver = get_kernel_drv(devices)
+    driver_binded = False
     for dev in devices.keys():
-        bind_device(cmd, dev, kernel_driver)
-
+        for kernel_driver in drivers:
+            if kernel_driver == "igb_uio":
+                continue
+            if kernel_driver not in supported_nic_drivers:
+                continue
+            try:
+                bind_device(cmd, dev, kernel_driver)
+                break
+            except:
+                pass
 
 def load_dpdk_module(dpdk_kernel_module):
     "Load DPDK kernel Modules to whom DPDK ports will be bind"
@@ -117,7 +146,6 @@ def main():
 
     bind_all_to_linux(cmd, devices)
     lib_dpdk.get_nic_details()
-
     config = ConfigParser.RawConfigParser()
     config.readfp(open(twister_conf))
 
@@ -131,8 +159,7 @@ def main():
     if not set(whitelist).issubset(devices.keys()):
         raise Exception("whitelist interfaces in twister.conf do not exist")
 
-    portmask = hex(len(whitelist))
-
+    portmask = get_portmask(whitelist)
     for device in whitelist:
         out, err = bind_device(cmd, device, dpdk_drv)
 
@@ -146,3 +173,4 @@ def main():
 if __name__ == '__main__':
 
     main()
+

@@ -71,7 +71,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*pa
     udp_flag = 1;
     test->protocol_id = 2;
 
-    while ((flag = getopt_long(argc, argv, "n:p:ue:c:h:s", longopts, NULL)) != -1)
+    while ((flag = getopt_long(argc, argv, "n:p:uec:hs", longopts, NULL)) != -1)
     {
         switch (flag)
         {
