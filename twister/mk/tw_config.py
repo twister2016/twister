@@ -95,6 +95,18 @@ def get_coremask(config):
 
     return hex(int(coremask,2))
 
+def get_portmask(whitelist):
+    "Returns portmask usable by Twister"
+
+    portmask = ""
+    if len(whitelist) == 0:
+        portmask = "0"
+
+    for i in range(len(whitelist)):
+        portmask = portmask + "1"
+    return hex(int(portmask,2))
+
+
 def bind_all_to_linux(cmd, devices):
     "Binds all available NICs to Linux NIC drivers"
     driver_dir = "/sys/bus/pci/drivers/"
@@ -147,8 +159,7 @@ def main():
     if not set(whitelist).issubset(devices.keys()):
         raise Exception("whitelist interfaces in twister.conf do not exist")
 
-    portmask = hex(len(whitelist))
-
+    portmask = get_portmask(whitelist)
     for device in whitelist:
         out, err = bind_device(cmd, device, dpdk_drv)
 
