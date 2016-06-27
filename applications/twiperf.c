@@ -10,6 +10,8 @@
 #define PacketLimit 0
 #define UDP_PROTO_ID    17
 
+int server_flag, client_flag;
+
 tw_buf_t * tx_buf; //global memory buffer variable, equal the payload user given in arguments.
 tw_loop_t * tw_loop; // event loop, used for client and server.                           
 
@@ -43,11 +45,24 @@ void sig_handler(int signo) /*On presseing Ctrl-C*/
         twiprintf(&test, summary_dot_line);
         printf("\nPacket Size: %d bytes\n",test.packet_size);
         printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-        twiprintf(&test, summary_head);
-        twiprintf(&test, summary_stats_number, 0.0, test_stats.interval_window,
-                  test_stats.bandwidth,
-                  test_stats.datagrams_sent,test_stats.datagrams_recv,test_stats.cum_lat/test_stats.n_samples,
-		  test_stats.cum_jitter/test_stats.n_samples);
+
+        if(server_flag)
+        {
+            twiprintf(&test, summary_head_server);
+            twiprintf(&test, summary_stats_number_server, 0.0, test_stats.interval_window,
+                      test_stats.bandwidth,
+                      test_stats.datagrams_sent,test_stats.datagrams_recv);
+        }
+
+        if(client_flag)
+        {
+            twiprintf(&test, summary_head);
+            twiprintf(&test, summary_stats_number, 0.0, test_stats.interval_window,
+                      test_stats.bandwidth,
+                      test_stats.datagrams_sent,test_stats.datagrams_recv,test_stats.cum_lat/test_stats.n_samples,
+              test_stats.cum_jitter/test_stats.n_samples);
+        }
+
         printf("\n\n");
         exit(1);
     }
@@ -55,7 +70,7 @@ void sig_handler(int signo) /*On presseing Ctrl-C*/
 
 int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*parsing user given arguments*/
 {
-    int server_flag, client_flag, udp_flag, ethernet_flag;
+    int udp_flag, ethernet_flag;
     static struct option longopts[] = { { "udp", no_argument, NULL, 'u' }, { "ethernet",
     no_argument, NULL, 'e' }, { "server", no_argument, NULL, 's' }, { "client",
     required_argument, NULL, 'c' }, { "help", no_argument, NULL, 'h' }, { "port",
@@ -186,7 +201,7 @@ int udp_app_server(__attribute__((unused)) void * app_params)
     tw_timer_t * timer_handle;
     timer_handle = tw_timer_init(tw_loop);
     tw_timer_start(timer_handle, print_perf_stats, 1000);
-    twiprintf(&test, stats_head);
+    twiprintf(&test, stats_head_server);
     tw_run(tw_loop);
     return 0;
 }
@@ -224,7 +239,7 @@ int ether_app_server(__attribute__((unused)) void * app_params)
     tw_timer_t * timer_handle;
     timer_handle = tw_timer_init(tw_loop);
     tw_timer_start(timer_handle, print_perf_stats, 1000);
-    twiprintf(&test, stats_head);
+    twiprintf(&test, stats_head_server);
     tw_run(tw_loop);
     return 0;
 }
@@ -273,9 +288,17 @@ void print_perf_stats(tw_timer_t * timer_handle)
 //        jitter = sqrt((test_stats.jitter / (tw_stats.rx_pps - 1)) - (latency * latency * (tw_stats.rx_pps/(tw_stats.rx_pps - 1))));
  
     }
-    twiprintf(&test, stats_number, test_stats.interval_window - 1.0, test_stats.interval_window,
+
+    if(server_flag)
+        twiprintf(&test, stats_number_server, test_stats.interval_window - 1.0, test_stats.interval_window,
               test_stats.rx_pps, tw_stats.tx_pps, bandwidth,test_stats.datagrams_sent,
-              test_stats.datagrams_recv,latency, jitter);
+              test_stats.datagrams_recv);
+
+    if(client_flag)
+        twiprintf(&test, stats_number, test_stats.interval_window - 1.0, test_stats.interval_window,
+                  test_stats.rx_pps, tw_stats.tx_pps, bandwidth,test_stats.datagrams_sent,
+                  test_stats.datagrams_recv, latency, jitter);
+
     test_stats.cum_lat += latency;
     test_stats.cum_jitter += jitter;
     test_stats.latency = 0;

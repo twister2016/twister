@@ -11,15 +11,24 @@
 //#define MAX_UDP_BLOCKSIZE (65535 - 8 - 20)
 #define MAX_UDP_BLOCKSIZE 1500
 const
-
 const char stats_head[] =
 "\n Interval(sec)    RX pkts/s    TX pkts/s      Bandwidth (Mbits/s)   Datagrams Sent   Datagrams Recvd        Latency      Jitter/sec";
 const char summary_head[]=
 "\n Interval(sec)         Bandwidth (Mbits/s)   Total Datagrams Sent   Total Datagrams Recvd        Latency       Jitter";
 const char stats_number[]=
-"\n%7.2f-%-7.2f   %9llu    %9llu    %11.2f             %14llu    %14llu     %7llu μs   %7llu μs" ;
+"\n%7.2f-%-7.2f   %9llu    %9llu    %11.2f             %14llu    %14llu     %7llu μs   %7llu μs";
 const char summary_stats_number[]=
-"\n%7.2f-%-7.2f        %9.2f             %20llu    %20llu      %7llu us     %7llu us" ;
+"\n%7.2f-%-7.2f        %9.2f             %20llu    %20llu      %7llu us     %7llu us";
+
+const char stats_head_server[] =
+"\n Interval(sec)    RX pkts/s    TX pkts/s      Bandwidth (Mbits/s)   Datagrams Sent   Datagrams Recvd";
+const char summary_head_server[]=
+"\n Interval(sec)         Bandwidth (Mbits/s)   Total Datagrams Sent   Total Datagrams Recvd";
+const char stats_number_server[]=
+"\n%7.2f-%-7.2f   %9llu    %9llu    %11.2f             %14llu    %14llu";
+const char summary_stats_number_server[]=
+"\n%7.2f-%-7.2f        %9.2f             %20llu    %20llu";
+
 const char on_host_conn[]=
 "Connecting to host %s, port %u\n";
 const char summary_dot_line[]=
