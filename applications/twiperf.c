@@ -7,10 +7,15 @@
 #include <stats.h>
 #include <math.h>
 #include "twiperf.h"
+
 #define PacketLimit 0
 #define UDP_PROTO_ID    17
+#define GIGA_UNIT 1000000000
+#define MEGA_UNIT 1000000
+#define KILO_UNIT 1000
 
-int server_flag, client_flag;
+
+int server_flag, client_flag, rate_flag;
 
 tw_buf_t * tx_buf; //global memory buffer variable, equal the payload user given in arguments.
 tw_loop_t * tw_loop; // event loop, used for client and server.                           
@@ -24,6 +29,8 @@ struct udp_hdr * udp_hdr_d; //udp header 8 bytes
 uint32_t dst_ip, src_ip;    // ips in decimal
 uint16_t eth_type;
 uint16_t src_port, dst_port;
+uint64_t pps_delay;
+uint64_t curr_time_cycle, prev_time_cycle;
 
 struct iperf_test test;
 struct iperf_stats test_stats;
@@ -68,14 +75,39 @@ void sig_handler(int signo) /*On presseing Ctrl-C*/
     }
 }
 
+double unit_atof_rate(const char *s)
+{
+    double n;
+    char suffix;// = '/0';
+
+    sscanf(s, "%lf%c", &n, &suffix);
+
+    switch(suffix)
+    {
+        case 'g': case 'G':
+            n *= GIGA_UNIT;
+            break;
+        case 'm': case 'M':
+            n *= MEGA_UNIT;
+            break;
+        case 'k': case 'K':
+            n *= KILO_UNIT;
+            break;
+        default:
+            break;
+    }
+
+    return n;
+}
+
 int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*parsing user given arguments*/
 {
     int udp_flag, ethernet_flag;
     static struct option longopts[] = { { "udp", no_argument, NULL, 'u' }, { "ethernet",
     no_argument, NULL, 'e' }, { "server", no_argument, NULL, 's' }, { "client",
     required_argument, NULL, 'c' }, { "help", no_argument, NULL, 'h' }, { "port",
-    required_argument, NULL, 'p' }, { "bytes", required_argument, NULL, 'n' }, { NULL, 0,
-    NULL, 0 } };
+    required_argument, NULL, 'p' }, { "bytes", required_argument, NULL, 'n' }, { "bandwith", required_argument, NULL, 'b'},
+    { NULL, 0, NULL, 0 } };
     int flag;
     server_flag = client_flag = udp_flag = ethernet_flag = 0;
     test->packet_size = 1500; //initialized to default value of 64 bytes pcket size
@@ -86,7 +118,7 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*pa
     udp_flag = 1;
     test->protocol_id = 2;
 
-    while ((flag = getopt_long(argc, argv, "n:p:uec:hs", longopts, NULL)) != -1)
+    while ((flag = getopt_long(argc, argv, "b:n:p:uec:hs", longopts, NULL)) != -1)
     {
         switch (flag)
         {
@@ -96,11 +128,23 @@ int twiperf_parse_arguments(struct iperf_test *test, int argc, char **argv) /*pa
             case 'n':
                 test->packet_size = atoi(optarg);
                 break;
+            case 'b':
+                test->rate = unit_atof_rate(optarg);
+                rate_flag = 1;
+                client_flag = 1;
+                break;
             case 'c':
                 client_flag = 1;
                 test->role = 2;
                 test->client_mac = tw_get_ether_addr("tw0");
                 test->server_ip = tw_cpu_to_be_32(tw_convert_ip_str_to_dec(strdup(optarg)));
+
+                if(test->server_ip == 0)
+                {
+                    twiperf_usage();
+                    exit(1);
+                }
+
                 test->client_ip = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
                 break;
             case 's':
@@ -313,28 +357,34 @@ void print_perf_stats(tw_timer_t * timer_handle)
 /*send udp packet, used in udp_app_client event loop*/
 void pkt_tx(tw_tx_t * handle)
 {
-    test.eth = test.tx_buf->data;
-    test.ip = (test.tx_buf->data + sizeof(struct ether_hdr));
-    test.udp = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
-	test.app = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
-    test.app->payload = tw_get_current_timer_cycles();
-    test.udp->src_port = tw_cpu_to_be_16(test.client_port);
-    test.udp->dst_port = tw_cpu_to_be_16(test.server_port);
-    test.udp->dgram_len = tw_cpu_to_be_16(
-    test.tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
-    test.udp->dgram_cksum = 0;
-    test.ip->total_length = tw_cpu_to_be_16(test.tx_buf->size - sizeof(struct ether_hdr));
-    test.ip->next_proto_id = UDP_PROTO_ID;
-    test.ip->src_addr = test.client_ip;
-    test.ip->dst_addr = test.server_ip;
-    test.ip->version_ihl = 0x45;
-    test.ip->time_to_live = 63;
-    test.ip->hdr_checksum = tw_ipv4_cksum(test.ip);
-    test.eth->ether_type = tw_cpu_to_be_16(ETHER_TYPE_IPv4);
-    tw_copy_ether_addr(test.server_mac, &(test.eth->d_addr));
-    tw_copy_ether_addr(test.client_mac, &(test.eth->s_addr));
-    tw_send_pkt(test.tx_buf, "tw0");
-    test_stats.datagrams_sent++;
+    curr_time_cycle = tw_get_current_timer_cycles();
+
+    if((curr_time_cycle - prev_time_cycle) > pps_delay)
+    {
+        prev_time_cycle = curr_time_cycle;
+        test.eth = test.tx_buf->data;
+        test.ip = (test.tx_buf->data + sizeof(struct ether_hdr));
+        test.udp = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
+        test.app = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
+        test.app->payload = tw_get_current_timer_cycles();
+        test.udp->src_port = tw_cpu_to_be_16(test.client_port);
+        test.udp->dst_port = tw_cpu_to_be_16(test.server_port);
+        test.udp->dgram_len = tw_cpu_to_be_16(
+        test.tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
+        test.udp->dgram_cksum = 0;
+        test.ip->total_length = tw_cpu_to_be_16(test.tx_buf->size - sizeof(struct ether_hdr));
+        test.ip->next_proto_id = UDP_PROTO_ID;
+        test.ip->src_addr = test.client_ip;
+        test.ip->dst_addr = test.server_ip;
+        test.ip->version_ihl = 0x45;
+        test.ip->time_to_live = 63;
+        test.ip->hdr_checksum = tw_ipv4_cksum(test.ip);
+        test.eth->ether_type = tw_cpu_to_be_16(ETHER_TYPE_IPv4);
+        tw_copy_ether_addr(test.server_mac, &(test.eth->d_addr));
+        tw_copy_ether_addr(test.client_mac, &(test.eth->s_addr));
+        tw_send_pkt(test.tx_buf, "tw0");
+        test_stats.datagrams_sent++;
+    }
 }
 
 int udp_app_client(__attribute__((unused)) void * app_params)
@@ -462,6 +512,13 @@ int main(int argc, char **argv)
         server_ip.s_addr = (test.server_ip);
         twiprintf(&test, on_host_conn, inet_ntoa(server_ip), test.server_port);
         tw_get_timer_hz(&clock_rate);
+
+        if(test.rate == 0)
+            pps_delay = 0;
+        else
+            pps_delay = clock_rate/test.rate;
+
+        //printf("pps_delay: %" PRIu64 " rate: %lf", pps_delay, test.rate);
         clock_rate = clock_rate/1000000;
 
         udp_app_client(NULL);

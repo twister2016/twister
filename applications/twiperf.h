@@ -57,6 +57,7 @@ struct iperf_test
         uint32_t server_ip;
         uint32_t client_ip;
         uint32_t packet_size;
+        double rate;
         struct ether_addr * server_mac;
         struct ether_addr * client_mac;
         struct ether_hdr * eth;
@@ -90,7 +91,8 @@ const char usage_longstr[] = "Usage: twiperf [-s|-c host] [options]\n"
         "  -s, --server              run in server mode\n"
         "Client specific:\n"
         "  -c, --client    <host>    run in client mode, connecting to <host>\n"
-        "  -n, --bytes     <size>    Packet size in bytes. Default is 1470 bytes \n";
+        "  -n, --bytes     <size>    Packet size in bytes. Default is 1470 bytes \n"
+        "  -b, --bandwith  <number>  Number of packets to send per second e.g. 1M \n";
 
 char * iperf_strerror(int i_errno)
 {
