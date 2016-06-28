@@ -308,9 +308,13 @@ void calculate_latency(uint64_t latency)
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer)
 {
     eth = buffer->data;
-	test.app = buffer->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
-	calculate_latency(test.app->payload);
-    test_stats.datagrams_recv++;
+    udp_hdr_d = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
+    if(udp_hdr_d->src_port == tw_cpu_to_be_16(test.client_port) && udp_hdr_d->dst_port == tw_cpu_to_be_16(test.server_port));
+    {
+	    test.app = (struct app_hdr *) udp_hdr_d + sizeof(struct udp_hdr);
+	    calculate_latency(test.app->payload);
+        test_stats.datagrams_recv++;
+    }
     tw_free_pkt(buffer);
     return;
 }
@@ -340,7 +344,7 @@ void print_perf_stats(tw_timer_t * timer_handle)
 
     if(client_flag)
         twiprintf(&test, stats_number, test_stats.interval_window - 1.0, test_stats.interval_window,
-                  test_stats.rx_pps, tw_stats.tx_pps, bandwidth,test_stats.datagrams_sent,
+                  tw_stats.rx_pps, tw_stats.tx_pps, bandwidth,test_stats.datagrams_sent,
                   test_stats.datagrams_recv, latency, jitter);
 
     test_stats.cum_lat += latency;
@@ -369,8 +373,7 @@ void pkt_tx(tw_tx_t * handle)
         test.app->payload = tw_get_current_timer_cycles();
         test.udp->src_port = tw_cpu_to_be_16(test.client_port);
         test.udp->dst_port = tw_cpu_to_be_16(test.server_port);
-        test.udp->dgram_len = tw_cpu_to_be_16(
-        test.tx_buf->size - sizeof(struct ether_hdr) - sizeof(struct ipv4_hdr));
+        test.udp->dgram_len = tw_cpu_to_be_16(test.packet_size);
         test.udp->dgram_cksum = 0;
         test.ip->total_length = tw_cpu_to_be_16(test.tx_buf->size - sizeof(struct ether_hdr));
         test.ip->next_proto_id = UDP_PROTO_ID;
@@ -506,13 +509,12 @@ int main(int argc, char **argv)
 
     if(test.protocol_id == 2 && test.role == 2)
     {
-        test.tx_buf = tw_new_buffer(test.packet_size);
+        test.tx_buf = tw_new_buffer(test.packet_size + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr));
         tw_stats.secs_passed = 0;
         struct in_addr server_ip;
         server_ip.s_addr = (test.server_ip);
         twiprintf(&test, on_host_conn, inet_ntoa(server_ip), test.server_port);
         tw_get_timer_hz(&clock_rate);
-
         if(test.rate == 0)
             pps_delay = 0;
         else
