@@ -291,7 +291,7 @@ void print_perf_stats(tw_timer_t * timer_handle)
 
     if(server_flag)
         twiprintf(&test, stats_number_server, test_stats.interval_window - 1.0, test_stats.interval_window,
-              test_stats.rx_pps, tw_stats.tx_pps, bandwidth,test_stats.datagrams_sent,
+              tw_stats.rx_pps, tw_stats.tx_pps, bandwidth,test_stats.datagrams_sent,
               test_stats.datagrams_recv);
 
     if(client_flag)
