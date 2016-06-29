@@ -172,5 +172,7 @@ def main():
 
 if __name__ == '__main__':
 
-    main()
-
+    if os.getuid() == 0:
+        main()
+    else:
+        exit("\nYou need to have root privileges to run this script.\nPlease try again, this time using 'sudo'. Exiting.\n")
