@@ -31,8 +31,8 @@ uint16_t eth_type;
 uint16_t src_port, dst_port;
 uint64_t pps_delay;
 uint64_t curr_time_cycle, prev_time_cycle;
-uint64_t current, jitter1;
-
+uint64_t current;
+int64_t jitter1;
 struct iperf_test test;
 struct iperf_stats test_stats;
 
