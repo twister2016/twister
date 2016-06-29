@@ -31,6 +31,7 @@ uint16_t eth_type;
 uint16_t src_port, dst_port;
 uint64_t pps_delay;
 uint64_t curr_time_cycle, prev_time_cycle;
+uint64_t current, jitter1;
 
 struct iperf_test test;
 struct iperf_stats test_stats;
@@ -290,16 +291,19 @@ int ether_app_server(__attribute__((unused)) void * app_params)
 
 void calculate_latency(uint64_t latency)
 {
-    //test_stats.latency = (tw_get_current_timer_cycles() - latency)/clock_rate;
-   // uint64_t current = tw_get_current_timer_cycles();
-    //uint64_t diff = current - latency;
-    uint64_t current = (uint64_t)((tw_get_current_timer_cycles() - latency)/clock_rate);
+    /*uint64_t current = tw_get_current_timer_cycles();
+    uint64_t diff = current - latency;
+    test_stats.latency = diff/clock_rate;*/
+
+    current = (uint64_t)((tw_get_current_timer_cycles() - latency)/clock_rate);
     test_stats.latency += current;
-    int64_t jitter = current - test_stats.prev_lat;
-    if (jitter < 0) 
-	test_stats.jitter -= jitter;
+    jitter1 = current - test_stats.prev_lat;
+
+    if (jitter1 < 0)
+        test_stats.jitter -= jitter1;
     else
-    	test_stats.jitter += (uint64_t)(jitter);
+    	test_stats.jitter += jitter1;
+
     test_stats.prev_lat = current;
     test_stats.rx_pps ++;
 }
@@ -307,14 +311,17 @@ void calculate_latency(uint64_t latency)
 /*packet receive callbacks, receives the packet , increment the counter and free the buffer*/
 void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer)
 {
-    eth = buffer->data;
-    udp_hdr_d = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
-    if(udp_hdr_d->src_port == tw_cpu_to_be_16(test.client_port) && udp_hdr_d->dst_port == tw_cpu_to_be_16(test.server_port));
+    //eth = buffer->data;
+    //udp_hdr_d = buffer->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
+    //if(udp_hdr_d->src_port == tw_cpu_to_be_16(test.client_port) && udp_hdr_d->dst_port == tw_cpu_to_be_16(test.server_port));
     {
-	    test.app = (struct app_hdr *) udp_hdr_d + sizeof(struct udp_hdr);
+	    //test.app = (struct app_hdr *) udp_hdr_d + sizeof(struct udp_hdr);
+        test.app = buffer->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct udp_hdr);
+
 	    calculate_latency(test.app->payload);
         test_stats.datagrams_recv++;
     }
+
     tw_free_pkt(buffer);
     return;
 }
@@ -330,11 +337,9 @@ void print_perf_stats(tw_timer_t * timer_handle)
     uint64_t jitter = 0;
     if (test_stats.rx_pps > 1)
     {
-
         latency = (uint64_t)(test_stats.latency/test_stats.rx_pps);
-	jitter = (uint64_t)(test_stats.jitter/(test_stats.rx_pps-1));
-//        jitter = sqrt((test_stats.jitter / (tw_stats.rx_pps - 1)) - (latency * latency * (tw_stats.rx_pps/(tw_stats.rx_pps - 1))));
- 
+        jitter = (uint64_t)(test_stats.jitter/(test_stats.rx_pps-1));
+//      jitter = sqrt((test_stats.jitter / (tw_stats.rx_pps - 1)) - (latency * latency * (tw_stats.rx_pps/(tw_stats.rx_pps - 1))));
     }
 
     if(server_flag)
@@ -366,28 +371,35 @@ void pkt_tx(tw_tx_t * handle)
     if((curr_time_cycle - prev_time_cycle) > pps_delay)
     {
         prev_time_cycle = curr_time_cycle;
-        test.eth = test.tx_buf->data;
-        test.ip = (test.tx_buf->data + sizeof(struct ether_hdr));
-        test.udp = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
         test.app = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
         test.app->payload = tw_get_current_timer_cycles();
-        test.udp->src_port = tw_cpu_to_be_16(test.client_port);
-        test.udp->dst_port = tw_cpu_to_be_16(test.server_port);
-        test.udp->dgram_len = tw_cpu_to_be_16(test.packet_size);
-        test.udp->dgram_cksum = 0;
-        test.ip->total_length = tw_cpu_to_be_16(test.tx_buf->size - sizeof(struct ether_hdr));
-        test.ip->next_proto_id = UDP_PROTO_ID;
-        test.ip->src_addr = test.client_ip;
-        test.ip->dst_addr = test.server_ip;
-        test.ip->version_ihl = 0x45;
-        test.ip->time_to_live = 63;
-        test.ip->hdr_checksum = tw_ipv4_cksum(test.ip);
-        test.eth->ether_type = tw_cpu_to_be_16(ETHER_TYPE_IPv4);
-        tw_copy_ether_addr(test.server_mac, &(test.eth->d_addr));
-        tw_copy_ether_addr(test.client_mac, &(test.eth->s_addr));
+
         tw_send_pkt(test.tx_buf, "tw0");
         test_stats.datagrams_sent++;
     }
+}
+
+void make_pkt()
+{
+    test.eth = test.tx_buf->data;
+    test.ip = (test.tx_buf->data + sizeof(struct ether_hdr));
+    test.udp = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
+    test.app = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
+    test.udp->src_port = tw_cpu_to_be_16(test.client_port);
+    test.udp->dst_port = tw_cpu_to_be_16(test.server_port);
+    test.udp->dgram_len = tw_cpu_to_be_16(test.packet_size);
+    test.udp->dgram_cksum = 0;
+    test.ip->total_length = tw_cpu_to_be_16(test.tx_buf->size - sizeof(struct ether_hdr));
+    test.ip->next_proto_id = UDP_PROTO_ID;
+    test.ip->src_addr = test.client_ip;
+    test.ip->dst_addr = test.server_ip;
+    test.ip->version_ihl = 0x45;
+    test.ip->time_to_live = 63;
+    test.ip->hdr_checksum = tw_ipv4_cksum(test.ip);
+    test.eth->ether_type = tw_cpu_to_be_16(ETHER_TYPE_IPv4);
+    tw_copy_ether_addr(test.server_mac, &(test.eth->d_addr));
+    tw_copy_ether_addr(test.client_mac, &(test.eth->s_addr));
+    test.app->payload = tw_get_current_timer_cycles();
 }
 
 int udp_app_client(__attribute__((unused)) void * app_params)
@@ -444,6 +456,8 @@ void tw_udp_connect(tw_timer_t * timer_handle_this)
             printf("Packet Size: %d bytes\n",test.packet_size);
             printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
             twiprintf(&test, stats_head);
+            make_pkt();
+
 
             tw_tx_t * tx_handle = tw_tx_init(tw_loop); //registering the tx event for client, ready to send packets
             if(tx_handle == NULL)
@@ -522,7 +536,6 @@ int main(int argc, char **argv)
 
         //printf("pps_delay: %" PRIu64 " rate: %lf", pps_delay, test.rate);
         clock_rate = clock_rate/1000000;
-
         udp_app_client(NULL);
     }
 
