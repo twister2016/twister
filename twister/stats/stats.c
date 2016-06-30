@@ -10,6 +10,23 @@ uint32_t stats_server_ip = 0;
 uint16_t l4_stats_port = 0;
 uint64_t prev_pkts_rx = 0, prev_pkts_tx = 0;
 
+int tw_get_port_stats (char *portname)
+{
+    unsigned int id =  tw_eth_name_to_id (portname);
+    struct rte_eth_stats eth_stats;
+    rte_eth_stats_get(id, &eth_stats);
+    struct ether_addr *addr = tw_get_ether_addr( portname);
+    char buf[ETHER_ADDR_FMT_SIZE];
+    ether_format_addr(buf, ETHER_ADDR_FMT_SIZE, addr);
+    printf("Mac Address: %s", buf);
+                printf("\nPort %s stats:\n", portname);
+                printf(" - Pkts in:   %"PRIu64"\n", eth_stats.ipackets);
+                printf(" - Pkts out:  %"PRIu64"\n", eth_stats.opackets);
+                printf(" - In Errs:   %"PRIu64"\n", eth_stats.ierrors);
+                printf(" - Out Errs:  %"PRIu64"\n", eth_stats.oerrors);
+                printf(" - Mbuf Errs: %"PRIu64"\n", eth_stats.rx_nombuf);
+   return 0;
+}
 void tw_clear_scr(void)
 {
     const char clr[] = { 27, '[', '2', 'J', '\0' };

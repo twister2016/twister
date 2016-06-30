@@ -10,6 +10,7 @@
 #include <lcoreconf.h>
 #include <eth.h>
 #include <rte_ethdev.h>
+#include <rte_ether.h>
 #include <portconf.h>
 #include <rte_cycles.h>
 #include <timerfuncs.h>
@@ -59,7 +60,7 @@ int tw_init_stats(uint8_t, uint32_t);
 void tw_print_global_stats(void);
 void tw_calc_average_rtt(uint64_t);
 int tw_calc_global_stats(void);
-
+int tw_get_port_stats (char * portname);
 float average_rtt;
 uint64_t data_pkt_recvd;
 uint64_t data_pkt_sent;
