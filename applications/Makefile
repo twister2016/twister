@@ -6,7 +6,7 @@ DEB_DEPENDS  = make gcc
 
 .PHONY: help build clean install
 
-build: clean bootstrap ARP PING ICMPECHO REVERSEARP MULTIETHERECHO GATEWAY IPERF SMOKE
+build: clean bootstrap ARP PING ICMPECHO REVERSEARP MULTIETHERECHO GATEWAY IPERF SMOKE GETSTATS
 
 help:
 	@echo "Make Targets:"
@@ -59,6 +59,8 @@ GATEWAY: twgateway.c
 IPERF: twiperf.c
 	$(CC) twiperf.c $(TWFLAGS) -o build/twiperf
 
+GETSTATS: twgetstats.c
+	$(CC) twgetstats.c $(TWFLAGS) -o build/twgetstats
 install: 
 	cp ./build/* /usr/bin/
 
