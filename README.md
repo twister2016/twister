@@ -50,9 +50,29 @@ For example, final configuration in `/etc/twister/config.json` file may look lik
 [{"ip_addrs": [{ "ip_address": "10.0.2.129", "gateway_ip": "10.0.2.1", "subnet_mask": "255.255.255.0"}], "port_name": "tw0"}]
 ```
 
-Run `twister-config`  to apply the changes.
+To use multiple ports, edit the '/etc/twister/twister.conf` file with sudo privelages and append additional ports to the `whitelist`.
+For example, if eth1 and eth2 are to be used by Twister, the '/etc/twister/twister.conf' file would look like:
+
 ```
-sudo twister-config
+[DEFAULT]
+
+blacklist=eth0
+whitelist=eth1,eth2
+```
+Network configuration for additional ports  would need to be added to `/etc/twister/config.json`.
+For example, the `/etc/twister/config.json' file listing configurations for multiple two ports (added in the previous example) can be seen below.
+It is important to ensure that the ports have different names:
+
+```
+[{"ip_addrs": [{ "ip_address": "10.0.2.129", "gateway_ip": "10.0.2.1", "subnet_mask": "255.255.255.0"}], "port_name": "tw0"},
+{"ip_addrs": [{ "ip_address": "10.0.3.128", "gateway_ip": "10.0.3.1", "subnet_mask": "255.255.255.0"}], "port_name": "tw1"}]
+
+``` 
+
+
+Run `twifconfig`  to apply the changes.
+```
+sudo twiconfig
 ```
 This script will apply the configurations defined in `/etc/twister/twister.conf` and generate a json file `/etc/twister/twister_api.json` which will be used by Twister API.
 
