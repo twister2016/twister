@@ -35,7 +35,7 @@ uint64_t current;
 int64_t jitter1;
 struct iperf_test test;
 struct iperf_stats test_stats;
-
+int offset, offset1;
 void print_perf_stats(tw_timer_t * timer_handle);
 int udp_app_server(void *);
 void reply_udp_payload(tw_rx_t *, tw_buf_t *);
@@ -315,10 +315,9 @@ void pkt_rx(tw_rx_t * handle, tw_buf_t * buffer)
     //udp_hdr_d = buffer->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr);
     //if(udp_hdr_d->src_port == tw_cpu_to_be_16(test.client_port) && udp_hdr_d->dst_port == tw_cpu_to_be_16(test.server_port));
     {
-	    //test.app = (struct app_hdr *) udp_hdr_d + sizeof(struct udp_hdr);
-        test.app = buffer->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct udp_hdr);
-
-	    calculate_latency(test.app->payload);
+	    //test.app = (struct app_hdr *) udp_hdr_d + sizeof(struct udp_hdr);a
+        test.app = buffer->data + offset;
+        calculate_latency(test.app->payload);
         test_stats.datagrams_recv++;
     }
 
@@ -371,7 +370,7 @@ void pkt_tx(tw_tx_t * handle)
     if((curr_time_cycle - prev_time_cycle) > pps_delay)
     {
         prev_time_cycle = curr_time_cycle;
-        test.app = test.tx_buf->data + sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
+        test.app = test.tx_buf->data + offset1;
         test.app->payload = tw_get_current_timer_cycles();
 
         tw_send_pkt(test.tx_buf, "tw0");
@@ -491,7 +490,8 @@ void tw_udp_connect(tw_timer_t * timer_handle_this)
 int main(int argc, char **argv)
 {
     tw_init_global();
-
+    offset =  sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct udp_hdr);
+    offset1 = sizeof(struct ether_hdr) + sizeof(struct ipv4_hdr) + sizeof(struct app_hdr);
     if(twiperf_parse_arguments(&test, argc, argv) < 0)
     {
         iperf_err(&test, "parameter error - %s", iperf_strerror(i_errno));
