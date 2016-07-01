@@ -20,8 +20,8 @@ class Interface():
     def print_interface(self):
         print self.name.ljust(10), "inet addr:", self.inet, "Mask:", self.netmask, "Gateway:", self.gateway
         print "".ljust(10), "Status:", self.status, "HWaddr", self.ether
-        print "".ljust(10), "RX packets:", self.rx_pkts, "TX packets:".rjust(10), self.tx_pkts
-        print "".ljust(10), "RX bytes:", self.rx_bytes,"TX bytes:", self.tx_bytes
+#        print "".ljust(10), "RX packets:", self.rx_pkts, "TX packets:".rjust(10), self.tx_pkts
+#        print "".ljust(10), "RX bytes:", self.rx_bytes,"TX bytes:", self.tx_bytes
 
 
 def get_json():
