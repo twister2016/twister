@@ -70,8 +70,11 @@ def configure_interface(port_name, ip_address, netmask, gateway):
             interface = Interface()
             interface.name = port_name
             interface.inet = ip_address
+            twister_json[i]["ip_addrs"][0]["ip_address"] = ip_address
             interface.netmask = netmask
+            twister_json[i]["ip_addrs"][0]["subnet_mask"] = netmask
             interface.gateway = gateway
+            twister_json[i]["ip_addrs"][0]["gateway_ip"] = gateway
             port_found = True
 
     if not port_found:
