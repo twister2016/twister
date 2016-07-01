@@ -45,13 +45,19 @@ cores=1
 Edit port configurations in `/etc/twister/config.json`. `sudo` previleges will be required to edit this file.
 
 Provide the network configurations for the NIC to be used as twister ports. The ports should have the configurations of network interfaces listed as `whitelist` interfaces in `/etc/twister/twister.conf` file. These NICs will be used in Twister applications as data network.
-For example, final configuration in `/etc/twister/config.json` file may look like below:
+
+For example, run following command to configure tw0 port for twister.
+```
+sudo twifconfig tw0 10.0.2.129 255.255.255.0 10.0.2.1
+```
+
+Final configuration in `/etc/twister/config.json` file will look like below:
 ```
 [{"ip_addrs": [{ "ip_address": "10.0.2.129", "gateway_ip": "10.0.2.1", "subnet_mask": "255.255.255.0"}], "port_name": "tw0"}]
 ```
 
-To use multiple ports, edit the '/etc/twister/twister.conf` file with sudo privelages and append additional ports to the `whitelist`.
-For example, if eth1 and eth2 are to be used by Twister, the '/etc/twister/twister.conf' file would look like:
+To use multiple ports, edit the `/etc/twister/twister.conf` file with sudo privelages and append additional ports to the `whitelist`.
+For example, if eth1 and eth2 are to be used by Twister, the `/etc/twister/twister.conf` file would look like:
 
 ```
 [DEFAULT]
@@ -60,7 +66,7 @@ blacklist=eth0
 whitelist=eth1,eth2
 ```
 Network configuration for additional ports  would need to be added to `/etc/twister/config.json`.
-For example, the `/etc/twister/config.json' file listing configurations for multiple two ports (added in the previous example) can be seen below.
+For example, the `/etc/twister/config.json` file listing configurations for multiple two ports (added in the previous example) can be seen below.
 It is important to ensure that the ports have different names:
 
 ```
@@ -70,19 +76,19 @@ It is important to ensure that the ports have different names:
 ``` 
 
 
-Run `twifconfig`  to apply the changes.
+Run `twifconfig -s`  to apply the changes.
 ```
-sudo twiconfig
+sudo twiconfig -s
 ```
-This script will apply the configurations defined in `/etc/twister/twister.conf` and generate a json file `/etc/twister/twister_api.json` which will be used by Twister API.
+This script will apply the configurations defined in `/etc/twister/twister.conf` and `/etc/twister/config.json` files.
 
 ### Steps After Reboot
 If the machine is rebooted after setting up Twister, do following steps to start Twister.
 - Validate configurations in `/etc/twister/twister.conf` and `/etc/twister/config.json` files.
 - Make sure that interfaces listed as `whitelist` in `/etc/twister/twister.conf` are do not have any IP address assigned by Linux.
-- Run `twister-config` to apply the changes
+- Run `twifconfif` to apply the changes
 ```
-sudo twister-config
+sudo twifconfig -s
 ```
 
 ## Applications:
