@@ -75,6 +75,8 @@ def configure_interface(port_name, ip_address, netmask, gateway):
             twister_json[i]["ip_addrs"][0]["subnet_mask"] = netmask
             interface.gateway = gateway
             twister_json[i]["ip_addrs"][0]["gateway_ip"] = gateway
+            interface.ether = str(os.popen("sudo twgetstats " + \
+                              twister_json[i]["port_name"]).read().rstrip())
             port_found = True
 
     if not port_found:
