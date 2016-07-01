@@ -30,6 +30,7 @@ mk_dir:
 copy: mk_dir  
 	echo 'Copying configuration files'
 	cp $(SUBDIR2)/mk/tw_config.py $(INSTALLED_DIR)/scripts/tw_config.py
+	cp $(SUBDIR2)/mk/twister_interfaces.py $(INSTALLED_DIR)/scripts/twister_interfaces.py
 	cp $(SUBDIR2)/mk/insert_module.sh $(INSTALLED_DIR)/scripts/insert_module.sh
 	cp $(SUBDIR1)/tools/dpdk_nic_bind.py $(INSTALLED_DIR)/scripts/dpdk_nic_bind.py
 	cp -n $(SUBDIR2)/mk/twister.conf $(CONFIGURATION_FILES)/twister.conf

@@ -6,9 +6,11 @@ import ConfigParser
 import dpdk_nic_bind as lib_dpdk
 import shlex
 import os
+import sys
+import argparse
+import twister_interfaces as twconfig
 
 kernel=str(os.popen("uname -r").read().rstrip())
-
 dpdk_drivers = ["igb_uio", "vfio-pci", "uio_pci_generic"]
 # from dpdk.org/doc/nics
 supported_nic_drivers = ["ena", "cxgbe", "szedata2", "enic",
@@ -131,8 +133,8 @@ def load_dpdk_module(dpdk_kernel_module):
     subprocess.Popen(['sudo','/usr/lib/twister/scripts/insert_module.sh'],
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
+def configure():
 
-def main():
     cmd = "/usr/lib/twister/scripts/dpdk_nic_bind.py"
     twister_conf = "/etc/twister/twister.conf"
     twister_api = "/etc/twister/twister_api.json"
@@ -169,6 +171,32 @@ def main():
     with open(twister_api, 'w') as outfile:
         json.dump(twister_json, outfile)
 
+
+
+def main():
+    parser = argparse.ArgumentParser()   
+    parser.add_argument("port_name", nargs='?')
+    parser.add_argument("ip_addrs", nargs='?')
+    parser.add_argument("subnet_mask", nargs='?')
+    parser.add_argument("gateway_ip", nargs='?')
+    parser.add_argument("-s", "--configure", action = "store_true")
+    args = parser.parse_args()
+    
+    if args.configure:
+        configure ()
+        print ("\nTwister ports configured succesfully!\n")
+        twconfig.populate(print_flag = True)
+        sys.exit (0)
+    elif len (sys.argv) == 1:
+        twconfig.populate (print_flag = True)
+    elif len(sys.argv) == 2:
+        twconfig.print_interface (args.port_name)
+    elif len (sys.argv) == 5:
+        twconfig.configure_interface (args.port_name, args.ip_addrs, args.subnet_mask, args.gateway_ip)
+    else:
+        parser.print_help()
+        sys.exit (0)
+       
 
 if __name__ == '__main__':
 

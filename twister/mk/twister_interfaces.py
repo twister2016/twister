@@ -24,22 +24,6 @@ class Interface():
         print "".ljust(10), "RX bytes:", self.rx_bytes,"TX bytes:", self.tx_bytes
 
 
-
-def run():
-    c = Interface()
-    c.name = "tw0"
-    c.ether = "06:bb:3b:e0:25:0f"
-    c.inet = "10.0.2.26"
-    c.netmask = "255.255.255.0"
-    c.gateway = "10.0.2.1"
-    c.status = "UP"
-    c.rx_pkts = 9870
-    c.tx_pkts = 9870
-    c.rx_bytes = 10389650
-    c.tx_bytes = 10389650
-
-    c.print_interface()
-
 def get_json():
     json_data = open(config_json, "r+")
     twister_json = json.load(json_data)
@@ -61,6 +45,7 @@ def populate(print_flag=False):
     if print_flag:
         for twister_interface in interfaces:
             twister_interface.print_interface()
+            print "\n"
     return interfaces
 
 def print_interface (port_name):
@@ -97,6 +82,3 @@ def configure_interface(port_name, ip_address, netmask, gateway):
         json.dump(twister_json, outfile)
 
     interface.print_interface()
-
-#populate()
-#configure_interface("tw1", "10.0.4.124", "255.255.255.0", "10.0.4.1")
