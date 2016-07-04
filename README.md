@@ -78,7 +78,7 @@ It is important to ensure that the ports have different names:
 
 Run `twifconfig -s`  to apply the changes.
 ```
-sudo twiconfig -s
+sudo twifconfig -s
 ```
 This script will apply the configurations defined in `/etc/twister/twister.conf` and `/etc/twister/config.json` files.
 
