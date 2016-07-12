@@ -129,14 +129,15 @@ Twister should work on any 64bit Amazon linux image which support hardware virtu
 
 ```
 Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
+Amazon Linux AMI 2016.03.1 (HVM), SSD Volume Type
 ```
 Following Amazon Images should work with Twister as they meet the requirements of Twister. But they have not been tested yet.
+
 ```
-Amazon Linux AMI 2016.03.1 (HVM), SSD Volume Type
 Red Hat Enterprise Linux 7.2 (HVM), SSD Volume Type
 SUSE Linux Enterprise Server 12 SP1 (HVM), SSD Volume Type
 ```
-Select `Ubuntu Server 14.04 LTS (HVM), SSD Volume Type` (64 bit) image from the list. 
+Select `Ubuntu Server 14.04 LTS (HVM), SSD Volume Type` or `Amazon Linux AMI 2016.03.1 (HVM), SSD Volume Type` (64 bit) image from the list. 
 
 
 ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815821/03430ef0-0bc7-11e6-9ced-3321d83a97c6.jpg)
@@ -157,7 +158,9 @@ For ease of use `c4.xlarge` instance type is selected here.
  
  ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815829/08ec8a7a-0bc7-11e6-9449-d7e2cc143507.png)
 
-- In step 3 (configure instance details), go to `Advanced Details` and add following lines in text box labelled as `User data`. 
+- In step 3 (configure instance details), go to `Advanced Details` and add following lines in text box labelled as `User data`.
+-In case of Ubuntu AMI: 
+
 ```bash
 #!/bin/bash
 apt-get update -y
@@ -168,6 +171,17 @@ mkdir -p /mnt/huge
 sed -i -e '$i \mount -t hugetlbfs nodev /mnt/huge &\n' /etc/rc.local
 reboot
 ```
+-In case of Amazon Linux or CentOS AMI:
+
+```#!/bin/bash
+yum update -y
+yum install make gcc gdb git unzip kernel-devel redhat-lsb -y
+bash -c "echo vm.nr_hugepages = 1024 >> /etc/sysctl.conf"
+mkdir -p /mnt/huge
+sed -i -e '$i \mount -t hugetlbfs nodev /mnt/huge &\n' /etc/rc.local
+reboot
+```
+
 These commands in user-data will install the software dependecies required for twister, configure hugepages creation at boot time and reboot the VM for the changes to take effect. 
 
  ![alt tag](https://cloud.githubusercontent.com/assets/3003907/14815832/0bd3bd58-0bc7-11e6-887b-36f900d36ca2.png)
