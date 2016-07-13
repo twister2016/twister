@@ -7,6 +7,7 @@
 #include <tw_api.h>
 #include <unistd.h>
 #include <inttypes.h>
+#include <getopt.h>
 #include <math.h>
 #include <time.h>
 #include <stdbool.h>
@@ -196,44 +197,52 @@ int main(int argc, char **argv)
 {
     argvector = argv;
     argcount = argc;
+    int debug_flag = 0, flag;
+    char* line = argvector[1];
+    if(argc > 4 || argc <= 1)
+     {
+        printf("Usage Error\n");
+        exit(0);
+     }
+     else
+     {
+        char* line = argvector[1];
+         if(isValidIpAddress(line))
+         {
+           ping_ip = tw_convert_ip_str_to_dec(line);
+         }
+         else
+         {
+           printf("Please specify a valid ip address\n");
+           exit(0);
+         }
+    }      
+    static struct option longopts[] = {{ "debug", no_argument, NULL, 'd' },{ NULL, 0, NULL, 0 }};
+    while ((flag = getopt_long(argc, argv, "d", longopts, NULL)) != -1)
+    {
+        switch (flag)
+         {
+            case 'd':
+                debug_flag = 1;
+                printf("Debug Flag works\n");
+                break;
+            default:
+                printf("Default Usage error not valid\n");
+                exit (0);
+         }
+     }
+    optind = 0;
+    tw_enable_debug(debug_flag);
     tw_init_global();
     tw_map_port_to_engine("tw0", "engine0");
 
     if(signal(SIGINT, sig_handler) == SIG_ERR)
         printf("\ncan't catch SIGINT\n");
-
-    if(argcount > 2)
-    {
-        printf("Please specify twping <x.x.x.x> \n");
-        exit(1);
-    }
-
-    if(argcount < 2)
-    {
-        printf("Please specify twping <x.x.x.x> \n");
-        exit(1);
-    }
-
-    else if(argcount == 2)
-    {
-        char* line = argv[1];
-        if(isValidIpAddress(line))
-        {
-            ping_ip = tw_convert_ip_str_to_dec(line);
-            ping = 1;
-            total_init_time = current_timestamp();
-            struct in_addr ip_addr;
-            ip_addr.s_addr = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
-            printf("PING %s (%s) 56(84) bytes of data.\n", line, inet_ntoa(ip_addr));
-        }
-
-        else
-        {
-            printf("command not valid\n");
-            exit(1);
-        }
-    }
-
+    ping = 1;
+    total_init_time = current_timestamp();
+    struct in_addr ip_addr;
+    ip_addr.s_addr = tw_cpu_to_be_32(tw_get_ip_addr("tw0"));
+    printf("PING %s (%s) 56(84) bytes of data.\n", line, inet_ntoa(ip_addr));
     user_app_main(NULL);
     return 0;
 }

@@ -105,6 +105,8 @@ tw_rx_t * tw_rx_init(tw_loop_t * loop);
  */
 
 tw_tx_t * tw_tx_init(tw_loop_t * loop);
+void tw_enable_debug(int flag);
+
 
 /** Register the callback functions for rx handles
  *
