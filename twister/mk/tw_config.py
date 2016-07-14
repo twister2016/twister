@@ -8,6 +8,7 @@ import shlex
 import os
 import sys
 import argparse
+from netaddr import *
 import twister_interfaces as twconfig
 
 kernel=str(os.popen("uname -r").read().rstrip())
@@ -177,7 +178,6 @@ def main():
     parser = argparse.ArgumentParser()   
     parser.add_argument("port_name", nargs='?')
     parser.add_argument("ip_addrs", nargs='?')
-    parser.add_argument("subnet_mask", nargs='?')
     parser.add_argument("gateway_ip", nargs='?')
     parser.add_argument("-s", "--configure", action = "store_true")
     args = parser.parse_args()
@@ -191,8 +191,13 @@ def main():
         twconfig.populate (print_flag = True)
     elif len(sys.argv) == 2:
         twconfig.print_interface (args.port_name)
-    elif len (sys.argv) == 5:
-        twconfig.configure_interface (args.port_name, args.ip_addrs, args.subnet_mask, args.gateway_ip)
+    elif len (sys.argv) == 4 or len (sys.argv) == 3 :
+        ip = IPNetwork(args.ip_addrs)
+        gateway = str(IPAddress(( int(ip.ip) & int (ip.netmask) ) + 1 ))
+        if args.gateway_ip is not None:
+            gateway = args.gateway_ip
+        print (gateway + " " + str (ip.ip) + " " + str (ip.netmask))
+        twconfig.configure_interface (args.port_name, str (ip.ip), str(ip.netmask), gateway)
     else:
         parser.print_help()
         sys.exit (0)
