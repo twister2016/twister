@@ -165,7 +165,7 @@ For ease of use `c4.xlarge` instance type is selected here.
 #!/bin/bash
 apt-get update -y
 apt-get upgrade -y
-apt-get install linux-generic linux-headers-generic make gcc gdb git unzip -y
+apt-get install linux-generic linux-headers-generic make gcc gdb git unzip python-netaddr -y
 bash -c "echo vm.nr_hugepages = 1024 >> /etc/sysctl.conf"
 mkdir -p /mnt/huge
 sed -i -e '$i \mount -t hugetlbfs nodev /mnt/huge &\n' /etc/rc.local
@@ -176,7 +176,8 @@ reboot
 ```
 #!/bin/bash
 yum update -y
-yum install make gcc gdb git unzip kernel-devel redhat-lsb -y
+yum install make gcc gdb git unzip kernel-devel redhat-lsb python-pip -y
+pip install --upgrade netaddr
 bash -c "echo vm.nr_hugepages = 1024 >> /etc/sysctl.conf"
 mkdir -p /mnt/huge
 sed -i -e '$i \mount -t hugetlbfs nodev /mnt/huge &\n' /etc/rc.local
