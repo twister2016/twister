@@ -173,7 +173,7 @@ reboot
 ```
 -In case of Amazon Linux or CentOS AMI:
 
-```
+```bash
 #!/bin/bash
 yum update -y
 yum install make gcc gdb git unzip kernel-devel redhat-lsb python-pip -y
