@@ -196,7 +196,10 @@ def main():
         gateway = str(IPAddress(( int(ip.ip) & int (ip.netmask) ) + 1 ))
         if args.gateway_ip is not None:
             gateway = args.gateway_ip
-        print (gateway + " " + str (ip.ip) + " " + str (ip.netmask))
+        if IPAddress(gateway) not in ip:
+            print ("Gateway is not in network!")
+            sys.exit (0)
+        #print (gateway + " " + str (ip.ip) + " " + str (ip.netmask))
         twconfig.configure_interface (args.port_name, str (ip.ip), str(ip.netmask), gateway)
     else:
         parser.print_help()
