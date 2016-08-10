@@ -1,3 +1,7 @@
+/** @file Gathers stats and displays them
+ *
+ */
+
 #ifndef _STATS_H_
 #define _STATS_H_
 
@@ -30,11 +34,18 @@ uint16_t l4_stats_port;
 uint64_t global_pps_limit;
 uint64_t global_pps_delay;
 
+/** To calculate RTT
+ *
+ */
 struct average_filter
 {
         float timestamp;
         struct average_filter* next;
 }__attribute__ ((__packed__));
+
+/** Contains all stats
+ *
+ */
 struct stats_option
 {
         uint64_t secs_passed;
@@ -55,11 +66,34 @@ uint8_t average_list_size;
 struct stats_option tw_stats;
 extern uint64_t prev_pkts_rx, prev_pkts_tx;
 
+/** Clears screen
+ *
+ */
 void tw_clear_scr(void);
-int tw_init_stats(uint8_t, uint32_t);
+
+/** Prints all the global stats, essentially prints the stats struct
+ *
+ */
 void tw_print_global_stats(void);
-void tw_calc_average_rtt(uint64_t);
+
+/** Calculates RTT
+ *
+ * @param time_clk :Current time
+ */
+void tw_calc_average_rtt(uint64_t time_clk);
+
+/** Populates the stats structure
+ *
+ * @return 0(TRUE)
+ */
 int tw_calc_global_stats(void);
+
+/** Only calculates stats for a specific port.
+ *
+ * @param portname :Name of port in string form
+ *
+ * @return
+ */
 int tw_get_port_stats (char * portname);
 float average_rtt;
 uint64_t data_pkt_recvd;

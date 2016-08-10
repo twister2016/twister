@@ -1,3 +1,7 @@
+/**@file Contains structs that have info about ports, buffers for each port.
+ *
+ */
+
 #ifndef _PORTCONF_H_
 #define _PORTCONF_H_
 
@@ -30,6 +34,9 @@ enum
     MGMT_PORT = 0x00000010
 }__attribute__((__packed__));
 
+/** Table of every buffer, a list of all memory buffers.
+ *
+ */
 struct mbuf_table
 {
         int len;
@@ -37,6 +44,9 @@ struct mbuf_table
         uint8_t portid;
 }__attribute__((__packed__));
 
+/** Contains info about port like IPs, name etc.
+ *
+ */
 struct port_info
 {
         struct ether_addr * eth_mac;

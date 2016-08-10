@@ -1,3 +1,6 @@
+/** @file Contains an enum and a single function to return core ID
+ *
+ */
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
 
@@ -14,6 +17,10 @@ enum
     RESERVE_FIRST_ENGINE = 254
 };
 
+/** Returns the current core ID
+ *
+ * @return Core ID
+ */
 unsigned tw_current_engine(void);
 
 #endif

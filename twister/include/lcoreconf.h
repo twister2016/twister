@@ -1,3 +1,7 @@
+/** @file Contains all the functionality related to core configuration
+ *
+ */
+
 #ifndef _LCORECONF_H_
 #define _LCORECONF_H_
 
@@ -10,6 +14,9 @@
 #define MAX_TX_PKT_BURST 32
 #define MASTER_LCORE 0
 
+/** Contains all the info about a core or engine
+ *
+ */
 struct lcore_conf
 {
         char core_name[10];
@@ -25,8 +32,19 @@ struct lcore_conf
 
 struct lcore_conf lcore_conf[MAX_LCORES];
 
+/** Creates core masks. Hard coded.
+ * @param
+ * @param
+ * @return
+ */
 int tw_lcore_conf_init(void);
-int tw_engine_name_to_lcore_id(char*);
-int tw_lcore_pipeline_init(void);
+
+/** Takes the engine name and returns its lcore ID
+ *
+ * @param engineName :Name of engine in string form
+ *
+ * @return ID fo engine
+ */
+int tw_engine_name_to_lcore_id(char* engineName);
 
 #endif
