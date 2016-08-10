@@ -179,7 +179,7 @@ yum update -y
 yum install make gcc gdb git unzip kernel-devel redhat-lsb -y
 bash -c "echo vm.nr_hugepages = 1024 >> /etc/sysctl.conf"
 mkdir -p /mnt/huge
-chmod +x rc.local
+chmod +x /etc/rc.local
 sed -i -e '$i \mount -t hugetlbfs nodev /mnt/huge &\n' /etc/rc.local
 bash -c "echo nodev /mnt/huge hugetlbfs defaults 0 0 >> /etc/fstab" 
 reboot
