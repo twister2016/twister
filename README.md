@@ -10,6 +10,33 @@ To create required AWS instances for twister please follow [this guide](/documen
 
 Also ensure to connect one additional NIC (from data Network) for use by Twister Application. The VMs will automatically reboot one time to apply updates required for Twister.
 
+### Install Dependencies
+Twister requires some basic build tools to be installed in Linux. 
+Run following commands for debian based systems( Ubuntu, Debian etc.)
+```bash
+apt-get update -y
+apt-get upgrade -y
+apt-get install linux-generic linux-headers-generic make gcc gdb git unzip python-netaddr -y
+bash -c "echo vm.nr_hugepages = 1024 >> /etc/sysctl.conf"
+mkdir -p /mnt/huge
+sed -i -e '$i \mount -t hugetlbfs nodev /mnt/huge &\n' /etc/rc.local
+```
+
+For yum based systems (CentOS, Fedora, Redhat etc.) run following commands
+```bash
+yum update -y
+yum install make gcc gdb git unzip kernel-devel redhat-lsb -y
+bash -c "echo vm.nr_hugepages = 1024 >> /etc/sysctl.conf"
+mkdir -p /mnt/huge
+chmod +x /etc/rc.local
+sed -i -e '$i \mount -t hugetlbfs nodev /mnt/huge &\n' /etc/rc.local
+bash -c "echo nodev /mnt/huge hugetlbfs defaults 0 0 >> /etc/fstab" 
+```
+
+Reboot the system for the changes to take effect
+```
+reboot
+```
 ### Clone
 The Twister source can be cloned using the following command:
 
