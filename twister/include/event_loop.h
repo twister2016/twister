@@ -1,3 +1,7 @@
+/** @file Provides all the functionality of the event loop
+ *
+ */
+
 #ifndef _EVENT_LOOP_H_
 #define _EVENT_LOOP_H_
 #include <rte_config.h>
@@ -31,6 +35,11 @@ enum
     TW_TIMER_HANDLE = 0x05
 };
 
+/** Struct containing info about handlers
+ *
+ * @bug Not used
+ *
+ */
 struct tw_handle_s
 {
         uint8_t handle_type;
@@ -38,6 +47,9 @@ struct tw_handle_s
         struct tw_handle_s * next;
 }__attribute__((__packed__));
 
+/** Struct containing info about event loop
+ *
+ */
 struct tw_loop_s
 {
         /* User data - use this for whatever. */
@@ -57,6 +69,9 @@ struct tw_loop_s
 typedef struct tw_loop_s tw_loop_t;
 typedef struct tw_handle_s tw_handle_t;
 
+/** Struct for UDP handlers.
+ * @bug Not Used
+ */
 struct tw_udp_s
 {
         uint8_t handle_type;
@@ -69,6 +84,9 @@ struct tw_udp_s
         struct tw_udp_s * next;
 };
 
+/** Struct for rx handler.
+ *
+ */
 struct tw_rx_s
 {
         uint8_t handle_type;
@@ -80,6 +98,9 @@ struct tw_rx_s
         struct tw_rx_s * next;
 };
 
+/** Struct for tx handler
+ *
+ */
 struct tw_tx_s
 {
         uint8_t handle_type;
@@ -91,6 +112,9 @@ struct tw_tx_s
         void * tx_cb;
 };
 
+/** Struct for timer handler
+ *
+ */
 struct tw_timer_s
 {
         uint8_t handle_type;
@@ -111,7 +135,20 @@ typedef struct tw_timer_s tw_timer_t;
 
 typedef void * tw_timer_cb;
 
-int tw_loop_init(tw_loop_t *);
+/** Used to initialize the event loop
+ *
+ * @param *event_loop :Pointer to event loop struct.
+ *
+ * @return 0(TRUE)
+ */
+int tw_loop_init(tw_loop_t * event_loop);
+
+/** Used to stop the event loop
+ *
+ * @param *event_loop :Pointer to event loop struct.
+ *
+ * @return 0(TRUE)
+ */
 int tw_stop(tw_loop_t *);
 
 #endif

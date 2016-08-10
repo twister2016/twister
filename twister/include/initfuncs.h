@@ -1,3 +1,6 @@
+/** @file Contains all functions necessary to initialize Twister environment
+ *
+ */
 #ifndef _INITFUNCS_H_
 #define _INITFUNCS_H_
 #include <rte_ip.h>
@@ -15,6 +18,9 @@
 #include <portconf.h>
 #include <tw_api.h>
 
+/** Structure to hold application parameters such as cores and ports
+ *
+ */
 struct app_params
 {
         /* CPU cores */
@@ -56,6 +62,9 @@ struct app_params
         uint32_t pipeline_type;
 }__rte_cache_aligned;
 
+/** Structure to hold configuration of Twister such as blacklist ports.
+ *
+ */
 struct tw_conf
 {
         char * portmask;
@@ -66,12 +75,52 @@ struct tw_conf
 
 struct app_params app;
 
-int tw_smoke_init_eal_env(int , char **);
-int tw_init_eal_env(int, char **);
+/** Initializer function used for smoke test
+ *
+ * @return 0(TRUE), -1(False)
+ */
+int tw_smoke_init_eal_env(int argc, char ** argv);
+
+/** Initializes environment abstraction layer
+ *
+ * @return 0(TRUE), -1(FALSE)
+ */
+int tw_init_eal_env(int argc, char ** argv);
+
+/** Parses application specific parameters
+ *
+ * @return 0(TRUE), -1(FALSE)
+ */
 int tw_parse_twister_args(int argc, char **argv);
+
+/** Reads the parameters from conf file
+ *
+ * @param tw_conf_path :Path of the conf file
+ *
+ * @return 0(TRUE)
+ */
 int tw_parse_conf(const char * tw_conf_path);
+
+/** Calls another function which assigns IP to port
+ *
+ * @return 0(TRUE)
+ */
 int tw_init_user_given_vals(void);
-int tw_display_usage(const char *);
-int tw_parse_portmask(const char *);
+
+/** Displays an error if the current configuration is invalid
+ *
+ * @param prgname :Name of program
+ *
+ * @return 0(TRUE)
+ */
+int tw_display_usage(const char * prgname);
+
+/** Parses the hexadecimal port mask to return a decimal value
+ *
+ * @param portmask : Port mask in hexadecimal
+ *
+ * @return The port mask in decimal form
+ */
+int tw_parse_portmask(const char * portmask);
 
 #endif
